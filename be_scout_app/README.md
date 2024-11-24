@@ -1,4 +1,4 @@
-# my_awesome_namer
+# be_scout_app
 
 A new Flutter project.
 
