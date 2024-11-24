@@ -1,7 +1,7 @@
 # Skautská Knihovna
 
 **Ročníkový projekt 2024**  
-**Vývojáři:** Filip (backend, frontend), spolužák (grafika ve Figma)  
+**Vývojáři:** Wingscloa (backend, frontend), Lukylo (grafika ve Figma)  
 
 Tento projekt je mobilní a webová aplikace, která poskytuje skautům digitální knihovnu a mnoho užitečných funkcí. Naším cílem je usnadnit organizaci, zlepšit přístup k informacím a zpestřit skautský život díky moderním technologiím.
 
@@ -51,8 +51,8 @@ Tento projekt je mobilní a webová aplikace, která poskytuje skautům digitál
 
 | **Člen týmu** | **Role**         | **Hlavní úkoly**                                      |
 |---------------|------------------|-------------------------------------------------------|
-| Filip         | Backend, Frontend | Vývoj aplikační logiky, propojení frontend a backend, práce s databází. |
-| Spolužák      | Grafik            | Návrh uživatelského rozhraní ve Figmě.              |
+| Wingscloa     | Backend, Frontend | Vývoj aplikační logiky, propojení frontend a backend, práce s databází. |
+| Lukylo        | Grafik            | Návrh uživatelského rozhraní ve Figmě.               |
 
 ---
 
