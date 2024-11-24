@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "871295497804",
+    "project_id": "scautapp-1683e",
+    "storage_bucket": "scautapp-1683e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:871295497804:android:f7e52baf191620cb5aa6e9",
+        "android_client_info": {
+          "package_name": "com.example.my_awesome_namer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAldyslnKGDAS2MvM4hL-EGDN-lSsLK_fw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
