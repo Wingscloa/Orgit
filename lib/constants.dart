@@ -15,6 +15,12 @@ const String apiBaseUrl = 'https://api.example.com';
 const String EmailTitle = 'Email';
 const String EmailHint = 'můjEmail@gmail.com';
 
+const String PasswordTitle = 'Heslo';
+const String PasswordHint = '**********';
+
+const String PasswordTitleVer = 'Potvrdit Heslo';
+const String PasswordHintVer = '**********';
+
 // Register Submit
 
 const String RegisterSubmit = 'Registrovat se';

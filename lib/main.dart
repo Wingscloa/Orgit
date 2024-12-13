@@ -1,13 +1,23 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:my_awesome_namer/app_dimensions.dart';
 import 'Components/Layout.dart';
-import 'app_dimensions.dart';
+import 'Pages/Auth/Registrace.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await await Firebase.initializeApp();
+
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -18,11 +28,16 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFFFBE79F)),
         ),
         debugShowCheckedModeBanner: false,
-        // home: MainLayout(),
         home: Builder(
           builder: (context) {
             AppDimensions.initialize(context);
-            return MainLayout();
+            if (FirebaseAuth.instance.currentUser != null) {
+              //sign in
+              return MainLayout();
+            } else {
+              //sign out
+              return Registration();
+            }
           },
         ));
   }

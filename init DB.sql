@@ -21,12 +21,13 @@ CREATE TABLE Roles (
 -- Users (SOFT DELETE PRI SMAZANI UCTU)
 CREATE TABLE Users (
 	UserId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	UserUID varchar(255) NOT NULL,
 	FirstName varchar(64) NOT NULL,
 	LastName varchar(64) NOT NULL,
 	Nickname varchar(64) NULL,
 	RoleId INTEGER REFERENCES Roles(RoleId) ON DELETE CASCADE,
-	Email varchar(255) NOT NULL UNIQUE,
-	Password varchar(24) NOT NULL,
+	-- Email varchar(255) NOT NULL UNIQUE,
+	-- Password varchar(24) NOT NULL,
 	ProfileIcon BYTEA NULL,
 	Deleted BOOLEAN NOT NULL DEFAULT FALSE,
 	Parent1 Parent NULL,

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:my_awesome_namer/Pages/Home.dart';
-import 'Background.dart';
+// import 'Backgrounds/Background.dart';
 import 'BottomNav.dart';
 import '../Pages/Schuzka.dart';
 import '../Pages/VytvareniAkce.dart';
 import '../Pages/Profile.dart';
 import '../Pages/Settings.dart';
+import '../Components/Backgrounds/BckMain.dart';
 
 // main kde se bude menit obsah
 // dodelat push na jiny stranky
@@ -42,7 +43,7 @@ class _MainLayoutState extends State<MainLayout> {
     return Scaffold(
       body: Stack(
         children: [
-          HomePageBackground(),
+          MainBackground(),
           PageView(
             controller: _pageController,
             onPageChanged: (index) {

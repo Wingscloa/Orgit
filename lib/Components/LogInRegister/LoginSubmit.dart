@@ -3,18 +3,18 @@ import '../../constants.dart';
 
 class LogInSubmit extends StatelessWidget {
   final bool register;
+  final GestureTapCallback onTap;
 
   const LogInSubmit({
     super.key,
     required this.register,
+    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        print("Login/Register");
-      },
+      onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
             color: Color.fromRGBO(32, 49, 69, 0.15),
