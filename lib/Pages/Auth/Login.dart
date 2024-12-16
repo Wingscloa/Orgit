@@ -20,22 +20,47 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final _auth = AuthService();
 
+  var user;
   final _email = TextEditingController();
   final _password = TextEditingController();
-  final _passwordVerification = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Center(
-          child: Stack(
+      resizeToAvoidBottomInset: false,
+      body: Stack(
+        children: [
+          LoginPageBackground(
+            position: 150,
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 110, left: 40),
+            child: Text(
+              'Přihlášení',
+              style: TextStyle(
+                color: Color.fromARGB(255, 107, 66, 38),
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              LoginPageBackground(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Column(
+              Center(
+                child: Container(
+                  margin: EdgeInsets.only(top: 100),
+                  height: 410,
+                  width: 350,
+                  padding: EdgeInsets.all(32),
+                  decoration: BoxDecoration(
+                      color: Color(0x1A142131),
+                      border: Border.all(
+                        color: Color(0x1AFFFFFF),
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.circular(32)),
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Logininput(
@@ -57,15 +82,36 @@ class _LoginState extends State<Login> {
                         height: 27,
                       ),
                       LogInSubmit(
-                        register: true,
-                        onTap: () => {
-                          if (signIn()) {goToHome(context)}
-                        },
+                        register: false,
+                        onTap: () => {signIn(context)},
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      GestureDetector(
+                        onTap: () => {signInGoogle(context)},
+                        child: Container(
+                          height: 50,
+                          width: 50,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(6),
+                            border: Border.all(
+                                color: const Color.fromARGB(255, 0, 0, 0)),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Image.asset(
+                              "assets/googleIcon.png", // Ujistěte se, že máte Google logo v assets
+                            ),
+                          ),
+                        ),
                       ),
                       SizedBox(
                         height: 20,
                       ),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
                             'Nemáte žádný účet?',
@@ -93,23 +139,39 @@ class _LoginState extends State<Login> {
                         ],
                       )
                     ],
-                  )
-                ],
-              ),
+                  ),
+                ),
+              )
             ],
           ),
-        ));
+        ],
+      ),
+    );
   }
 
-  signIn() async {
+  Future<void> signIn(BuildContext context) async {
     log(_email.text.length.toString());
     log(_password.text.length.toString());
-    final user =
+
+    user =
         await _auth.logInUserWithEmailAndPassword(_email.text, _password.text);
 
-    if (user != null) {
-      log('User Created Succesfully');
-      return true;
+    if (user == null) {
+      log('Přihlášení se nezdařilo');
+      // Můžete zde přidat další logiku, například zobrazení chybového hlášení
+    } else {
+      log('Přihlášení úspěšné');
+      goToHome(context);
+      // Další akce po úspěšném přihlášení
+    }
+  }
+
+  Future<void> signInGoogle(BuildContext context) async {
+    try {
+      await _auth.loginWithGoogle();
+      goToHome(context);
+    } catch (e) {
+      print(e.toString());
     }
   }
 

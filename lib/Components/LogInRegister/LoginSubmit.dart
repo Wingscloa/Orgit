@@ -16,27 +16,26 @@ class LogInSubmit extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        width: 350, // Šířka
+        height: 70, // Výška
         decoration: BoxDecoration(
-            color: Color.fromRGBO(32, 49, 69, 0.15),
-            borderRadius: BorderRadius.circular(12)),
-        child: SizedBox(
-            width: MediaQuery.of(context).size.width * 0.785,
-            height: MediaQuery.of(context).size.height * 0.08,
-            child: Container(
-              margin: EdgeInsets.only(left: PaddingSize, top: PaddingSize),
-              child: Stack(
-                children: [
-                  Center(
-                      child: Text(
-                    register ? RegisterSubmit : LoginSubmit,
-                    style: TextStyle(
-                        fontSize: fontSize,
-                        color: Color.fromARGB(255, 255, 255, 255),
-                        fontWeight: FontWeight.w500),
-                  ))
-                ],
+          color: Color(0x26203145), // Barva s 15 % neprůhledností
+          borderRadius: BorderRadius.circular(12), // Zaoblení rohů
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Center(
+              child: Text(
+                register ? 'Registrovat se' : 'Přihlásit se',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            )),
+            )
+          ],
+        ),
       ),
     );
   }

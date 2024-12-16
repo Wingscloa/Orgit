@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class LoginPageBackground extends StatefulWidget {
+  final double position;
+
+  const LoginPageBackground({Key? key, required this.position})
+      : super(key: key);
   @override
   State<LoginPageBackground> createState() => _LoginPageBackgroundState();
 }
@@ -9,7 +13,7 @@ class LoginPageBackground extends StatefulWidget {
 class _LoginPageBackgroundState extends State<LoginPageBackground> {
   @override
   Widget build(BuildContext context) {
-    return Container( 
+    return Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height, // Výška obrazovky
       decoration: BoxDecoration(
@@ -19,7 +23,7 @@ class _LoginPageBackgroundState extends State<LoginPageBackground> {
         children: [
           // Čtvercové pozadí s gradientem
           Positioned(
-            top: 160, // Odsazení ze shora
+            top: widget.position, // Odsazení ze shora
             left: 0,
             child: Container(
               width: MediaQuery.of(context)

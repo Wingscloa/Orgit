@@ -42,18 +42,7 @@ class _Profile extends State<Profile> {
                   width: 325,
                   decoration: new BoxDecoration(
                       borderRadius: BorderRadius.circular(30),
-                      gradient: new LinearGradient(
-                          colors: [
-                            Color.fromRGBO(105, 105, 105, 0.35),
-                            Color.fromRGBO(23, 28, 40, 0.5)
-                          ],
-                          stops: [
-                            0.0,
-                            1.0
-                          ],
-                          begin: FractionalOffset.topCenter,
-                          end: FractionalOffset.bottomCenter,
-                          tileMode: TileMode.repeated)),
+                      color: Color.fromARGB(100, 255, 241, 173)),
                   child: Stack(
                     children: [
                       Container(
@@ -78,7 +67,7 @@ class _Profile extends State<Profile> {
                                 Text(
                                   '3. oddíl vodních skautů Děčín',
                                   style: TextStyle(
-                                    color: Colors.white70,
+                                    color: Color.fromARGB(125, 0, 1, 19),
                                     fontSize: 16,
                                   ),
                                 ),
@@ -136,10 +125,10 @@ Widget buildIconButton(IconData icon, String label) {
         margin: EdgeInsets.symmetric(horizontal: 7.5),
         padding: EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Colors.blue.withOpacity(0.2),
+          color: Color.fromARGB(255, 107, 66, 38),
           shape: BoxShape.circle,
         ),
-        child: Icon(icon, color: Colors.blue, size: 28),
+        child: Icon(icon, color: Colors.white, size: 28),
       ),
       SizedBox(height: 8),
       Text(

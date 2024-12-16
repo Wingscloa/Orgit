@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:my_awesome_namer/Pages/Auth/Auth.dart';
 import '../app_dimensions.dart';
+import '../Pages/Auth/Login.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -73,10 +74,8 @@ class _Settings extends State<Settings> {
           SelectBar(
             icon: Icons.logout,
             nazev: 'Odhlásit se',
-            onTap: () => {
-              print('Odhlaseni'),
-              _auth.signOut(),
-            },
+            onTap: () =>
+                {print('Odhlaseni'), _auth.signOut(), gotoSign(context)},
           ),
           SizedBox(
             height: 15,
@@ -118,6 +117,10 @@ class _Settings extends State<Settings> {
         ],
       ),
     );
+  }
+
+  gotoSign(BuildContext context) async {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
   }
 }
 

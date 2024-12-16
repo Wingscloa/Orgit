@@ -9,155 +9,151 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [
-      //Profilovka
-      Container(
-        margin: EdgeInsets.only(top: 50, right: 25),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            ProfileIcon(
-              size: 50,
-            )
-          ],
-        ),
-      ),
-      //Text Akce + Soucet akci
-      Container(
-        margin: EdgeInsets.only(top: 125, left: 110),
-        child: Column(
-          children: [
-            Text(
-              'AKCE 2024/2025',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              'Celkem 7 akcí',
-              style: TextStyle(
-                color: Colors.white70,
-                fontSize: 16,
-              ),
-            ),
-          ],
-        ),
-      ),
-      // informace o nejblizsi schuzce
-      Container(
-        margin: EdgeInsets.only(top: 200, left: 25),
-        padding: EdgeInsets.all(20),
-        width: 350,
-        height: 160,
-        decoration: new BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            gradient: new LinearGradient(
-                colors: [
-                  Color.fromRGBO(20, 33, 49, 1),
-                  Color.fromRGBO(0, 1, 19, 0.098)
-                ],
-                stops: [
-                  0.0,
-                  1.0
-                ],
-                begin: FractionalOffset.topCenter,
-                end: FractionalOffset.bottomCenter,
-                tileMode: TileMode.repeated)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Nazev akce
-            Text(
-              'Betlémské světlo',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            // Jmena vedouciho a 18+ dozoru
-            Container(
-              margin: EdgeInsets.only(left: 20),
-              child: Text(
-                'Zip, Nemo',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                ),
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.only(top: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Padding(
+      padding: const EdgeInsets.only(top: 50, right: 20, left: 20),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Column(
                 children: [
-                  Row(
-                    children: [
-                      ProfileIcon(
-                        size: 40,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      ProfileIcon(
-                        size: 40,
-                      )
-                    ],
+                  Text(
+                    'AKCE 2024/2025',
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 107, 66, 38),
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   Text(
-                    '1.12.2024',
-                    textAlign: TextAlign.center,
+                    'Celkem 7 akcí',
                     style: TextStyle(
-                      color: Color.fromRGBO(255, 255, 255, 0.5),
-                      fontSize: 14,
+                      color: Color.fromARGB(125, 107, 66, 38),
+                      fontSize: 16,
                     ),
                   ),
                 ],
               ),
-            ),
-            // kalendar
-          ],
-        ),
-      ),
-      // kalendar
-      Container(
-          width: 280,
-          height: 320,
-          margin: EdgeInsets.only(top: 375, left: 55),
-          decoration: new BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              gradient: new LinearGradient(
-                  colors: [
-                    Color.fromRGBO(20, 33, 49, 1),
-                    Color.fromRGBO(0, 1, 19, 0.098)
-                  ],
-                  stops: [
-                    0.0,
-                    1.0
-                  ],
-                  begin: FractionalOffset.topCenter,
-                  end: FractionalOffset.bottomCenter,
-                  tileMode: TileMode.repeated)),
-          child: Stack(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Text(
-                  'Prosinec 2024',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+              ProfileIcon(
+                size: 50,
               ),
-              Center(child: CalendarButton(datum: '2024', nazev: 'nazev'))
             ],
-          )),
-    ]);
+          ),
+          SizedBox(
+            height: 100,
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width * 0.90, // Šířka
+            height: 170, // Výška
+            decoration: BoxDecoration(
+              color: Color(0x4DFFF1AD), // Fill barva s 30% neprůhledností
+              border: Border.all(
+                color: Color(0x1AFFFFFF), // Stroke barva s 10% neprůhledností
+                width: 1, // Tloušťka obrysu
+              ),
+              borderRadius: BorderRadius.circular(32), // Zaoblené rohy
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(
+                top: 12,
+                left: 26,
+                right: 29,
+                bottom: 12,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Betlémské světlo',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 6),
+                        child: Text(
+                          'Zip, Nemo',
+                          style: TextStyle(
+                              color: Colors.white.withAlpha(125),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          ProfileIcon(size: 40),
+                          SizedBox(
+                            width: 11,
+                          ),
+                          ProfileIcon(size: 40),
+                        ],
+                      ),
+                      Text(
+                        '1.12.2024',
+                        style: TextStyle(
+                          color: Colors.white.withAlpha(125),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 25,
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width * 0.90,
+            height: 290,
+            decoration: BoxDecoration(
+              color: Color(0x1A000000), // Fill barva (světle modrá)
+              border: Border.all(
+                color: Color(
+                    0x1A000000), // Stroke barva (černá, 10% neprůhlednost)
+                width: 1, // Tloušťka obrysu
+              ),
+              borderRadius: BorderRadius.circular(32), // Zaoblené rohy
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Wrap(
+                spacing: 8,
+                runSpacing: 16,
+                children: [
+                  CalendarButton(datum: 'dawdwadawd', nazev: 'BS-Vídeň'),
+                  CalendarButton(datum: 'test', nazev: 'Podzimky'),
+                  CalendarButton(datum: 'dawdw', nazev: 'Oddílova'),
+                  CalendarButton(datum: 'test', nazev: '3. jezy'),
+                  CalendarButton(datum: 'test', nazev: 'Pazourky'),
+                  CalendarButton(datum: 'test', nazev: 'Bruslení'),
+                  CalendarButton(datum: 'test', nazev: 'BS-Praha'),
+                  CalendarButton(datum: 'test', nazev: 'Svojcikac'),
+                  CalendarButton(datum: 'test', nazev: 'Plavení Jara'),
+                  CalendarButton(datum: 'test', nazev: 'Tábor'),
+                  CalendarButton(datum: 'test', nazev: 'BS-Praha'),
+                  CalendarButton(datum: 'test', nazev: 'Svojcikac'),
+                  CalendarButton(datum: 'test', nazev: 'Plavení Jara'),
+                  CalendarButton(datum: 'test', nazev: 'Tábor'),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -192,30 +188,19 @@ class CalendarButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return Column(
       children: [
         Container(
-          height: 40,
-          width: 40,
+          height: 55,
+          width: 55,
           decoration: new BoxDecoration(
-              gradient: new LinearGradient(
-                  colors: [
-                Color.fromRGBO(20, 33, 49, 1),
-                Color.fromRGBO(0, 1, 19, 0.098)
-              ],
-                  stops: [
-                0.0,
-                1.0
-              ],
-                  begin: FractionalOffset.topCenter,
-                  end: FractionalOffset.bottomCenter,
-                  tileMode: TileMode.repeated)),
-          child: Column(children: [
-            Text(
-              "ahoj",
-              textAlign: TextAlign.center,
-            ),
-          ]),
+              color: Color.fromARGB(125, 255, 241, 173),
+              borderRadius: BorderRadius.circular(8)),
+        ),
+        Text(
+          nazev,
+          textAlign: TextAlign.center,
+          style: TextStyle(color: Colors.white, fontSize: 10),
         ),
       ],
     );

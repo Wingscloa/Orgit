@@ -26,7 +26,7 @@ CREATE TABLE Users (
 	LastName varchar(64) NOT NULL,
 	Nickname varchar(64) NULL,
 	RoleId INTEGER REFERENCES Roles(RoleId) ON DELETE CASCADE,
-	-- Email varchar(255) NOT NULL UNIQUE,
+	Email varchar(255) NOT NULL UNIQUE,
 	-- Password varchar(24) NOT NULL,
 	ProfileIcon BYTEA NULL,
 	Deleted BOOLEAN NOT NULL DEFAULT FALSE,
@@ -148,56 +148,55 @@ CREATE TABLE Notification(
 
 
 ------------------------- TESTOVACI DATA (NEUPLNY) -------------------------
--- Testovací data pro Permissions
-INSERT INTO Permissions (Name, Poznamka) VALUES 
-('Admin', 'Přístup k administraci'),
-('Editor', 'Může upravovat obsah'),
-('Viewer', 'Pouze prohlížení'),
-('Manager', 'Správa týmů'),
-('Support', 'Podpora uživatelů');
+-- Insert test data into Permissions
+INSERT INTO Permissions (Name, Poznamka) VALUES
+('Permission 1', 'Permission description 1'),
+('Permission 2', 'Permission description 2'),
+('Permission 3', 'Permission description 3'),
+('Permission 4', 'Permission description 4'),
+('Permission 5', 'Permission description 5');
 
--- Testovací data pro Roles
-INSERT INTO Roles (Name, Description, PermissionId) VALUES 
-('Administrator', 'Má přístup k veškerým funkcím', 1),
-('Content Editor', 'Spravuje obsah aplikace', 2),
-('Viewer', 'Pouze čte obsah', 3),
-('Team Manager', 'Spravuje týmové záležitosti', 4),
-('Support Agent', 'Řeší problémy uživatelů', 5);
+-- Insert test data into Roles
+INSERT INTO Roles (Name, Description, PermissionId) VALUES
+('Admin', 'Administrator role', 1),
+('User', 'Regular user role', 2),
+('Manager', 'Manager role', 3),
+('Editor', 'Editor role', 4),
+('Viewer', 'Viewer role', 5);
 
--- Testovací data pro Users
-INSERT INTO Users (FirstName, LastName, Nickname, RoleId, Email, Password, Deleted, Parent1, Parent2, ProfileIcon) VALUES
-('Jan', 'Novák', 'JNovak', 1, 'jan.novak@example.com', 'password123', FALSE, ROW('Petr', 'Novák', '123456789'), NULL, E'\\xFFD8FFDB'),
-('Petra', 'Svobodová', 'PSvoboda', 2, 'petra.svobodova@example.com', 'password456', FALSE, NULL, NULL, E'\\xFFD8FFE0'),
-('Karel', 'Dvořák', 'KDvorak', 3, 'karel.dvorak@example.com', 'password789', TRUE, ROW('Alena', 'Dvořáková', '987654321'), NULL, E'\\xFFD8FFEE'),
-('Lucie', 'Havlíčková', 'LHavlickova', 4, 'lucie.havlickova@example.com', 'securepass', FALSE, NULL, NULL, E'\\xFFD8FFE1'),
-('Tomáš', 'Kučera', 'TKucera', 5, 'tomas.kucera@example.com', 'adminpass', TRUE, ROW('Radek', 'Kučera', '456789123'), ROW('Marie', 'Kučerová', '987123456'), E'\\xFFD8FFDB');
+-- Insert test data into Users
+INSERT INTO Users (UserUID, FirstName, LastName, Nickname, RoleId, Email, ProfileIcon, Deleted, Parent1, Parent2) VALUES
+('UID001', 'John', 'Doe', 'JD', 1, 'john.doe@example.com', NULL, FALSE, NULL, NULL),
+('UID002', 'Jane', 'Smith', 'JS', 2, 'jane.smith@example.com', NULL, FALSE, NULL, NULL),
+('UID003', 'Alice', 'Johnson', 'AJ', 3, 'alice.johnson@example.com', NULL, FALSE, NULL, NULL),
+('UID004', 'Bob', 'Williams', 'BW', 4, 'bob.williams@example.com', NULL, FALSE, NULL, NULL),
+('UID005', 'Charlie', 'Brown', 'CB', 5, 'charlie.brown@example.com', NULL, FALSE, NULL, NULL);
 
--- Testovací data pro Quests
+-- Insert test data into Quests
 INSERT INTO Quests (Name, Icon, Description) VALUES
-('Najdi poklad', '/icons/treasure.png', 'Najít skrytý poklad'),
-('Postav přístřešek', '/icons/shelter.png', 'Postavit jednoduchý přístřešek z přírodních materiálů'),
-('Pomoz ostatním', '/icons/help.png', 'Pomoc při zajištění schůzky'),
-('Nauč se nové dovednosti', '/icons/skills.png', 'Nauč se základy uzlování'),
-('Zúčastni se výpravy', '/icons/trip.png', 'Účast na víkendové výpravě');
+('Quest 1', 'icon1.png', 'Quest description 1'),
+('Quest 2', 'icon2.png', 'Quest description 2'),
+('Quest 3', 'icon3.png', 'Quest description 3'),
+('Quest 4', 'icon4.png', 'Quest description 4'),
+('Quest 5', 'icon5.png', 'Quest description 5');
 
--- Testovací data pro QuestsCompleted
+-- Insert test data into QuestsCompleted
 INSERT INTO QuestsCompleted (QuestId, UserId) VALUES
 (1, 1),
-(2, 1),
-(3, 2),
-(4, 3),
-(5, 4),
-(2, 5);
+(2, 2),
+(3, 3),
+(4, 4),
+(5, 5);
 
--- Testovací data pro Badgets
+-- Insert test data into Badgets
 INSERT INTO Badgets (Name, Description, Icon) VALUES
-('Statečný Skaut', 'Za splnění 5 úkolů', E'\\xFFD8FFE2'),
-('Zlatý Skaut', 'Za splnění všech úkolů', E'\\xFFD8FFE3'),
-('Pomocník', 'Za pomoc ostatním', E'\\xFFD8FFE4'),
-('Cestovatel', 'Za účast na více než 3 výpravách', E'\\xFFD8FFE5'),
-('Učitel', 'Za předání dovedností ostatním', E'\\xFFD8FFE6');
+('Badge 1', 'Badge description 1', NULL),
+('Badge 2', 'Badge description 2', NULL),
+('Badge 3', 'Badge description 3', NULL),
+('Badge 4', 'Badge description 4', NULL),
+('Badge 5', 'Badge description 5', NULL);
 
--- Testovací data pro UserBadgets
+-- Insert test data into UserBadgets
 INSERT INTO UserBadgets (UserId, BadgetId) VALUES
 (1, 1),
 (2, 2),
@@ -205,37 +204,82 @@ INSERT INTO UserBadgets (UserId, BadgetId) VALUES
 (4, 4),
 (5, 5);
 
--- Testovací data pro Meeting
+-- Insert test data into Meeting
 INSERT INTO Meeting (Velitel, Zastupce, Dosplej, Name, Popis, DatumZac, DatumKon) VALUES
-(1, 2, 3, 'Výprava do lesa', 'Přespání a hry v lese', '2024-11-30', '2024-12-02'),
-(2, 1, 4, 'Čištění lesa', 'Sbírání odpadků a úklid lesa', '2024-12-05', '2024-12-05'),
-(3, 5, 2, 'Výstup na horu', 'Výprava na Sněžku', '2024-12-10', '2024-12-11'),
-(4, 3, 1, 'Tábor v přírodě', 'Týdenní letní tábor', '2024-07-01', '2024-07-07'),
-(5, 4, 3, 'Zimní přespání', 'Zimní výprava s přespáním', '2025-01-15', '2025-01-16');
+(1, 2, 3, 'Meeting 1', 'Meeting description 1', '2024-12-20', '2024-12-21'),
+(2, 3, 4, 'Meeting 2', 'Meeting description 2', '2024-12-22', '2024-12-23'),
+(3, 4, 5, 'Meeting 3', 'Meeting description 3', '2024-12-24', '2024-12-25'),
+(4, 5, 1, 'Meeting 4', 'Meeting description 4', '2024-12-26', '2024-12-27'),
+(5, 1, 2, 'Meeting 5', 'Meeting description 5', '2024-12-28', '2024-12-29');
 
--- Testovací data pro Participant
+-- Insert test data into Participant
 INSERT INTO Participant (MeetingID, UserId, Note) VALUES
-(1, 1, 'Organizátor akce'),
-(1, 2, 'Pomocník'),
-(1, 3, 'Účastník'),
-(2, 4, 'Dobrovolník'),
-(2, 5, 'Úklidový tým'),
-(3, 1, 'Vedoucí skupiny'),
-(4, 2, 'Táborový organizátor'),
-(5, 3, 'Účastník');
+(1, 1, 'Participant 1 note'),
+(2, 2, 'Participant 2 note'),
+(3, 3, 'Participant 3 note'),
+(4, 4, 'Participant 4 note'),
+(5, 5, 'Participant 5 note');
 
--- Testovací data pro Things
+-- Insert test data into MeetingPoints
+INSERT INTO MeetingPoints (ParticipantId, Points, Nazev) VALUES
+(1, 10, 1),
+(2, 15, 2),
+(3, 20, 3),
+(4, 25, 4),
+(5, 30, 5);
+
+-- Insert test data into Things
 INSERT INTO Things (Nazev, ICON) VALUES
-('Stan', E'\\xFFD8FFAA'),
-('Lahev vody', E'\\xFFD8FFBB'),
-('Baterka', E'\\xFFD8FFCC'),
-('Mapa', E'\\xFFD8FFDD'),
-('Kompas', E'\\xFFD8FFEE');
+('Thing 1', NULL),
+('Thing 2', NULL),
+('Thing 3', NULL),
+('Thing 4', NULL),
+('Thing 5', NULL);
 
--- Testovací data pro MeetingThings
+-- Insert test data into MeetingThings
 INSERT INTO MeetingThings (ThingsId, MeetingID, Pocet) VALUES
 (1, 1, 5),
-(2, 1, 10),
-(3, 2, 3),
-(4, 3, 7),
-(5, 4, 2);
+(2, 2, 4),
+(3, 3, 3),
+(4, 4, 2),
+(5, 5, 1);
+
+-- Insert test data into TroopsType
+INSERT INTO TroopsType (Nazev) VALUES
+('Type 1'),
+('Type 2'),
+('Type 3'),
+('Type 4'),
+('Type 5');
+
+-- Insert test data into Troops
+INSERT INTO Troops (Nazev, Vudce, Poznamka, Typ, Adresa) VALUES
+('Troop 1', 1, 'Troop 1 description', 1, 'Address 1'),
+('Troop 2', 2, 'Troop 2 description', 2, 'Address 2'),
+('Troop 3', 3, 'Troop 3 description', 3, 'Address 3'),
+('Troop 4', 4, 'Troop 4 description', 4, 'Address 4'),
+('Troop 5', 5, 'Troop 5 description', 5, 'Address 5');
+
+-- Insert test data into ReportType
+INSERT INTO ReportType (Nazev) VALUES
+('Error Type 1'),
+('Error Type 2'),
+('Error Type 3'),
+('Error Type 4'),
+('Error Type 5');
+
+-- Insert test data into Reports
+INSERT INTO Reports (Uzivatel, Types, Resolved, Resolver, Note) VALUES
+(1, 1, FALSE, NULL, 'Report 1 description'),
+(2, 2, TRUE, 3, 'Report 2 description'),
+(3, 3, FALSE, NULL, 'Report 3 description'),
+(4, 4, TRUE, 5, 'Report 4 description'),
+(5, 5, FALSE, NULL, 'Report 5 description');
+
+-- Insert test data into Notification
+INSERT INTO Notification (Nazev) VALUES
+('Notification 1'),
+('Notification 2'),
+('Notification 3'),
+('Notification 4'),
+('Notification 5');
