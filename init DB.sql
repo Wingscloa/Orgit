@@ -11,6 +11,13 @@ CREATE TABLE Permissions (
 	Poznamka varchar(255) NOT NULL UNIQUE
 );
 
+-- ADMIN - Muze pridavat oddily, mazat uzivatele atd., mel by mit pristup k DB
+-- LEADER - Rozhled ohledne vsech ve stredisku napr. TIK
+-- OFFICER - CRUD, vytvaret schuzky, moct smazat vsechny schuzky, moct pridan k sobe clena atd. napr. ZIP
+-- CREATOR - CD, vytvaret schuzky a smazat svoje schuzky napr. TULEN
+-- EDITOR - U, moct kastomizovat schuzky pro svuj oddil napr. NEJAKY POMOCNIK
+-- ANONYMOUS - uzivatel, ktery uvidi jen interface a postovat zakladni informace svemu oddilu
+
 CREATE TABLE Roles (
 	RoleId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	Name varchar(32) NOT NULL UNIQUE,
@@ -29,6 +36,7 @@ CREATE TABLE Users (
 	Email varchar(255) NOT NULL UNIQUE,
 	-- Password varchar(24) NOT NULL,
 	ProfileIcon BYTEA NULL,
+	Verified BOOLEAN NULL DEFAULT FALSE, -- zda bude moct hledat ostatni skauty v jinych oddilech (prevence hledani informaci ohledne dalsich lidi)
 	Deleted BOOLEAN NOT NULL DEFAULT FALSE,
 	Parent1 Parent NULL,
 	Parent2 Parent NULL
