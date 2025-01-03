@@ -9,7 +9,7 @@ Orgit je mobilní aplikace navržená pro zjednodušení komunikace a organizace
 
 ## 🚀 Funkcionality aplikace  
 
-### 👩‍὆9 Organizační skupiny  
+### 👩‍🦰 Organizační skupiny  
 - Možnost vytvářet nebo se připojit ke skupinám.  
 - Praktické organizační nástroje pro vedoucí i členy skupin.  
 
