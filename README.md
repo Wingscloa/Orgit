@@ -1,6 +1,4 @@
----
-
-# **Organizační aplikace (Orgit)**  
+# Organizační aplikace (Orgit)
 
 **Ročníkový projekt 2024**  
 **Vývojáři:** Wingscloa (Fullstack), Lukylo (UI Design, Frontend)  
@@ -9,25 +7,25 @@ Orgit je mobilní aplikace navržená pro zjednodušení komunikace a organizace
 
 ---
 
-## 🚀 **Funkcionality aplikace**  
+## 🚀 Funkcionality aplikace  
 
-### 👩‍🦰 **Organizační skupiny**  
+### 👩‍὆9 Organizační skupiny  
 - Možnost vytvářet nebo se připojit ke skupinám.  
 - Praktické organizační nástroje pro vedoucí i členy skupin.  
 
-### 👤 **Profily členů**  
+### 👤 Profily členů  
 - Vyhledávání uživatelů podle jména nebo přezdívky.  
 - Zobrazení osobních profilů s přehledem aktivit.  
 
-### 📔 **Plnění organizačních úkolů**  
+### 📔 Plnění organizačních úkolů  
 - Sledování a správa pokroku v jednotlivých úkolech.  
 
-### 🗓️ **Organizace akcí**  
+### 🗓️ Organizace akcí  
 - Účastníci mohou potvrzovat nebo odmítat svou účast na událostech.  
 
 ---
 
-## 🛠️ **Použité technologie**  
+## 🛠️ Použité technologie  
 
 - **Frontend:** Flutter  
 - **Backend:** Node.js / Express.js  
@@ -37,16 +35,16 @@ Orgit je mobilní aplikace navržená pro zjednodušení komunikace a organizace
 
 ---
 
-## 📈 **Rozdělení práce**  
+## 📈 Rozdělení práce  
 
 | **Člen týmu** | **Role**                | **Hlavní úkoly**                               |  
-|---------------|-------------------------|-----------------------------------------------|  
+|----------------|-------------------------|-----------------------------------------------|  
 | Wingscloa     | Fullstack vývojář       | Vývoj backendu, integrace a podpora týmu.     |  
 | Lukylo        | UI design & Frontend    | Návrh uživatelského rozhraní a implementace.  |  
 
 ---
 
-## 🎯 **Cíle projektu**  
+## 🎯 Cíle projektu  
 1. Vytvořit funkční prototyp aplikace.  
 2. Usnadnit uživatelům organizaci a plánování.  
 3. Nabídnout moderní a přehledné uživatelské rozhraní.  
@@ -54,7 +52,7 @@ Orgit je mobilní aplikace navržená pro zjednodušení komunikace a organizace
 
 ---
 
-## 📌 **Instalace a spuštění**  
+## 📌 Instalace a spuštění  
 Sekce bude doplněna v budoucnu.  
 
 ---
