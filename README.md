@@ -1,71 +1,60 @@
-# Skautská Knihovna
+---
+
+# **Organizační aplikace (Orgit)**  
 
 **Ročníkový projekt 2024**  
-**Vývojáři:** Wingscloa (backend, frontend), Lukylo (grafika ve Figma)  
+**Vývojáři:** Wingscloa (Fullstack), Lukylo (UI Design, Frontend)  
 
-Tento projekt je mobilní a webová aplikace, která poskytuje skautům digitální knihovnu a mnoho užitečných funkcí. Naším cílem je usnadnit organizaci, zlepšit přístup k informacím a zpestřit skautský život díky moderním technologiím.
-
----
-
-## 🚀 Funkcionality aplikace
-
-### 📚 Sdílená knihovna
-- Získávání užitečných informací o skautských aktivitách, pravidlech a tipech.
-- Možnost přidávání vlastního obsahu do knihovny.
-
-### 🏅 Plnění úkolů a odznaků
-- Systém úkolů navázaných na skautské odznaky.
-- Sledování postupu v plnění úkolů.
-- Zobrazení historie získaných odznaků.
-
-### 👤 Profily členů
-- Vyhledávání ostatních skautů podle jména nebo přezdívky.
-- Možnost zobrazení osobního profilu s odznaky a statistikami.
-
-### 🛤️ Plnění skautské stezky
-- Sledování postupu v jednotlivých úkolech a kapitolách stezky.
-- Možnost označit splněné úkoly.
-
-### 🗓️ Organizace akcí
-- Účastníci mohou potvrdit nebo odmítnout svou účast na akcích.
-- Různé role (např. vedoucí, člen) s odlišnými oprávněními.
-
-### 📋 Plánování schůzek
-- Vedoucí mohou vytvářet schůzky a přidávat detaily (čas, místo, účastníci).
-- Specifikace, jaké věci by si měli účastníci přinést (pro jednotlivce nebo celou skupinu).
-- Možnost bodování schůzek přímo v aplikaci.
+Orgit je mobilní aplikace navržená pro zjednodušení komunikace a organizace mezi lidmi. Naším cílem je usnadnit organizaci, zpřístupnit důležité informace a zpestřit uživatelům jejich každodenní plánování.  
 
 ---
 
-## 🛠️ Technologie
+## 🚀 **Funkcionality aplikace**  
 
-- **Frontend:** Flutter
-- **Backend:** Node.js / Express.js
-- **Databáze:** MySQL
-- **Design:** Figma
-- **Version Control:** Git
+### 👩‍🦰 **Organizační skupiny**  
+- Možnost vytvářet nebo se připojit ke skupinám.  
+- Praktické organizační nástroje pro vedoucí i členy skupin.  
 
----
+### 👤 **Profily členů**  
+- Vyhledávání uživatelů podle jména nebo přezdívky.  
+- Zobrazení osobních profilů s přehledem aktivit.  
 
-## 📈 Rozdělení práce
+### 📔 **Plnění organizačních úkolů**  
+- Sledování a správa pokroku v jednotlivých úkolech.  
 
-| **Člen týmu** | **Role**         | **Hlavní úkoly**                                      |
-|---------------|------------------|-------------------------------------------------------|
-| Wingscloa     | Backend, Frontend | Vývoj aplikační logiky, propojení frontend a backend, práce s databází. |
-| Lukylo        | Grafik            | Návrh uživatelského rozhraní ve Figmě.               |
-
----
-
-## 🎯 Cíle projektu
-1. Vytvořit funkční prototyp aplikace.
-2. Usnadnit organizaci skautských aktivit.
-3. Nabídnout moderní a přehledné uživatelské rozhraní.
-4. Zajistit stabilní a bezpečný backend pro zpracování dat.
+### 🗓️ **Organizace akcí**  
+- Účastníci mohou potvrzovat nebo odmítat svou účast na událostech.  
 
 ---
 
-## 📌 Instalace a spuštění
+## 🛠️ **Použité technologie**  
 
-1. Naklonujte repozitář:
-   ```bash
-   git clone https://github.com/<username>/<repo>.git
+- **Frontend:** Flutter  
+- **Backend:** Node.js / Express.js  
+- **Databáze:** MySQL  
+- **Design:** Figma  
+- **Version Control:** Git  
+
+---
+
+## 📈 **Rozdělení práce**  
+
+| **Člen týmu** | **Role**                | **Hlavní úkoly**                               |  
+|---------------|-------------------------|-----------------------------------------------|  
+| Wingscloa     | Fullstack vývojář       | Vývoj backendu, integrace a podpora týmu.     |  
+| Lukylo        | UI design & Frontend    | Návrh uživatelského rozhraní a implementace.  |  
+
+---
+
+## 🎯 **Cíle projektu**  
+1. Vytvořit funkční prototyp aplikace.  
+2. Usnadnit uživatelům organizaci a plánování.  
+3. Nabídnout moderní a přehledné uživatelské rozhraní.  
+4. Zajistit stabilní a bezpečný backend pro správu dat.  
+
+---
+
+## 📌 **Instalace a spuštění**  
+Sekce bude doplněna v budoucnu.  
+
+---
