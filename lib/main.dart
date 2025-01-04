@@ -1,11 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:my_awesome_namer/Pages/Settings/upozorneni.dart';
-import 'package:my_awesome_namer/app_dimensions.dart';
-import 'Components/Layout.dart';
-import 'Pages/Auth/Registrace.dart';
-import 'Pages/Settings/account.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:my_awesome_namer/Pages/Register/MainMenu.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,7 +27,6 @@ class _MyAppState extends State<MyApp> {
         debugShowCheckedModeBanner: false,
         home: Builder(
           builder: (context) {
-            AppDimensions.initialize(context);
             // if (FirebaseAuth.instance.currentUser != null) {
             //   //sign in
             //   return MainLayout();
@@ -40,7 +34,7 @@ class _MyAppState extends State<MyApp> {
             //   //sign out
             //   return Registration();
             // }
-            return Upozorneni();
+            return MainMenu();
           },
         ));
   }
