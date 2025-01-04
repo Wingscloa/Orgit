@@ -8,6 +8,8 @@ class FormInput extends StatefulWidget {
   bool obscureText;
   bool showObscureText;
   bool changePassword;
+  bool readonly;
+  bool dateInput;
 
   FormInput(
       {required this.labelText,
@@ -17,6 +19,8 @@ class FormInput extends StatefulWidget {
           false, // highest priority,  if true => shows up as password, icons (eye of visibility), // show ups change password text
       this.showObscureText = false,
       this.obscureText = false,
+      this.readonly = false,
+      this.dateInput = false,
       this.icon = Icons.check});
 
   @override
@@ -75,6 +79,10 @@ class _FormInputState extends State<FormInput> {
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: TextField(
+                  onTap: widget.dateInput
+                      ? () => _selectDate()
+                      : () => print('ahoj'),
+                  readOnly: widget.readonly,
                   obscureText: widget.obscureText,
                   decoration: null,
                   controller: widget.controller,
@@ -117,5 +125,19 @@ class _FormInputState extends State<FormInput> {
         ),
       ],
     );
+  }
+
+  Future<void> _selectDate() async {
+    DateTime? _picked = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2000),
+        lastDate: DateTime(2100));
+
+    if (_picked != null) {
+      setState(() {
+        widget.controller.text = _picked.toString().split(" ")[0];
+      });
+    }
   }
 }
