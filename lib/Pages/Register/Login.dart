@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_awesome_namer/Auth/Auth.dart';
 import 'package:my_awesome_namer/Components/Background/MenuBckg.dart';
 import 'package:my_awesome_namer/Components/BottomDots.dart';
 import 'package:my_awesome_namer/Components/FormInput.dart';
@@ -173,10 +174,11 @@ class Login extends StatelessWidget {
                       brand: Brand(Brands.facebook),
                     ),
                     SocialButton(
-                        text: 'Google',
-                        brand: Brand(Brands.google),
-                        color: Color.fromARGB(255, 44, 105, 61),
-                        onPressed: () => ()),
+                      text: 'Google',
+                      brand: Brand(Brands.google),
+                      color: Color.fromARGB(255, 44, 105, 61),
+                      onPressed: () => loginWithGoogle(context),
+                    ),
                   ],
                 )
               ],
@@ -192,5 +194,21 @@ class Login extends StatelessWidget {
             )
           ],
         ));
+  }
+
+  Future<void> Log(String email, String password, BuildContext context) async {
+    await AuthService().logInUserWithEmailAndPassword(email, password);
+    Navigationcontroller.goToWelcomeScreen(
+        context); // pokud nema vytvoreny profil
+  }
+
+  Future<void> loginWithGoogle(BuildContext context) async {
+    try {
+      await AuthService().loginWithGoogle();
+      Navigationcontroller.goToWelcomeScreen(context);
+    } catch (e) {
+      // error pop-up
+      print(e.toString());
+    }
   }
 }

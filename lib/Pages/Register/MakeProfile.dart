@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:my_awesome_namer/Auth/Auth.dart';
 import 'package:my_awesome_namer/Components/Background/MenuBckg.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:my_awesome_namer/Components/BottomDots.dart';
@@ -34,27 +35,30 @@ class _MakeProfileState extends State<MakeProfile> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 46),
-                  child: Row(children: [
-                    Transform.rotate(
-                      angle: 3.14,
-                      child: Icon(
-                        Icons.arrow_right_alt,
-                        color: Colors.white,
-                        size: 35,
+                  child: InkWell(
+                    onTap: AuthService().signOut,
+                    child: Row(children: [
+                      Transform.rotate(
+                        angle: 3.14,
+                        child: Icon(
+                          Icons.arrow_right_alt,
+                          color: Colors.white,
+                          size: 35,
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      width: 22,
-                    ),
-                    Text(
-                      'Profil',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 30,
+                      SizedBox(
+                        width: 22,
                       ),
-                    )
-                  ]),
+                      Text(
+                        'Profil',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 30,
+                        ),
+                      )
+                    ]),
+                  ),
                 ),
                 SizedBox(
                   height: 30,
@@ -72,23 +76,26 @@ class _MakeProfileState extends State<MakeProfile> {
                     Column(
                       children: [
                         FormInput(
-                            labelText: 'Jméno',
-                            controller: widget.nameCont,
-                            iconColor: Colors.white),
+                          labelText: 'Jméno',
+                          controller: widget.nameCont,
+                          iconColor: Colors.white,
+                        ),
                         SizedBox(
                           height: 8,
                         ),
                         FormInput(
-                            labelText: 'Příjmení',
-                            controller: widget.lastNameCont,
-                            iconColor: Colors.white),
+                          labelText: 'Příjmení',
+                          controller: widget.lastNameCont,
+                          iconColor: Colors.white,
+                        ),
                         SizedBox(
                           height: 8,
                         ),
                         FormInput(
-                            labelText: 'Přezdívka',
-                            controller: widget.nicknameCont,
-                            iconColor: Colors.white),
+                          labelText: 'Přezdívka',
+                          controller: widget.nicknameCont,
+                          iconColor: Colors.white,
+                        ),
                         SizedBox(
                           height: 8,
                         ),
@@ -114,35 +121,38 @@ class _MakeProfileState extends State<MakeProfile> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Container(
-                      width: 290,
-                      height: 60,
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 255, 203, 105),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(6),
-                          bottomLeft: Radius.circular(6),
+                    InkWell(
+                      onTap: () => AuthService().signOut(),
+                      child: Container(
+                        width: 290,
+                        height: 60,
+                        decoration: BoxDecoration(
+                          color: Color.fromARGB(255, 255, 203, 105),
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(6),
+                            bottomLeft: Radius.circular(6),
+                          ),
                         ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text(
-                            'Dokončit registraci',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text(
+                              'Dokončit registraci',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          Icon(
-                            Icons.arrow_right_alt_rounded,
-                            size: 50,
-                          )
-                        ],
+                            SizedBox(
+                              width: 15,
+                            ),
+                            Icon(
+                              Icons.arrow_right_alt_rounded,
+                              size: 50,
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ],

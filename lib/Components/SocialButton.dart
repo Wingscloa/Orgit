@@ -17,9 +17,7 @@ class SocialButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        print('Tap ${text}');
-      },
+      onTap: onPressed,
       child: Container(
         width: 140,
         height: 70,

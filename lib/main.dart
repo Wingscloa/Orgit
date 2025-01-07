@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
@@ -33,14 +34,13 @@ class _MyAppState extends State<MyApp> {
         debugShowCheckedModeBanner: false,
         home: Builder(
           builder: (context) {
-            // if (FirebaseAuth.instance.currentUser != null) {
-            //   //sign in
-            //   return MainLayout();
-            // } else {
-            //   //sign out
-            //   return Registration();
-            // }
-            return MakeProfile();
+            if (FirebaseAuth.instance.currentUser != null) {
+              //sign in
+              return MakeProfile();
+            } else {
+              //sign out
+              return MainMenu();
+            }
           },
         ));
   }

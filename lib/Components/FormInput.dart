@@ -10,17 +10,23 @@ class FormInput extends StatefulWidget {
   bool changePassword;
   bool readonly;
   bool dateInput;
+  String righText;
+  Color rightTextColor;
+  GestureTapCallback? righTextOnTap;
 
   FormInput(
       {required this.labelText,
       required this.controller,
       required this.iconColor,
+      this.righTextOnTap,
       this.changePassword =
           false, // highest priority,  if true => shows up as password, icons (eye of visibility), // show ups change password text
       this.showObscureText = false,
       this.obscureText = false,
       this.readonly = false,
       this.dateInput = false,
+      this.righText = "",
+      this.rightTextColor = const Color.fromARGB(255, 255, 203, 105),
       this.icon = Icons.check});
 
   @override
@@ -47,15 +53,13 @@ class _FormInputState extends State<FormInput> {
                   color: Color.fromARGB(255, 87, 88, 90),
                 ),
               ),
-              widget.changePassword
+              widget.righText.isNotEmpty
                   ? InkWell(
-                      onTap: () {
-                        print('Change Password');
-                      },
+                      onTap: widget.righTextOnTap,
                       child: Text(
-                        'Zapomenuté heslo?',
+                        widget.righText,
                         style: TextStyle(
-                          color: Color.fromARGB(255, 255, 203, 105),
+                          color: widget.rightTextColor,
                           fontWeight: FontWeight.bold,
                           fontSize: 12,
                         ),
@@ -78,13 +82,15 @@ class _FormInputState extends State<FormInput> {
               ),
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
-                child: TextField(
+                child: TextFormField(
                   onTap: widget.dateInput
                       ? () => _selectDate()
                       : () => print('ahoj'),
                   readOnly: widget.readonly,
                   obscureText: widget.obscureText,
-                  decoration: null,
+                  decoration: InputDecoration(
+                    border: InputBorder.none, // Odstranění čáry pod textem
+                  ),
                   controller: widget.controller,
                   style: TextStyle(
                     color: Colors.white,

@@ -30,8 +30,8 @@ class _MainMenuState extends State<MainMenu> {
         children: [
           if (!widget.isRegistered) WelcomePage(),
           widget.inRegister
-              ? Register(onRegister: _toggleRegister)
-              : Login(onLogin: _toggleRegister),
+              ? Login(onLogin: _toggleRegister)
+              : Register(onRegister: _toggleRegister),
           if (widget.isRegistered) WelcomeScreen(),
         ],
         onPageChanged: (pageIndex) {

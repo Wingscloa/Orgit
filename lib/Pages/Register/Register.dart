@@ -1,20 +1,36 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:my_awesome_namer/Auth/Auth.dart';
 import 'package:my_awesome_namer/Components/Background/MenuBckg.dart';
 import 'package:my_awesome_namer/Components/BottomDots.dart';
 import 'package:my_awesome_namer/Components/FormInput.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:my_awesome_namer/Components/SocialButton.dart';
+import 'package:my_awesome_namer/NavigationController.dart';
 
-class Register extends StatelessWidget {
+class Register extends StatefulWidget {
   final VoidCallback onRegister;
 
   Register({required this.onRegister}) {
     debugPrint("Navigace na stránku Register");
   }
 
-  final email = TextEditingController();
+  @override
+  State<Register> createState() => _RegisterState();
+}
 
-  final password = TextEditingController();
+class _RegisterState extends State<Register> {
+  TextEditingController emailCont = TextEditingController();
+  String emailError = "";
+  Color emailValid = Colors.white;
+
+  TextEditingController passwordCont = TextEditingController();
+  String passwordError = "";
+  Color passwordValid = Colors.white;
+
+  TextEditingController repeatPasswordCont = TextEditingController();
+  String repeatPasswordError = "";
+  Color repeatPasswordValid = Colors.white;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +55,7 @@ class Register extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         InkWell(
-                          onTap: () => onRegister(),
+                          onTap: () => widget.onRegister(),
                           child: Text(
                             'Přihlásit se',
                             style: TextStyle(
@@ -75,30 +91,36 @@ class Register extends StatelessWidget {
                     Column(
                       children: [
                         FormInput(
-                          controller: email,
+                          controller: emailCont,
                           labelText: 'EMAIL',
                           icon: Icons.check,
-                          iconColor: Colors.white,
+                          iconColor: emailValid,
+                          righText: emailError,
+                          rightTextColor: Colors.red,
                         ),
                         SizedBox(
                           height: 17,
                         ),
                         FormInput(
                           labelText: 'HESLO',
-                          controller: password,
+                          controller: passwordCont,
                           obscureText: true,
                           showObscureText: true,
-                          iconColor: Colors.white,
+                          iconColor: passwordValid,
+                          righText: passwordError,
+                          rightTextColor: Colors.red,
                         ),
                         SizedBox(
                           height: 17,
                         ),
                         FormInput(
                           labelText: 'HESLO ZNOVU',
-                          controller: password,
+                          controller: repeatPasswordCont,
                           obscureText: true,
                           showObscureText: false,
-                          iconColor: Colors.white,
+                          iconColor: repeatPasswordValid,
+                          righText: repeatPasswordError,
+                          rightTextColor: Colors.red,
                         ),
                       ],
                     ),
@@ -108,37 +130,41 @@ class Register extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Container(
-                    width: 240,
-                    height: 80,
-                    decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 255, 203, 105),
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(6),
-                        bottomLeft: Radius.circular(6),
+                  InkWell(
+                    onTap: () => register(emailCont.text, passwordCont.text,
+                        repeatPasswordCont.text, context),
+                    child: Container(
+                      width: 240,
+                      height: 80,
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 255, 203, 105),
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(6),
+                          bottomLeft: Radius.circular(6),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text(
+                            'Registrovat se',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          Icon(
+                            Icons.arrow_right_alt_rounded,
+                            size: 50,
+                          )
+                        ],
                       ),
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text(
-                          'Registrovat se',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                        SizedBox(
-                          width: 15,
-                        ),
-                        Icon(
-                          Icons.arrow_right_alt_rounded,
-                          size: 50,
-                        )
-                      ],
-                    ),
-                  ),
+                  )
                 ],
               ),
               SizedBox(
@@ -205,5 +231,94 @@ class Register extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<bool> emailValidation(String email) async {
+    if (email.isEmpty) {
+      setState(() {
+        emailError = "Nezadal si email";
+        emailValid = Colors.red;
+      });
+      return false;
+    } else if (!EmailValidator.validate(email)) {
+      setState(() {
+        emailError = "Email je neplatný";
+        emailCont.text = "";
+        emailValid = Colors.red;
+      });
+      return false;
+    }
+
+    setState(() {
+      emailError = "";
+      emailValid = Colors.green;
+    });
+
+    return true;
+  }
+
+  Future<bool> passwordValidation(
+      String password, String repeatPassword) async {
+    if (repeatPassword.isEmpty) {
+      setState(() {
+        repeatPasswordError = "Nezadal si heslo";
+        repeatPasswordValid = Colors.red;
+      });
+    } else {
+      setState(() {
+        repeatPasswordError = "";
+      });
+    }
+
+    RegExp regExp = RegExp(r'[!@#\$%\^&\*\(\)_\+\-=\[\]{};:"\\|,.<>\/?]');
+    // password is empty
+    if (password.isEmpty) {
+      setState(() {
+        passwordError = "Nezadal si heslo";
+        passwordValid = Colors.red;
+      });
+      return false;
+      // password doesnt have special symbol
+    } else if (!regExp.hasMatch(password)) {
+      setState(() {
+        passwordError = "Heslo neobsahuje speciální znak";
+        passwordValid = Colors.red;
+      });
+      return false;
+      // password doesnt match with repeat password
+    } else if (password != repeatPassword) {
+      setState(() {
+        passwordError = "Hesla se neshodují";
+        repeatPasswordError = "Hesla se neshodují";
+        passwordValid = Colors.red;
+      });
+      return false;
+    }
+
+    setState(() {
+      passwordError = "";
+      passwordValid = Colors.green;
+      repeatPasswordValid = Colors.green;
+    });
+    return true;
+  }
+
+  Future<void> register(
+    String email,
+    String password,
+    String repeatPassword,
+    BuildContext context,
+  ) async {
+    try {
+      bool isValidEmail = await emailValidation(email);
+      bool isValidPassword = await passwordValidation(password, repeatPassword);
+
+      if (isValidEmail && isValidPassword) {
+        AuthService().createUserWithEmailAndPassword(email, password);
+        Navigationcontroller.goToMakeProfile(context);
+      }
+    } catch (e) {
+      print(e.toString());
+    }
   }
 }
