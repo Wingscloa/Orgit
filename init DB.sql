@@ -9,7 +9,7 @@ CREATE TABLE Users (
 	Deleted BOOLEAN NOT NULL DEFAULT FALSE,
 	DeletedAt TIMESTAMP NULL,
 	CreatedAt TIMESTAMP DEFAULT NOW(),
-	LastActive TIMESTAMP NOT NULL,
+	LastActive TIMESTAMP NOT NULL DEFAULT NOW(),
 	TelephoneNumber varchar(16) NULL,
 	TelephonePrefix varchar(6) NULL,
 	Level INTEGER NOT NULL DEFAULT 1,
