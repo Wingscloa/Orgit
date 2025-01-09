@@ -1,5 +1,5 @@
 CREATE TABLE Users (
-	UserId INTFirstNameEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	UserId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	UserUID varchar(255) NOT NULL,
 	FirstName varchar(64) NOT NULL,
 	LastName varchar(64) NOT NULL,
@@ -9,7 +9,7 @@ CREATE TABLE Users (
 	Deleted BOOLEAN NOT NULL DEFAULT FALSE,
 	DeletedAt DATE NULL,
 	CreatedAt DATE DEFAULT NOW(),
-	LastActive DATE NOT NULL,
+	LastActive DATE NULL,
 	TelephoneNumber varchar(15) NOT NULL,
 	TelephonePrefix varchar(5) NOT NULL,
 	Level INTEGER NOT NULL DEFAULT 1,
@@ -19,13 +19,13 @@ CREATE TABLE Users (
 
 CREATE INDEX idx_users_email ON Users(Email);
 
-CREATE TYPE TitleGroupEnum AS ENUM ('specials', 'achievements', 'level', 'unique');
+CREATE TYPE titlegroup AS ENUM ('specials', 'achievements', 'level', 'unique');
 
 CREATE TABLE Titles (
 	TitleId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	TitleName varchar(64) NOT NULL UNIQUE,
 	TitleColor varchar(64) NOT NULL,
-	TitleGroup TitleGroupEnum NOT NULL,
+	TitleGroup titlegroup NOT NULL,
 	LevelReq INTEGER NULL,
 	Description varchar(255) NULL
 );
@@ -224,8 +224,3 @@ CREATE TABLE Reports (
 );
 
 CREATE INDEX idx_reports_userid ON Reports(UserId);
-
-
--- TO SEE PERMS
-
-SELECT rolname, rolpassword FROM pg_authid;
