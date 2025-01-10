@@ -224,3 +224,16 @@ CREATE TABLE Reports (
 );
 
 CREATE INDEX idx_reports_userid ON Reports(UserId);
+
+
+-- VIEWS
+
+CREATE VIEW email_exists AS
+SELECT 
+    email,
+    COUNT(*) AS email_count
+FROM 
+    users
+GROUP BY 
+    email;
+

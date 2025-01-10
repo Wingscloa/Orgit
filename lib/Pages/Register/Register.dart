@@ -1,6 +1,5 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:my_awesome_namer/Auth/Auth.dart';
 import 'package:my_awesome_namer/Components/Background/MenuBckg.dart';
 import 'package:my_awesome_namer/Components/BottomDots.dart';
 import 'package:my_awesome_namer/Components/FormInput.dart';
@@ -314,8 +313,10 @@ class _RegisterState extends State<Register> {
       bool isValidPassword = await passwordValidation(password, repeatPassword);
 
       if (isValidEmail && isValidPassword) {
-        AuthService().createUserWithEmailAndPassword(email, password);
-        Navigationcontroller.goToMakeProfile(context);
+        // creating email and push to page
+
+        // AuthService().createUserWithEmailAndPassword(email, password);
+        // Navigationcontroller.goToMakeProfile(context);
       }
     } catch (e) {
       print(e.toString());
