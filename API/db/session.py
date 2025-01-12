@@ -25,6 +25,7 @@ from db.models import reactions
 from db.models import notificationTypes
 from db.models import notifications
 from db.models import reports
+from db.models import category
 
 
 DATABASE_URL = "postgresql://admin:6Lpxd4hkS4E8s1IuxOA0WzCbWZgb@localhost/Orgit"
@@ -32,6 +33,8 @@ DATABASE_URL = "postgresql://admin:6Lpxd4hkS4E8s1IuxOA0WzCbWZgb@localhost/Orgit"
 engine = create_engine(DATABASE_URL, echo=True)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+Base.metadata.create_all(bind=engine)
 
 def createDBTables():
     Base.metadata.create_all(bind=engine)

@@ -19,16 +19,24 @@ CREATE TABLE Users (
 
 CREATE INDEX idx_users_email ON Users(Email);
 
-CREATE TYPE titlegroup AS ENUM ('specials', 'achievements', 'level', 'unique');
+CREATE TABLE Category(
+	CategoryId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	LevelReq INTEGER NULL,
+	Name varchar(32) NOT NULL
+);
+
 
 CREATE TABLE Titles (
 	TitleId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	TitleName varchar(64) NOT NULL UNIQUE,
 	TitleColor varchar(64) NOT NULL,
-	TitleGroup titlegroup NOT NULL,
+	CategoryId varchar(64) REFERENCES Category(CategoryId) ON DELETE CASCADE,
 	LevelReq INTEGER NULL,
+	AppDefault BOOLEAN NOT NULL DEFAULT FALSE,
 	Description varchar(255) NULL
 );
+
+
 
 CREATE TABLE UserTitles (
 	UserId INTEGER REFERENCES Users(UserId) ON DELETE CASCADE,
@@ -83,6 +91,12 @@ CREATE TABLE Groups (
 	CreatedBy INTEGER REFERENCES Users(UserId) ON DELETE CASCADE,
 	CreatedAt DATE DEFAULT NOW()
 );
+
+CREATE TABLE GroupTitles(
+	TitleId INTEGER REFERENCES Titles(TitleId) ON DELETE CASCADE,
+	GroupId INTEGER REFERENCES Groups(GroupId) ON DELETE CASCADE,
+	PRIMARY KEY (TitleId, GroupId)
+)
 
 CREATE TABLE GroupMembers (
 	GroupId INTEGER REFERENCES Groups(GroupId) ON DELETE CASCADE,
@@ -237,3 +251,49 @@ FROM
 GROUP BY 
     email;
 
+ -- ALL GROUPS ONLY Profile and Name
+
+CREATE VIEW AllGroups AS 
+	SELECT 
+		G.groupid,
+		G."name",
+		G.profilepic,
+		G.city
+	FROM groups as G;
+
+
+-- spojeny tituly zakladni aplikace a tituly skupiny uzivatele, ktera vraci potrebne veci pro zobrazeni
+CREATE OR REPLACE FUNCTION Func_get_all_titles(group_id INT)
+RETURNS TABLE (
+    titlename varchar(64),
+    titlecolor varchar(64),
+    levelreq INT,
+    description varchar(255),
+    categoryname varchar(32)
+) AS $$
+BEGIN
+    RETURN QUERY
+		SELECT -- tituly ze skupiny
+			titles.titlename,
+			titles.titlecolor,
+			titles.levelreq,
+			titles.description,
+			category."name"
+			
+			FROM grouptitles 
+				JOIN titles ON titles.titleid = grouptitles.titleid 
+				JOIN category ON titles.categoryid = category.categoryid
+		
+			WHERE grouptitles.groupid = group_id
+
+		UNION
+
+		SELECT titles.titlename, -- tituly ze zakladni aplikace
+			titles.titlecolor,
+			titles.levelreq,
+			titles.description,
+			category."name"
+			FROM titles JOIN category ON titles.categoryid = category.categoryid
+			WHERE titles.appdefault = TRUE;
+END;
+$$ LANGUAGE plpgsql;

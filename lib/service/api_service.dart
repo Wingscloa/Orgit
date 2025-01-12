@@ -9,5 +9,7 @@ abstract class ApiService {
   factory ApiService(Dio dio) = _ApiService;
 
   @GET('Users')
-  Future<UserModel> Users();
+  Future<UserModel> getUsers();
 }
+
+// flutter pub run build_runner build
