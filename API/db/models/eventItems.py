@@ -8,7 +8,7 @@ class EventItem(Base):
     # Columns
     eventitemid = Column(Integer, primary_key=True, autoincrement=True)
     eventid = Column(Integer, ForeignKey('events.eventid', ondelete='CASCADE'), nullable=False)
-    itemname = Column(String(255), nullable=False)
+    name = Column(String(255), nullable=False)
     quantity = Column(Integer, nullable=False, default=1)
     createdat = Column(TIMESTAMP, default='CURRENT_TIMESTAMP')
 

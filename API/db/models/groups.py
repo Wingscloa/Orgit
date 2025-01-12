@@ -11,6 +11,7 @@ class Group(Base):
     profilepic = Column(LargeBinary, nullable=False)
     name = Column(String(32), nullable=False)
     city = Column(String(32), nullable=False)
+    region = Column(String(32), nullable=False)
     leader = Column(Integer, ForeignKey('users.userid', ondelete='CASCADE'))
     description = Column(String(512), nullable=False)
     createdby = Column(Integer, ForeignKey('users.userid', ondelete='CASCADE'))

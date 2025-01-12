@@ -11,9 +11,11 @@ class Event(Base):
     name = Column(String(32), nullable=False)
     description = Column(String(512), nullable=False)
     profilepic = Column(LargeBinary, nullable=True)
-    begin = Column(TIMESTAMP, nullable=False)
-    end = Column(TIMESTAMP, nullable=False)
+    address = Column(String(255), nullable=False)
+    begins = Column(TIMESTAMP, nullable=False)
+    ends = Column(TIMESTAMP, nullable=False)
     createdat = Column(TIMESTAMP, default='CURRENT_TIMESTAMP')
+    colour = Column(String(7), nullable=True, default='#FFCB69')
 
     # Relationships
     group = relationship('Group', backref='events')

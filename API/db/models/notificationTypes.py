@@ -6,5 +6,5 @@ class NotificationType(Base):
 
     # Columns
     notificationtypeid = Column(Integer, primary_key=True, autoincrement=True)
-    typename = Column(String(64), nullable=False, unique=True)
+    name = Column(String(64), nullable=False, unique=True)
     description = Column(String(255), nullable=True)

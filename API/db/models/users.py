@@ -22,7 +22,9 @@ class User(Base):
     level = Column(Integer, nullable=False, default=1)
     experience = Column(Integer, nullable=False, default=0)
     settingsconfig = Column(LargeBinary, nullable=True)
-
+    birthday = Column(Date, nullable=False)
+    verified = Column(Boolean, nullable=False, default=False)
+    onnotify = Column(Boolean, nullable=False, default=True)
     # Indexes
     __table_args__ = (
         # Index for Email column

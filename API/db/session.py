@@ -26,6 +26,7 @@ from db.models import notificationTypes
 from db.models import notifications
 from db.models import reports
 from db.models import category
+from db.models import titlesIcons
 
 
 DATABASE_URL = "postgresql://admin:6Lpxd4hkS4E8s1IuxOA0WzCbWZgb@localhost/Orgit"

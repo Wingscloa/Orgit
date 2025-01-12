@@ -12,9 +12,21 @@ class UserCreate(BaseModel):
     telephoneprefix: str
     telephonenumber: str
     lastactive : datetime
+    birthday : datetime
 
-class UpdateUserSettings(BaseModel):
-    settingsconfig: bytes
+class UpdateUserForm(BaseModel):
+    userid : int
+    firstname : str
+    lastname : str
+    nickname : str
+    birthday : datetime
+    telephonenumber: str
+
+class DeleteUser(BaseModel):
+    userid : int
+    deleted : bool
+    deletedat : datetime
+    # lastactive == deletedat
 
 class UserResponse(BaseModel):
     userid: int
