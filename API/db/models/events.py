@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, TIMESTAMP, LargeBinary
 from sqlalchemy.orm import relationship
 from db.base import Base
+from datetime import datetime
 
 class Event(Base):
     __tablename__ = 'events'
@@ -14,7 +15,7 @@ class Event(Base):
     address = Column(String(255), nullable=False)
     begins = Column(TIMESTAMP, nullable=False)
     ends = Column(TIMESTAMP, nullable=False)
-    createdat = Column(TIMESTAMP, default='CURRENT_TIMESTAMP')
+    createdat = Column(TIMESTAMP, default=datetime.now())
     colour = Column(String(7), nullable=True, default='#FFCB69')
 
     # Relationships

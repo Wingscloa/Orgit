@@ -8,5 +8,4 @@ class Category(Base):
 
     # Columns
     categoryId = Column(Integer, primary_key=True, autoincrement=True)
-    levelreq = Column(Integer, nullable=True)
     name = Column(String(32), nullable=False)

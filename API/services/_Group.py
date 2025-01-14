@@ -13,7 +13,6 @@ async def DBcreateGroup(groupModel: GroupCreate, db: Session):
     db.commit()
     db.refresh(_groupModel)
 
-
 async def DBgetGroupById(groupid: int, db : Session):
     result = (db.query(Group)
               .filter(Group.groupid == groupid)

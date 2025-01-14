@@ -48,3 +48,11 @@ class UserResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+class userToGroup(BaseModel):
+    userid : int
+    groupid: int
+
+class sch_userToEvent(BaseModel):
+    eventid: int
+    userid : int

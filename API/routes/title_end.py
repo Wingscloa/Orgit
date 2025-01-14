@@ -77,4 +77,20 @@ async def allTitles(groupid: int):
         return HTTPException(status_code=200, detail=result)
     except Exception as err:
         db.close()
-        return HTTPException(status_code=400, detail=f"Contact support - Exception error : {err}")
+        return HTTPException(status_code=400, detail=f"Exception error : {err}")
+    
+@router.post('/titleToUser')
+async def titleToUser(model : titleToUser):
+    db = SessionLocal()
+    
+    try:
+        response = await DBtitleToUser(model=model,db=db)
+        db.close()
+    
+        if not response:
+            return HTTPException(status_code=404, detail="Not Found")
+    
+        return HTTPException(status_code=200, detail="Success")
+    
+    except Exception as err:
+        return err

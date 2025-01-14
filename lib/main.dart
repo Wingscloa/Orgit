@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:my_awesome_namer/Pages/Register/MainMenu.dart';
 import 'package:my_awesome_namer/Pages/Register/MakeProfile.dart';
+import 'package:my_awesome_namer/Pages/FigmaPages/Test.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,13 +35,15 @@ class _MyAppState extends State<MyApp> {
         debugShowCheckedModeBanner: false,
         home: Builder(
           builder: (context) {
-            if (FirebaseAuth.instance.currentUser != null) {
-              //sign in
-              return MakeProfile();
-            } else {
-              //sign out
-              return MainMenu();
-            }
+            //   if (FirebaseAuth.instance.currentUser != null) {
+            //     //sign in
+            //     return MakeProfile();
+            //   } else {
+            //     //sign out
+            //     return MainMenu();
+            //   }
+            // },
+            return Test();
           },
         ));
   }

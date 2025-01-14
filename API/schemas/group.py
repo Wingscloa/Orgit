@@ -10,3 +10,4 @@ class GroupCreate(BaseModel):
     description : str
     createdby : int
     createdat : datetime
+

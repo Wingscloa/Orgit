@@ -22,18 +22,18 @@ CREATE TABLE Users (
 
 CREATE INDEX idx_users_email ON Users(Email);
 
+
 CREATE TABLE Category(
 	CategoryId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	Name varchar(32) NOT NULL,
-	LevelReq INTEGER NULL
+	Name varchar(32) NOT NULL
 );
 
-
-CREATE TABLE LevelName(
-	LevelId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	GroupId INTEGER REFERENCES groups(GroupId) ON DELETE CASCADE,
-	Name varchar(16) NOT NULL,
-	LevelReq INTEGER NOT NULL
+CREATE TABLE TitlesIcons (
+	IconId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	Name varchar(32) NOT NULL,
+	Path TEXT NULL,
+	URL varchar(255) NULL,
+	Data BYTEA NULL
 );
 
 -- title = badget
@@ -41,19 +41,12 @@ CREATE TABLE Titles (
 	TitleId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	Name varchar(64) NOT NULL,
 	Color varchar(64) NOT NULL,
-	CategoryId varchar(64) REFERENCES Category(CategoryId) ON DELETE CASCADE,
+	CategoryId INTEGER REFERENCES Category(CategoryId) ON DELETE CASCADE,
 	LevelReq INTEGER NULL,
 	AppDefault BOOLEAN NOT NULL DEFAULT FALSE,
 	Description varchar(255) NULL,
 	Icon INTEGER REFERENCES TitlesIcons(IconId) ON DELETE CASCADE
 );
-
-CREATE TABLE TitlesIcons (
-	IconId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	Name varchar(32) NOT NULL,
-	assetPath varchar(64) NOT NULL
-);
-
 
 CREATE TABLE UserTitles (
 	UserId INTEGER REFERENCES Users(UserId) ON DELETE CASCADE,
@@ -61,23 +54,41 @@ CREATE TABLE UserTitles (
 	PRIMARY KEY (UserId, TitleId)
 );
 
-CREATE TABLE Permissions (
-	PermissionId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	Name varchar(32) NOT NULL UNIQUE,
-	Description varchar(255) NOT NULL
-);
-
 CREATE TABLE Roles (
 	RoleId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	Name varchar(32) NOT NULL UNIQUE,
-	Description varchar(255) NULL
+	Name varchar(32) NOT NULL,
+	Color varchar(7) NOT NULL,
+	Description varchar(255) NULL,
+	Admin BOOLEAN NOT NULL DEFAULT FALSE,
+	-- Duolingo Moderator
+	DuolingoCreateGroup BOOLEAN NOT NULL  DEFAULT FALSE,
+	DuolingoDeleteGroup BOOLEAN NOT NULL  DEFAULT FALSE,
+	DuolingoCreateQuest BOOLEAN NOT NULL DEFAULT FALSE,
+	DuolingoDeleteQuest BOOLEAN NOT NULL DEFAULT FALSE,
+	DuolingoValidationQuest BOOLEAN NOT NULL DEFAULT FALSE,
+	-- Chat Moderator
+	ChatDeleteMsg BOOLEAN NOT NULL DEFAULT FALSE,
+	ChatMuteMsg BOOLEAN NOT NULL DEFAULT FALSE,
+	-- Organisation
+	EditParticipants BOOLEAN NOT NULL DEFAULT FALSE,
+	EventDelete BOOLEAN NOT NULL DEFAULT FALSE,
+	EventCreate BOOLEAN NOT NULL DEFAULT FALSE,
+	-- Group Moderator
+	GroupKickUser BOOLEAN NOT NULL DEFAULT FALSE,
+	GroupBlockUser BOOLEAN NOT NULL DEFAULT FALSE,
+	GroupAcceptUser BOOLEAN NOT NULL DEFAULT FALSE,
+	GroupAddRole BOOLEAN NOT NULL DEFAULT FALSE,
+	-- Report Moderator
+	ReportView BOOLEAN NOT NULL DEFAULT FALSE,
+	ReportDelete BOOLEAN NOT NULL DEFAULT FALSE,
+	ReportAnswer BOOLEAN NOT NULL DEFAULT FALSE
 );
 
-CREATE TABLE RolePermissions (
-	RoleId INTEGER REFERENCES Roles(RoleId) ON DELETE CASCADE,
-	PermissionId INTEGER REFERENCES Permissions(PermissionId) ON DELETE CASCADE,
-	PRIMARY KEY (RoleId, PermissionId)
-);
+INSERT INTO Roles (Name,Color,Description,Admin)
+	VALUES ('Owner','#0c8ce9','Have all perms to do',TRUE);
+
+
+
 
 CREATE TABLE UserRoles (
 	UserId INTEGER REFERENCES Users(UserId) ON DELETE CASCADE,
@@ -113,11 +124,18 @@ CREATE TABLE Groups (
 	CreatedAt DATE DEFAULT NOW()
 );
 
+CREATE TABLE LevelName(
+	LevelId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	GroupId INTEGER REFERENCES groups(GroupId) ON DELETE CASCADE,
+	Name varchar(16) NOT NULL,
+	LevelReq INTEGER NOT NULL
+);
+
 CREATE TABLE GroupTitles(
 	TitleId INTEGER REFERENCES Titles(TitleId) ON DELETE CASCADE,
 	GroupId INTEGER REFERENCES Groups(GroupId) ON DELETE CASCADE,
 	PRIMARY KEY (TitleId, GroupId)
-)
+);
 
 CREATE TABLE GroupMembers (
 	GroupId INTEGER REFERENCES Groups(GroupId) ON DELETE CASCADE,
@@ -329,3 +347,7 @@ BEGIN
 			WHERE titles.appdefault = TRUE;
 END;
 $$ LANGUAGE plpgsql;
+
+
+
+

@@ -11,3 +11,6 @@ class createTitle(BaseModel):
     icon : int = 1
 
 
+class titleToUser(BaseModel):
+    userid: int
+    titleid: int

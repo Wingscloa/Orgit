@@ -2,6 +2,8 @@ from fastapi import APIRouter, HTTPException
 from db.session import SessionLocal
 from services._User import *
 from schemas.users import *
+from services._exists import *
+
 
 
 router = APIRouter()
@@ -76,3 +78,35 @@ async def userById(userid: int):
     except Exception as err:
         db.close()
         return HTTPException(status_code=400, detail=f"Contact support - Exception Error {err}")
+
+
+@router.post('/UserToGroup')
+async def userToGroup(model: userToGroup):
+    db = SessionLocal()
+
+    try:
+        response = await DBuserToGroup(model=model, db=db)
+        db.close()
+        
+        return HTTPException(status_code=200, detail="Success")
+    
+    except Exception as err:
+        db.close()
+        return HTTPException(status_code=400, detail=f"Contact support - Exception error : {err}")
+    
+
+@router.post('/UserToEvent')
+async def userToEvent(model: sch_userToEvent):
+    db = SessionLocal()
+    
+    try:
+        response = await DBuserToEvent(model=model,db=db)
+        db.close()
+    
+        if not response:
+            return HTTPException(status_code=404, detail="Not Found")
+    
+        return HTTPException(status_code=200, detail="Success")
+    
+    except Exception as err:
+        return HTTPException(status_code=404, detail=f"{err}")

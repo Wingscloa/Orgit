@@ -180,3 +180,5 @@ app.*.symbols
 !/dev/ci/**/Gemfile.lock
 !.vscode/settings.json
 >>>>>>> f9fa9ca75d7fcd091a552752682b03011e8b3406
+#MINE
+.env
