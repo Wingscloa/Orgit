@@ -22,6 +22,9 @@ class UpdateUserForm(BaseModel):
     birthday : datetime
     telephonenumber: str
 
+class sch_userToEvent(BaseModel):
+    eventid: int
+    userid : int
 class DeleteUser(BaseModel):
     userid : int
     deleted : bool
@@ -53,6 +56,3 @@ class userToGroup(BaseModel):
     userid : int
     groupid: int
 
-class sch_userToEvent(BaseModel):
-    eventid: int
-    userid : int

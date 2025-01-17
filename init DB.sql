@@ -60,25 +60,25 @@ CREATE TABLE Roles (
 	Color varchar(7) NOT NULL,
 	Description varchar(255) NULL,
 	Admin BOOLEAN NOT NULL DEFAULT FALSE,
-	-- Duolingo Moderator
+	-- Duolingo Moderator - 5
 	DuolingoCreateGroup BOOLEAN NOT NULL  DEFAULT FALSE,
 	DuolingoDeleteGroup BOOLEAN NOT NULL  DEFAULT FALSE,
 	DuolingoCreateQuest BOOLEAN NOT NULL DEFAULT FALSE,
 	DuolingoDeleteQuest BOOLEAN NOT NULL DEFAULT FALSE,
 	DuolingoValidationQuest BOOLEAN NOT NULL DEFAULT FALSE,
-	-- Chat Moderator
+	-- Chat Moderator - 2
 	ChatDeleteMsg BOOLEAN NOT NULL DEFAULT FALSE,
 	ChatMuteMsg BOOLEAN NOT NULL DEFAULT FALSE,
-	-- Organisation
+	-- Organisation - 3
 	EditParticipants BOOLEAN NOT NULL DEFAULT FALSE,
 	EventDelete BOOLEAN NOT NULL DEFAULT FALSE,
 	EventCreate BOOLEAN NOT NULL DEFAULT FALSE,
-	-- Group Moderator
+	-- Group Moderator - 4
 	GroupKickUser BOOLEAN NOT NULL DEFAULT FALSE,
 	GroupBlockUser BOOLEAN NOT NULL DEFAULT FALSE,
 	GroupAcceptUser BOOLEAN NOT NULL DEFAULT FALSE,
 	GroupAddRole BOOLEAN NOT NULL DEFAULT FALSE,
-	-- Report Moderator
+	-- Report Moderator - 3
 	ReportView BOOLEAN NOT NULL DEFAULT FALSE,
 	ReportDelete BOOLEAN NOT NULL DEFAULT FALSE,
 	ReportAnswer BOOLEAN NOT NULL DEFAULT FALSE
@@ -86,9 +86,6 @@ CREATE TABLE Roles (
 
 INSERT INTO Roles (Name,Color,Description,Admin)
 	VALUES ('Owner','#0c8ce9','Have all perms to do',TRUE);
-
-
-
 
 CREATE TABLE UserRoles (
 	UserId INTEGER REFERENCES Users(UserId) ON DELETE CASCADE,
@@ -104,7 +101,7 @@ CREATE TABLE ToDo(
 	ToComplete TIMESTAMP NULL,
 	Completed BOOLEAN DEFAULT FALSE,
 	CreatedAt TIMESTAMP DEFAULT NOW(),
-	Music varchar(255) NULL DEFAULT 'joy',
+	Music varchar(16) NULL DEFAULT 'joy',
 	Repeat BOOLEAN DEFAULT FALSE
 );
 
@@ -115,7 +112,7 @@ CREATE INDEX idx_todo_userid ON ToDo(UserId);
 CREATE TABLE Groups (
 	GroupId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	ProfilePic BYTEA NOT NULL,
-	Name varchar(32) NOT NULL,
+	Name varchar(32) NOT NULL UNIQUE,
 	City varchar(32) NOT NULL,
 	Region varchar(32) NOT NULL,
 	Leader INTEGER REFERENCES Users(UserId) ON DELETE CASCADE,
@@ -147,10 +144,10 @@ CREATE TABLE Events (
 	EventId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	GroupId INTEGER REFERENCES Groups(GroupId) ON DELETE CASCADE,
 	Name varchar(32) NOT NULL,
-	Colour char(7) NULL DEFAULT '#FFCB69',
+	Color char(7) NULL DEFAULT '#FFCB69',
 	Description varchar(512) NOT NULL,
 	ProfilePic BYTEA NULL,
-	Address varchar(255) NOT NULL,
+	Address varchar(128) NOT NULL,
 	Begins TIMESTAMP NOT NULL,
 	Ends TIMESTAMP NOT NULL,
 	CreatedAt TIMESTAMP DEFAULT NOW()
