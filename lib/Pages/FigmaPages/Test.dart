@@ -1,249 +1,92 @@
 import 'package:flutter/material.dart';
+import 'package:my_awesome_namer/models/user_model.dart';
+import 'package:my_awesome_namer/service/api_service.dart';
+import 'package:dio/dio.dart';
 
 class Test extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
-      width: 440,
-      height: 93.50,
-      margin: EdgeInsets.only(top: 200),
-      child: Stack(
-        children: [
-          Positioned(
-            left: 0,
-            top: 24.50,
-            child: Container(
-              width: 440,
-              height: 69,
-              decoration: ShapeDecoration(
-                color: Color(0xFF232323),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    topRight: Radius.circular(10),
-                    bottomLeft: Radius.circular(40),
-                    bottomRight: Radius.circular(40),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            left: 241,
-            top: 0,
-            child: Container(
-              width: 110,
-              height: 70.50,
-              child: Stack(
-                children: [
-                  Positioned(
-                    left: 25,
-                    top: 10.50,
-                    child: Container(
-                      width: 60,
-                      height: 60,
-                      decoration: ShapeDecoration(
-                        color: Color(0xFFE0AF1C),
-                        shape: OvalBorder(),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Positioned(
-            left: 54,
-            top: 25.50,
-            child: Container(
-              width: 333,
-              height: 50,
-              child: Stack(
-                children: [
-                  Positioned(
-                    left: 78,
-                    top: 0,
-                    child: Container(
-                      width: 255,
-                      height: 50,
-                      child: Stack(
-                        children: [
-                          Positioned(
-                            left: 150,
-                            top: 0,
-                            child: Container(
-                              width: 30,
-                              height: 32,
-                              child: Stack(
-                                children: [
-                                  Positioned(
-                                    left: 0,
-                                    top: 2,
-                                    child: Container(
-                                      width: 30,
-                                      height: 30,
-                                      clipBehavior: Clip.antiAlias,
-                                      decoration: BoxDecoration(),
-                                      child: FlutterLogo(),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    left: 0,
-                                    top: 0,
-                                    child: Container(
-                                      width: 30,
-                                      height: 30,
-                                      decoration: BoxDecoration(
-                                          color: Color(0x00D9D9D9)),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            left: 75,
-                            top: 18,
-                            child: Container(
-                              width: 30,
-                              height: 30,
-                              child: Stack(
-                                children: [
-                                  Positioned(
-                                    left: 0,
-                                    top: 0,
-                                    child: Container(
-                                      width: 30,
-                                      height: 30,
-                                      clipBehavior: Clip.antiAlias,
-                                      decoration: BoxDecoration(),
-                                      child: FlutterLogo(),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    left: 0,
-                                    top: 0,
-                                    child: Container(
-                                      width: 30,
-                                      height: 30,
-                                      decoration: BoxDecoration(
-                                          color: Color(0x00D9D9D9)),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            left: 225,
-                            top: 20,
-                            child: Container(
-                              width: 30,
-                              height: 30,
-                              child: Stack(
-                                children: [
-                                  Positioned(
-                                    left: 0,
-                                    top: 0,
-                                    child: Container(
-                                      width: 30,
-                                      height: 30,
-                                      padding: const EdgeInsets.all(5),
-                                      clipBehavior: Clip.antiAlias,
-                                      decoration: BoxDecoration(),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Container(
-                                              width: 20,
-                                              height: 20,
-                                              child: Stack()),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    left: 0,
-                                    top: 0,
-                                    child: Container(
-                                      width: 30,
-                                      height: 30,
-                                      decoration: BoxDecoration(
-                                          color: Color(0x00D9D9D9)),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            left: 0,
-                            top: 18,
-                            child: Container(
-                              width: 30,
-                              height: 30,
-                              child: Stack(
-                                children: [
-                                  Positioned(
-                                    left: 0,
-                                    top: 0,
-                                    child: Container(
-                                      width: 30,
-                                      height: 30,
-                                      decoration: BoxDecoration(
-                                          color: Color(0x00D9D9D9)),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    left: 0,
-                                    top: 0,
-                                    child: Container(
-                                      width: 30,
-                                      height: 30,
-                                      clipBehavior: Clip.antiAlias,
-                                      decoration: BoxDecoration(),
-                                      child: FlutterLogo(),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    left: 2,
-                    top: 18,
-                    child: Container(
-                      width: 30,
-                      height: 30,
-                      clipBehavior: Clip.antiAlias,
-                      decoration: BoxDecoration(),
-                      child: FlutterLogo(),
-                    ),
-                  ),
-                  Positioned(
-                    left: 0,
-                    top: 0,
-                    child: Container(
-                      width: 30,
-                      height: 30,
-                      decoration: BoxDecoration(color: Color(0x00D9D9D9)),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
+      appBar: AppBar(
+        backgroundColor: const Color(0xff1D1E22),
+        centerTitle: true,
+        title: const Text('Retrofit test'),
       ),
-    ));
+      body: InkWell(
+        onTap: _testAPI,
+        child: Container(
+          width: 100,
+          height: 100,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            color: Colors.black,
+          ),
+          child: Center(
+            child: Text(
+              'Test API',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _testAPI() {
+    final apiService =
+        ApiService(Dio(BaseOptions(contentType: "application/json")));
+
+    var users = apiService.getUsers();
+
+    print(users);
+  }
+
+  FutureBuilder _body() {
+    final apiService =
+        ApiService(Dio(BaseOptions(contentType: "application/json")));
+
+    return FutureBuilder(
+        future: apiService.getUsers(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            final List<UserModel> users = snapshot.data!;
+            return _users(users);
+          } else {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        });
+  }
+
+  Widget _users(List<UserModel> users) {
+    return ListView.builder(
+      itemCount: users.length,
+      itemBuilder: (context, index) {
+        return Container(
+          margin: EdgeInsets.all(16),
+          padding: EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: Colors.black38, width: 1),
+          ),
+          child: Column(
+            children: [
+              Text(
+                users[index].firstname + users[index].lastname,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }
