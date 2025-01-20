@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
-from schemas.todo import *
-from services._todo import *
-from db.session import SessionLocal
+from ..schemas.todo import *
+from ..services._todo import *
+from ..db.session import SessionLocal
 
 
 router = APIRouter()

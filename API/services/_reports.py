@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from db.models.reports import Report
-from schemas.reports import *
+from ..db.models.reports import Report
+from ..schemas.reports import *
 
 async def DBCreateReport(model: CreateReport, db: Session):
     _newReport = Report(**model.model_dump())

@@ -1,9 +1,8 @@
 from fastapi import APIRouter, HTTPException
-from db.session import SessionLocal
-from services._User import *
-from schemas.users import *
-from services._exists import *
-
+from ..db.session import SessionLocal
+from ..services._User import *
+from ..schemas.users import *
+from ..services._exists import *
 
 
 router = APIRouter()
@@ -34,11 +33,11 @@ async def addUser(userModel : UserCreate):
         return HTTPException(status_code=400, detail="Parameters are not correct")     
 
 @router.put('/User')
-async def UpdateUser(model : UpdateUserForm):
+async def CreateProfile(model : CreateProfileForm):
     db = SessionLocal()
 
     try:
-        response = await DBupdateUserForm(model=model, db=db)
+        response = await DBCreateProfileForm(model=model, db=db)
         db.close()
         if not response:
             return HTTPException(status_code=404,detail="User is not found")
@@ -62,12 +61,12 @@ async def deleteUser(model : DeleteUser):
         return HTTPException(status_code=400, detail=f"Contact support - Exception Error {err}")
 
 
-@router.get('/UserById/{userid}')
-async def userById(userid: int):
+@router.get('/UserByUId/{useruid}')
+async def userByUid(useruid: str):
     db = SessionLocal()
 
     try:
-        result = await DBgetUserById(userid=userid,db=db)
+        result = await DBgetUserByUid(useruid=useruid,db=db)
         db.close()
 
         if not result:
@@ -110,3 +109,4 @@ async def userToEvent(model: sch_userToEvent):
     
     except Exception as err:
         return HTTPException(status_code=404, detail=f"{err}")
+    

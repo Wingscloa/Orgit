@@ -1,6 +1,7 @@
 from pydantic import BaseModel, EmailStr
 from typing import Optional
 from datetime import datetime
+import base64
 
 class UserCreate(BaseModel):
     useruid: str
@@ -14,13 +15,25 @@ class UserCreate(BaseModel):
     lastactive : datetime
     birthday : datetime
 
-class UpdateUserForm(BaseModel):
-    userid : int
-    firstname : str
-    lastname : str
-    nickname : str
-    birthday : datetime
+    class Config:
+        json_encoders = {
+            bytes: lambda v: base64.b64encode(v).decode('utf-8'),
+        }
+
+class CreateProfileForm(BaseModel):
+    useruid: str
+    firstname: str
+    lastname: str
+    nickname: str
+    profileicon: bytes
+    telephoneprefix: str
     telephonenumber: str
+    birthday : datetime
+
+    class Config:
+        json_encoders = {
+            bytes: lambda v: base64.b64encode(v).decode('utf-8'),
+        }
 
 class sch_userToEvent(BaseModel):
     eventid: int

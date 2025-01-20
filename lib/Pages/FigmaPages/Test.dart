@@ -1,7 +1,11 @@
+import 'dart:typed_data';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:my_awesome_namer/models/user_model.dart';
+import 'package:my_awesome_namer/models/response_model.dart';
 import 'package:my_awesome_namer/service/api_service.dart';
 import 'package:dio/dio.dart';
+import 'package:logger/logger.dart';
 
 class Test extends StatelessWidget {
   @override
@@ -13,7 +17,7 @@ class Test extends StatelessWidget {
         title: const Text('Retrofit test'),
       ),
       body: InkWell(
-        onTap: _testAPI,
+        onTap: _emailTest,
         child: Container(
           width: 100,
           height: 100,
@@ -35,58 +39,52 @@ class Test extends StatelessWidget {
     );
   }
 
-  void _testAPI() {
-    final apiService =
-        ApiService(Dio(BaseOptions(contentType: "application/json")));
+  void _testAPIGet() async {
+    final logger = Logger();
+    final dio = Dio();
+    dio.options.headers['Demo-testovani'] = 'Demo testing';
+    final client = RestClient(dio);
 
-    var users = apiService.getUsers();
+    final response = await client.getUsers();
 
-    print(users);
+    logger.i(response.detail[0].nickname);
   }
 
-  FutureBuilder _body() {
-    final apiService =
-        ApiService(Dio(BaseOptions(contentType: "application/json")));
+  // bytes ==> base64 vzdy
+  // vzdy zkontrolovat zda konvertace modelu do JSNU je spravna, jinak se odesle s
+  //jinym klicem a jinou hodnotu, neprojde validaci pres Pydantic schema
+  void _testAPIPost() async {
+    // Sample data
+    final logger = Logger();
 
-    return FutureBuilder(
-        future: apiService.getUsers(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            final List<UserModel> users = snapshot.data!;
-            return _users(users);
-          } else {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        });
+    final dio = Dio();
+    dio.options.headers['Demo-testovani'] = 'Demo testing';
+    final client = RestClient(dio);
+
+    userAddSchema user = userAddSchema(
+        useruid: 'dartTest',
+        firstname: 'dartTest',
+        lastactive: DateTime.now(),
+        nickname: 'dartTest',
+        email: 'dartTest@gmail.com',
+        profileicon: Uint8List.fromList([0, 1, 2, 3]),
+        telephonenumber: '704167980',
+        telephoneprefix: '123',
+        birthday: DateTime.now(),
+        lastname: 'Eder');
+
+    print(user.toJson());
+
+    client.createUser(user.toJson());
   }
 
-  Widget _users(List<UserModel> users) {
-    return ListView.builder(
-      itemCount: users.length,
-      itemBuilder: (context, index) {
-        return Container(
-          margin: EdgeInsets.all(16),
-          padding: EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: Colors.black38, width: 1),
-          ),
-          child: Column(
-            children: [
-              Text(
-                users[index].firstname + users[index].lastname,
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-            ],
-          ),
-        );
-      },
-    );
+  void _emailTest() async {
+    final dio = Dio();
+
+    final client = RestClient(dio);
+
+    boolResponse bool = await client.doesEmailExists("dawdawdaw@example.com");
+
+    print(bool.detail);
   }
 }

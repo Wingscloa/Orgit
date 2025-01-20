@@ -1,26 +1,34 @@
 import 'dart:io';
+import 'dart:typed_data';
+import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:my_awesome_namer/Auth/Auth.dart';
 import 'package:my_awesome_namer/Components/Background/MenuBckg.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:my_awesome_namer/Components/BottomDots.dart';
 import 'package:my_awesome_namer/Components/FormInput.dart';
+import 'package:my_awesome_namer/NavigationController.dart';
+import 'package:my_awesome_namer/models/response_model.dart';
+import 'package:my_awesome_namer/models/user_model.dart';
+import 'package:my_awesome_namer/service/api_service.dart';
 
 class MakeProfile extends StatefulWidget {
-  final nameCont = TextEditingController();
+  final useruid = FirebaseAuth.instance.currentUser!.uid;
+  final firstNameCont = TextEditingController();
   final lastNameCont = TextEditingController();
   final nicknameCont = TextEditingController();
-  final prefixNumberCont = TextEditingController();
+  final telephonePrefixCont = TextEditingController();
   final telephoneCont = TextEditingController();
   final dateCont = TextEditingController();
+  var selectedImage;
   @override
   State<MakeProfile> createState() => _MakeProfileState();
 }
 
 class _MakeProfileState extends State<MakeProfile> {
-  File? _selectedImage;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,7 +73,7 @@ class _MakeProfileState extends State<MakeProfile> {
                 ),
                 ProfileIcon(
                   Ontap: _pickImageFromGallery,
-                  image: _selectedImage,
+                  image: widget.selectedImage,
                 ),
                 SizedBox(
                   height: 30,
@@ -77,7 +85,7 @@ class _MakeProfileState extends State<MakeProfile> {
                       children: [
                         FormInput(
                           labelText: 'Jméno',
-                          controller: widget.nameCont,
+                          controller: widget.firstNameCont,
                           iconColor: Colors.white,
                         ),
                         SizedBox(
@@ -122,7 +130,16 @@ class _MakeProfileState extends State<MakeProfile> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     InkWell(
-                      onTap: () => AuthService().signOut(),
+                      onTap: () => createProfile(
+                          widget.useruid,
+                          widget.firstNameCont.text,
+                          widget.lastNameCont.text,
+                          widget.nicknameCont.text,
+                          widget.telephonePrefixCont.text,
+                          widget.telephoneCont.text,
+                          widget.dateCont.text,
+                          widget.selectedImage,
+                          context),
                       child: Container(
                         width: 290,
                         height: 60,
@@ -172,6 +189,60 @@ class _MakeProfileState extends State<MakeProfile> {
         ));
   }
 
+  // Future<Null> getUser() async {
+  //   final dio = Dio();
+  //   final client = RestClient(dio);
+  //   Map<String, dynamic> requestData = {
+  //     "useruid": "pSUFIt1XmnYnQB08M7kAIV3qBTD2"
+  //   };
+
+  //   ApiResponseUser response =
+  //       await client.getUserByUid("pSUFIt1XmnYnQB08M7kAIV3qBTD2");
+
+  //   Logger log = Logger();
+
+  //   log.i(response.detail.nickname);
+  // }
+
+  Future<void> createProfile(
+      useruid,
+      firstname,
+      lastname,
+      nickname,
+      telephoneprefix,
+      telephonenumber,
+      birthday,
+      File profileicon,
+      BuildContext context) async {
+    try {
+      final dio = Dio();
+
+      final client = RestClient(dio);
+
+      Uint8List profileIconBytes = await profileicon.readAsBytes();
+
+      userCreateProfile profile = userCreateProfile(
+        useruid: useruid,
+        firstname: firstname,
+        lastname: lastname,
+        nickname: nickname,
+        profileicon: profileIconBytes,
+        telephonenumber: telephonenumber,
+        telephoneprefix: telephoneprefix,
+        birthday: DateTime.now(),
+      );
+
+      defaultResponse response = await client.updateProfile(profile.toJson());
+
+      if (response.status_code == 200) {
+        Navigationcontroller.goToWelcomeScreen(context);
+      }
+    } on Exception catch (_) {
+      Logger log = Logger();
+      log.i(_);
+    }
+  }
+
   Future _pickImageFromGallery() async {
     try {
       final returnedImage =
@@ -179,7 +250,7 @@ class _MakeProfileState extends State<MakeProfile> {
 
       if (returnedImage != null) {
         setState(() {
-          _selectedImage = File(returnedImage.path);
+          widget.selectedImage = File(returnedImage.path);
         });
       }
     } catch (e) {
@@ -234,7 +305,7 @@ class TelephoneInput extends StatelessWidget {
                 padding: const EdgeInsets.all(12.0),
                 child: TextField(
                   decoration: null,
-                  controller: widget.prefixNumberCont,
+                  controller: widget.telephonePrefixCont,
                   style: TextStyle(
                     color: Colors.grey,
                     fontWeight: FontWeight.bold,

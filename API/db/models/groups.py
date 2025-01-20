@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Date, LargeBinary
 from sqlalchemy.orm import relationship
-from db.base import Base
+from ...db.base import Base
 from datetime import datetime
 
 class Group(Base):

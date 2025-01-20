@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, TIMESTAMP
 from sqlalchemy.orm import relationship
-from db.base import Base
+from ...db.base import Base
 
 class EventItem(Base):
     __tablename__ = 'eventitems'

@@ -21,6 +21,7 @@ CREATE TABLE Users (
 );
 
 CREATE INDEX idx_users_email ON Users(Email);
+CREATE INDEX idx_users_useruid ON Users(UserUID);
 
 
 CREATE TABLE Category(

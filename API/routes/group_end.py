@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException
-from db.session import SessionLocal
-from services._Group import *
-from schemas.group import *
-from services._views import DBallGroupsFromTo, DBsearchGroupByName, DBnearGroup
+from ..db.session import SessionLocal
+from ..services._Group import *
+from ..schemas.group import *
+from ..services._views import DBallGroupsFromTo, DBsearchGroupByName, DBnearGroup
 
 
 router = APIRouter()

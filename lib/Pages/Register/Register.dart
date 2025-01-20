@@ -1,11 +1,20 @@
+import 'dart:typed_data';
+import 'package:my_awesome_namer/NavigationController.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:my_awesome_namer/Components/Background/MenuBckg.dart';
 import 'package:my_awesome_namer/Components/BottomDots.dart';
 import 'package:my_awesome_namer/Components/FormInput.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:my_awesome_namer/Components/SocialButton.dart';
-import 'package:my_awesome_namer/NavigationController.dart';
+import 'package:my_awesome_namer/models/response_model.dart';
+import 'package:my_awesome_namer/models/user_model.dart';
+import 'package:my_awesome_namer/service/api_service.dart';
+import 'package:dio/dio.dart';
+import 'package:logger/logger.dart';
+import 'package:my_awesome_namer/Auth/Auth.dart';
+import 'dart:convert';
 
 class Register extends StatefulWidget {
   final VoidCallback onRegister;
@@ -247,7 +256,22 @@ class _RegisterState extends State<Register> {
       });
       return false;
     }
+    // API service
+    try {
+      bool emailExist = await emailExists(email);
 
+      if (emailExist) {
+        setState(() {
+          emailError = "Tento email již existuje";
+          emailValid = Colors.red;
+        });
+        return false;
+      }
+    } on Exception catch (_) {
+      Logger logger = Logger();
+      logger.i(_);
+    }
+    // Alls good
     setState(() {
       emailError = "";
       emailValid = Colors.green;
@@ -290,6 +314,7 @@ class _RegisterState extends State<Register> {
         passwordError = "Hesla se neshodují";
         repeatPasswordError = "Hesla se neshodují";
         passwordValid = Colors.red;
+        repeatPasswordValid = Colors.red;
       });
       return false;
     }
@@ -308,18 +333,55 @@ class _RegisterState extends State<Register> {
     String repeatPassword,
     BuildContext context,
   ) async {
+    Logger logger = Logger();
+    logger.i(email);
+    logger.i(password);
+    logger.i(repeatPassword);
     try {
       bool isValidEmail = await emailValidation(email);
       bool isValidPassword = await passwordValidation(password, repeatPassword);
 
       if (isValidEmail && isValidPassword) {
-        // creating email and push to page
-
-        // AuthService().createUserWithEmailAndPassword(email, password);
-        // Navigationcontroller.goToMakeProfile(context);
+        // register
+        try {
+          await AuthService().createUserWithEmailAndPassword(email, password);
+          // taking useruid
+          String userUID = FirebaseAuth.instance.currentUser!.uid;
+          // ini. model
+          userAddSchema user = userAddSchema(
+              useruid: userUID,
+              firstname: "",
+              lastname: "",
+              nickname: "",
+              email: email,
+              profileicon: Uint8List.fromList([0]),
+              telephoneprefix: "",
+              telephonenumber: "",
+              lastactive: DateTime.now(),
+              birthday: DateTime.now());
+          // API service
+          final dio = Dio();
+          final client = RestClient(dio);
+          await client.createUser(user.toJson()); // des. user and post to API
+          // Push to page
+          Navigationcontroller.goToMakeProfile(context);
+        } on Exception catch (_) {
+          Logger log = Logger();
+          log.i(_);
+        }
       }
     } catch (e) {
       print(e.toString());
     }
+  }
+
+  Future<bool> emailExists(String email) async {
+    final dio = Dio();
+
+    final client = RestClient(dio);
+
+    boolResponse bool = await client.doesEmailExists(email);
+
+    return bool.detail;
   }
 }

@@ -1,7 +1,7 @@
 from fastapi import HTTPException, APIRouter
-from db.session import SessionLocal
-from schemas.notifications import *
-from services._notifications import *
+from ..db.session import SessionLocal
+from ..schemas.notifications import *
+from ..services._notifications import *
 
 
 router = APIRouter()

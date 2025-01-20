@@ -1,6 +1,6 @@
-from schemas.todo import *
-from db.models.users import User
-from db.models.toDo import ToDo
+from ..schemas.todo import *
+from ..db.models.users import User
+from ..db.models.toDo import ToDo
 from sqlalchemy.orm import Session
 
 async def DBcreateToDo(model : ToDoCreate, db : Session):

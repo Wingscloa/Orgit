@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, ForeignKey, Enum
 from sqlalchemy.orm import relationship
 from sqlalchemy.schema import Index
-from db.base import Base
+from ...db.base import Base
 from enum import Enum as PyEnum
 
 class EventPartStatus(PyEnum):

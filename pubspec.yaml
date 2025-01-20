@@ -10,6 +10,8 @@ environment:
 
 dependencies:
   http: ^1.0.0
+  logger: ^2.5.0
+
   flutter:
     sdk: flutter
 
@@ -22,7 +24,6 @@ dependencies:
   image_picker: ^1.1.2
   email_validator: ^3.0.0
   retrofit: ^4.4.2
-  logger: ^2.4.0
   json_annotation: ^4.9.0
 
 dev_dependencies:

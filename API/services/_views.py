@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from db.models.EmailExists import EmailExists
-from db.models.AllGroups import AllGroups
+from ..db.models.EmailExists import EmailExists
+from ..db.models.AllGroups import AllGroups
 
 
 async def DBemailExists(email:str, db : Session):

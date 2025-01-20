@@ -1,11 +1,11 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
-from schemas.title import *
-from db.models.titles import Title
+from ..schemas.title import *
+from ..db.models.titles import Title
 from sqlalchemy import text
-from db.models.grouptitles import GroupTitles
-from db.models.userTitles import UserTitle
-from services._exists import *
+from ..db.models.grouptitles import GroupTitles
+from ..db.models.userTitles import UserTitle
+from ..services._exists import *
 
 async def DBtitleCreate(titleModel: createTitle, db: Session):
     _title = Title(

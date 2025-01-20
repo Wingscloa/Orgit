@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from db.base import Base
-from db.models import (users, titles, userTitles, roles
+from ..db.base import Base
+from ..db.models import (users, titles, userTitles, roles
                        ,userRoles, toDo, groups, groupMembers, events, eventItems
                        ,eventParticipants, groupTree, bubbleGroups, bubbleQuests,
                        completedQuests, chat, chatParticipants, messages, reactions,

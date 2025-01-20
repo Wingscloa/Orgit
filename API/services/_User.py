@@ -1,10 +1,10 @@
-from db.models.users import User 
+from ..db.models.users import User 
 from sqlalchemy.orm import Session
-from schemas.users import *
-from db.models.users import User
-from db.models.groupMembers import GroupMember
-from db.models.eventParticipants import EventParticipant
-from services._exists import *
+from ..schemas.users import *
+from ..db.models.users import User
+from ..db.models.groupMembers import GroupMember
+from ..db.models.eventParticipants import EventParticipant
+from ..services._exists import *
 
 
 async def DBcreateUser(userModel: UserCreate, db: Session):
@@ -23,17 +23,17 @@ async def DBgetUsers(db: Session):
     db.flush()
     return response
 
-async def DBgetUserById(userid: int, db: Session):
+async def DBgetUserByUid(useruid: str, db: Session):
     result = (db.query(User).
-              filter(User.userid == userid)
+              filter(User.useruid == useruid)
               .first())
     db.flush()
     return result
 
 
-async def DBupdateUserForm(model : UpdateUserForm, db : Session):
+async def DBCreateProfileForm(model : CreateProfileForm, db : Session):
     user = (db.query(User)
-            .filter(User.userid == model.userid)
+            .filter(User.useruid == model.useruid)
             .first())
     
     if not user:
@@ -42,7 +42,9 @@ async def DBupdateUserForm(model : UpdateUserForm, db : Session):
     user.firstname = model.firstname
     user.lastname = model.lastname
     user.nickname = model.nickname
+    user.profileicon = model.profileicon
     user.birthday = model.birthday
+    user.telephoneprefix = model.telephoneprefix
     user.telephonenumber = model.telephonenumber
 
     db.commit()
