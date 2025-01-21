@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
-import 'package:my_awesome_namer/Auth/Auth.dart';
 import 'package:my_awesome_namer/Pages/Register/MainMenu.dart';
 import 'package:my_awesome_namer/Pages/Register/MakeProfile.dart';
 import 'package:dio/dio.dart';
@@ -11,7 +10,6 @@ import 'package:my_awesome_namer/Pages/Register/WelcomeScreen.dart';
 import 'package:my_awesome_namer/models/user_model.dart';
 import 'package:my_awesome_namer/service/api_service.dart';
 import 'dart:async';
-import 'dart:math';
 import 'package:my_awesome_namer/Pages/FigmaPages/ErrorPage.dart';
 
 class UserInfo {

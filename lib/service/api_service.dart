@@ -1,13 +1,8 @@
-import 'dart:ffi';
 
 import 'package:my_awesome_namer/models/user_model.dart';
 import 'package:my_awesome_namer/models/response_model.dart';
-import 'package:retrofit/http.dart';
 import 'package:dio/dio.dart';
-import 'package:retrofit/error_logger.dart';
-import 'package:json_annotation/json_annotation.dart';
 import 'package:retrofit/retrofit.dart';
-import 'package:retrofit/call_adapter.dart';
 
 part 'api_service.g.dart';
 

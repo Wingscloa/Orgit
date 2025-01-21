@@ -14,7 +14,6 @@ import 'package:my_awesome_namer/service/api_service.dart';
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
 import 'package:my_awesome_namer/Auth/Auth.dart';
-import 'dart:convert';
 
 class Register extends StatefulWidget {
   final VoidCallback onRegister;

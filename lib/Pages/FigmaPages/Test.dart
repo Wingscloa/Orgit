@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:my_awesome_namer/models/user_model.dart';
 import 'package:my_awesome_namer/models/response_model.dart';

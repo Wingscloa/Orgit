@@ -134,15 +134,15 @@ class _FormInputState extends State<FormInput> {
   }
 
   Future<void> _selectDate() async {
-    DateTime? _picked = await showDatePicker(
+    DateTime? picked = await showDatePicker(
         context: context,
         initialDate: DateTime.now(),
         firstDate: DateTime(2000),
         lastDate: DateTime(2100));
 
-    if (_picked != null) {
+    if (picked != null) {
       setState(() {
-        widget.controller.text = _picked.toString().split(" ")[0];
+        widget.controller.text = picked.toString().split(" ")[0];
       });
     }
   }
