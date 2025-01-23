@@ -2,15 +2,19 @@ from ..schemas.todo import *
 from ..db.models.users import User
 from ..db.models.toDo import ToDo
 from sqlalchemy.orm import Session
+from fastapi import HTTPException
 
 async def DBcreateToDo(model : ToDoCreate, db : Session):
-    newTodo = ToDo(**model.model_dump())
+    try:
+        newTodo = ToDo(**model.model_dump())
 
-    db.add(newTodo)
-    db.flush()
-    db.commit()
-    db.refresh(newTodo)
-    return True
+        db.add(newTodo)
+        db.commit()
+        db.flush()
+        db.refresh(newTodo)
+        raise HTTPException(status_code=201, detail="ToDo is created")
+    except Exception as err:
+        raise Exception(err)
 
 async def DBUpdateTodo(model : ToDoUpdate, db : Session):
     _current = (db.query(ToDo)
@@ -18,15 +22,15 @@ async def DBUpdateTodo(model : ToDoUpdate, db : Session):
                 .first())
     
     if not _current:
-        db.flush()
         return False
     
     _current.thing = model.thing
     _current.note = model.note
     _current.tocomplete = model.tocomplete
 
-    db.flush()
     db.commit()
+    db.flush()
+
     db.refresh(_current)
 
     return True

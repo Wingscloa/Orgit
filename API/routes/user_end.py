@@ -14,10 +14,19 @@ async def Users():
     try:
         response = await DBgetUsers(db)
         db.close()
-        return HTTPException(status_code=200,detail=response)
-    except NameError:
+        return HTTPException(status_code=200, detail=response)
+
+    except NameError as err:
         db.close()
-        return HTTPException(status_code=500,detail="Internal Server Error ${NameError}")
+        return HTTPException(status_code=500, detail=f"{err}")
+    
+    except HTTPException as err:
+        db.close()
+        return err
+    
+    except Exception as err:
+        db.close()
+        return HTTPException(status_code=500, detail=f"{err}")
     
 
 @router.post('/User')
@@ -27,10 +36,14 @@ async def addUser(userModel : UserCreate):
     try:
         await DBcreateUser(userModel,db=db)
         db.close()
-        return HTTPException(status_code=201, detail="Successfully created")
-    except NameError:
+
+    except NameError as err:
         db.close()
-        return HTTPException(status_code=400, detail="Parameters are not correct")     
+        return HTTPException(status_code=400, detail=f"{err}")
+    
+    except Exception as err:
+        db.close()
+        return HTTPException(status_code=500, detail=f"{err}")
 
 @router.put('/User')
 async def CreateProfile(model : CreateProfileForm):
@@ -38,14 +51,17 @@ async def CreateProfile(model : CreateProfileForm):
 
     try:
         response = await DBCreateProfileForm(model=model, db=db)
-        db.close()
-        if not response:
-            return HTTPException(status_code=404,detail="User is not found")
-        
-        return HTTPException(status_code=200, detail="User is changed")
+        db.close()   
+        return HTTPException(status_code=201, detail=f"{response}")  
     except Exception as err:
         db.close()
-        return HTTPException(status_code=400, detail=f"Contact support - Exception Error {err}")
+        return HTTPException(status_code=400, detail=f"{err}")
+    except HTTPException as err:
+        db.close()
+        return err
+    except NameError as err:
+        db.close()
+        return HTTPException(status_code=500, detail=f"{err}")
 
 @router.put('/UserAdmin')
 async def deleteUser(model : DeleteUser):
@@ -53,12 +69,14 @@ async def deleteUser(model : DeleteUser):
 
     try:
         response = await DBdeleteUser(model=model,db=db)
-        if not response:
-            return HTTPException(status_code=404,detail="User is not found")
-        
-        return HTTPException(status_code=200,detail="User is changed")
+        db.close()
+        return HTTPException(status_code=201, detail=f"{response}")
     except Exception as err:
-        return HTTPException(status_code=400, detail=f"Contact support - Exception Error {err}")
+        db.close()
+        return HTTPException(status_code=500, detail=f"{err}")
+    except NameError as err:
+        db.close()
+        return HTTPException(status_code=500, detail=f"{err}")
 
 
 @router.get('/UserByUId/{useruid}')
@@ -66,17 +84,18 @@ async def userByUid(useruid: str):
     db = SessionLocal()
 
     try:
-        result = await DBgetUserByUid(useruid=useruid,db=db)
+        response = await DBgetUserByUid(useruid=useruid,db=db)
         db.close()
-
-        if not result:
-            return HTTPException(status_code=404,detail=f"User not found",headers=False)
-        
-        return HTTPException(status_code=200,detail=result)
-
+        return HTTPException(status_code=200,detail=f"{response}")
     except Exception as err:
         db.close()
-        return HTTPException(status_code=400, detail=f"Contact support - Exception Error {err}")
+        return HTTPException(status_code=500, detail=f"{err}")
+    except HTTPException as err:
+        db.close()
+        return err
+    except NameError as err:
+        db.close()
+        return HTTPException(status_code=500, detail=f"{err}")
 
 
 @router.post('/UserToGroup')

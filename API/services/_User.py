@@ -8,105 +8,129 @@ from ..services._exists import *
 
 
 async def DBcreateUser(userModel: UserCreate, db: Session):
-    newuser = User(
-        **userModel.model_dump()
-    )
-    
-    db.add(newuser)
-    db.flush() 
-    db.commit()
-    db.refresh(newuser)
-
+    try:
+        newuser = User(
+            **userModel.model_dump()
+        )
+        
+        db.add(newuser)
+        db.commit()
+        db.flush() 
+        db.refresh(newuser)
+    except Exception as err:
+        raise Exception(err)
 
 async def DBgetUsers(db: Session):
-    response = db.query(User).all()
-    db.flush()
-    return response
+    try:   
+        result = db.query(User).all()
+
+        if not result:
+            raise HTTPException(status_code=404, detail="Users not found")
+        return result
+    except Exception as err:
+        raise Exception(err)
 
 async def DBgetUserByUid(useruid: str, db: Session):
-    result = (db.query(User).
-              filter(User.useruid == useruid)
-              .first())
-    db.flush()
-    return result
+    try:
+        result = (db.query(User).
+                filter(User.useruid == useruid)
+                .first())
+
+        if not result:
+            raise HTTPException(status_code=404, detail="User is not found")
+        
+        return result
+    
+    except Exception as err:
+        raise Exception(err)
 
 
 async def DBCreateProfileForm(model : CreateProfileForm, db : Session):
-    user = (db.query(User)
-            .filter(User.useruid == model.useruid)
-            .first())
-    
-    if not user:
-        return False
-    
-    user.firstname = model.firstname
-    user.lastname = model.lastname
-    user.nickname = model.nickname
-    user.profileicon = model.profileicon
-    user.birthday = model.birthday
-    user.telephoneprefix = model.telephoneprefix
-    user.telephonenumber = model.telephonenumber
+    try:
+        user = (db.query(User)
+                .filter(User.useruid == model.useruid)
+                .first())
+        
+        if not user:
+            raise HTTPException(status_code=404, detail="User is not found")
 
-    db.commit()
-    db.refresh(user)
-    db.flush()
-    return True
+        user.firstname = model.firstname
+        user.lastname = model.lastname
+        user.nickname = model.nickname
+        user.profileicon = model.profileicon
+        user.birthday = model.birthday
+        user.telephoneprefix = model.telephoneprefix
+        user.telephonenumber = model.telephonenumber
+
+        db.commit()
+        db.flush()
+        db.refresh(user)
+    except Exception as err:
+        raise Exception(err)
 
 
 async def DBdeleteUser(model : DeleteUser, db : Session):
-    user = (db.query(User)
-            .filter(User.userid == model.userid)
-            .first())
-    
-    if not user:
-        return False
-    
-    user.deleted = model.deleted
-    user.deletedat = model.deletedat
-    user.lastactive = model.deletedat
+    try:
+        user = (db.query(User)
+                .filter(User.userid == model.userid)
+                .first())
 
-    db.commit()
-    db.refresh(user)
-    db.flush()
-    return True
+        if not user:
+            raise HTTPException(status_code=404, detail="User is not found")        
 
+        user.deleted = model.deleted
+        user.deletedat = model.deletedat
+        user.lastactive = model.deletedat
+
+        db.commit()
+        db.refresh(user)
+        db.flush()
+
+    except Exception as err:
+        raise Exception(err)
 
 async def DBuserToGroup(model: userToGroup, db : Session):
     if not await userExists(model.userid,db=db):
-        return False
+        raise HTTPException(status_code=404, detail="User is not found")
 
     if not await groupExists(model.groupid,db=db):
-        return False
+        raise HTTPException(status_code=404, detail="Group is not found")
     
-    _groupMember = GroupMember(**model.model_dump())
+    try:    
+        _groupMember = GroupMember(**model.model_dump())
 
-    db.add(_groupMember)
-    db.flush()
-    db.commit()
-    db.refresh(_groupMember)
-
+        db.add(_groupMember)
+        db.commit()
+        db.flush()
+        db.refresh(_groupMember)
+        
+    except Exception as err:
+        raise Exception(err)
 
 async def DBuserToEvent(model: sch_userToEvent, db: Session):
     # Exceptions
     if not await eventExists(model.eventid,db=db):
-        raise Exception("Event doesn't exists")
+        raise HTTPException(status_code=404, detail="Event has not found")
     
     if not await userExists(model.userid,db=db):
-        raise Exception("User doesn't exists")
+        raise HTTPException(status_code=404, detail="User is not found")
     
-    exist = (db.query(EventParticipant).
-             filter((EventParticipant.eventid == model.eventid)&
-                    (EventParticipant.userid == model.userid)
-                    ).first())
-    
-    if exist:
-        raise Exception("Already exists")
-    
-    # CREATE
+    try:
+        exist = (db.query(EventParticipant).
+                filter((EventParticipant.eventid == model.eventid)&
+                        (EventParticipant.userid == model.userid)
+                        ).first())
+        
+        if exist:
+            raise HTTPException(status_code=409, detail="Request is duplicated")
+        
+        # CREATE
 
-    _userToEvent = EventParticipant(**model.model_dump())
+        _userToEvent = EventParticipant(**model.model_dump())
 
-    db.add(_userToEvent)
-    db.flush()
-    db.commit()
-    db.refresh(_userToEvent)
+        db.add(_userToEvent)
+        db.commit()
+        db.flush()
+        db.refresh(_userToEvent)
+    except Exception as err:
+        raise Exception(err)
