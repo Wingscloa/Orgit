@@ -160,14 +160,23 @@ CREATE TABLE Events (
 CREATE INDEX idx_event_group ON Events(GroupId);
 CREATE INDEX idx_event_creator ON Events(EventId);
 
+-- TODO
+-- vytvorit tabulku pro veci obrazek,barva,nazev, jaka skupina bude vlastnit svoje veci
+-- vytvorit prirazovaci tabulku neboli spojovou
 
+CREATE TABLE Item(
+	ItemId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	GroupId INTEGER REFERENCES Groups(GroupId) ON DELETE CASCADE,
+	Name varchar(32) NOT NULL,
+	Icon BYTEA NULL,
+	Color char(7) NOT NULL DEFAULT '#FFCB69'
+);
 
-CREATE TABLE EventItems (
-	EventItemId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+CREATE TABLE EventItem(
+	ItemId INTEGER REFERENCES Item(ItemId) ON DELETE CASCADE,
 	EventId INTEGER REFERENCES Events(EventId) ON DELETE CASCADE,
-	Name varchar(255) NOT NULL,
-	Quantity INTEGER  NULL,
-	CreatedAt TIMESTAMP DEFAULT NOW()
+	Quantity INTEGER NOT NULL DEFAULT 1,
+	PRIMARY KEY (ItemId, EventId)
 );
 
 CREATE TYPE EventPart_status AS ENUM (
@@ -201,7 +210,7 @@ CREATE TABLE BubbleGroups(
 	Name varchar(64) NOT NULL,
 	Icon BYTEA NOT NULL,
 	UnlockAfterComplete INTEGER REFERENCES BubbleGroups(BubbleGroupId) ON DELETE CASCADE NULL,
-	LevelReq INTEGER NULL
+	LevelReq INTEGER NULL DEFAULT 1
 );
 
 CREATE TABLE BubbleQuests(

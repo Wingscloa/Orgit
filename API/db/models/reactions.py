@@ -15,3 +15,4 @@ class Reaction(Base):
     # Relationships
     message = relationship('Message', backref='reactions')
     user = relationship('User', backref='reactions')
+
