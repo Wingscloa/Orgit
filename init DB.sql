@@ -12,7 +12,7 @@ CREATE TABLE Users (
 	DeletedAt DATE NULL,
 	CreatedAt DATE DEFAULT NOW(),
 	LastActive DATE NULL,
-	TelephoneNumber varchar(15) NOT NULL,
+	TelephoneNumber varchar(9) NOT NULL,
 	TelephonePrefix varchar(5) NOT NULL,
 	Level INTEGER NOT NULL DEFAULT 1,
 	Experience INTEGER NOT NULL DEFAULT 0,
@@ -23,30 +23,30 @@ CREATE TABLE Users (
 CREATE INDEX idx_users_email ON Users(Email);
 CREATE INDEX idx_users_useruid ON Users(UserUID);
 
+-- Icons
+
+CREATE TABLE Icon(
+	IconId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	Name varchar(16) NOT NULL,
+	Content BYTEA NOT NULL,
+	Extension varchar(8) NOT NULL
+);
+
+-- Titles
 
 CREATE TABLE Category(
 	CategoryId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	Name varchar(32) NOT NULL
+	Name varchar(16) NOT NULL
 );
 
-CREATE TABLE TitlesIcons (
-	IconId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	Name varchar(32) NOT NULL,
-	Path TEXT NULL,
-	URL varchar(255) NULL,
-	Data BYTEA NULL
-);
-
--- title = badget
 CREATE TABLE Titles (
 	TitleId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	Name varchar(64) NOT NULL,
-	Color varchar(64) NOT NULL,
+	Name varchar(32) NOT NULL,
 	CategoryId INTEGER REFERENCES Category(CategoryId) ON DELETE CASCADE,
-	LevelReq INTEGER NULL,
-	AppDefault BOOLEAN NOT NULL DEFAULT FALSE,
-	Description varchar(255) NULL,
-	Icon INTEGER REFERENCES TitlesIcons(IconId) ON DELETE CASCADE
+	Color char(6) NOT NULL,
+	Icon INTEGER REFERENCES Icon(IconId) ON DELETE CASCADE,
+	Describe varchar(255) NOT NULL,
+	Rewardable BOOLEAN NOT NULL
 );
 
 CREATE TABLE UserTitles (
@@ -55,56 +55,20 @@ CREATE TABLE UserTitles (
 	PRIMARY KEY (UserId, TitleId)
 );
 
-CREATE TABLE Roles (
-	RoleId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	Name varchar(32) NOT NULL,
-	Color varchar(7) NOT NULL,
-	Description varchar(255) NULL,
-	Admin BOOLEAN NOT NULL DEFAULT FALSE,
-	-- Duolingo Moderator - 5
-	DuolingoCreateGroup BOOLEAN NOT NULL  DEFAULT FALSE,
-	DuolingoDeleteGroup BOOLEAN NOT NULL  DEFAULT FALSE,
-	DuolingoCreateQuest BOOLEAN NOT NULL DEFAULT FALSE,
-	DuolingoDeleteQuest BOOLEAN NOT NULL DEFAULT FALSE,
-	DuolingoValidationQuest BOOLEAN NOT NULL DEFAULT FALSE,
-	-- Chat Moderator - 2
-	ChatDeleteMsg BOOLEAN NOT NULL DEFAULT FALSE,
-	ChatMuteMsg BOOLEAN NOT NULL DEFAULT FALSE,
-	-- Organisation - 3
-	EditParticipants BOOLEAN NOT NULL DEFAULT FALSE,
-	EventDelete BOOLEAN NOT NULL DEFAULT FALSE,
-	EventCreate BOOLEAN NOT NULL DEFAULT FALSE,
-	-- Group Moderator - 4
-	GroupKickUser BOOLEAN NOT NULL DEFAULT FALSE,
-	GroupBlockUser BOOLEAN NOT NULL DEFAULT FALSE,
-	GroupAcceptUser BOOLEAN NOT NULL DEFAULT FALSE,
-	GroupAddRole BOOLEAN NOT NULL DEFAULT FALSE,
-	-- Report Moderator - 3
-	ReportView BOOLEAN NOT NULL DEFAULT FALSE,
-	ReportDelete BOOLEAN NOT NULL DEFAULT FALSE,
-	ReportAnswer BOOLEAN NOT NULL DEFAULT FALSE
-);
-
-INSERT INTO Roles (Name,Color,Description,Admin)
-	VALUES ('Owner','#0c8ce9','Have all perms to do',TRUE);
-
-CREATE TABLE UserRoles (
-	UserId INTEGER REFERENCES Users(UserId) ON DELETE CASCADE,
-	RoleId INTEGER REFERENCES Roles(RoleId) ON DELETE CASCADE,
-	PRIMARY KEY (UserId, RoleId)
-);
+-- TODO
 
 CREATE TABLE ToDo(
 	TodoId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	UserId INTEGER REFERENCES Users(UserId) ON DELETE CASCADE,
-	Thing varchar(32) NOT NULL,
+	Title varchar(32) NOT NULL,
 	Note varchar(255) NULL,
+	WhenComplete TIMESTAMP NOT NULL,
 	ToComplete TIMESTAMP NULL,
 	Completed BOOLEAN DEFAULT FALSE,
 	CreatedAt TIMESTAMP DEFAULT NOW(),
-	Music varchar(16) NULL DEFAULT 'joy',
-	Repeat BOOLEAN DEFAULT FALSE
+	Music varchar(16) NULL DEFAULT 'joy'
 );
+
 
 CREATE INDEX idx_todo_userid ON ToDo(UserId);
 
@@ -119,7 +83,8 @@ CREATE TABLE Groups (
 	Leader INTEGER REFERENCES Users(UserId) ON DELETE CASCADE,
 	Description varchar(512) NOT NULL,
 	CreatedBy INTEGER REFERENCES Users(UserId) ON DELETE CASCADE,
-	CreatedAt DATE DEFAULT NOW()
+	CreatedAt DATE DEFAULT NOW(),
+	Deleted BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE LevelName(
@@ -141,43 +106,96 @@ CREATE TABLE GroupMembers (
 	PRIMARY KEY (GroupId, UserId)
 );
 
+
+-- Roles
+
+CREATE TABLE Roles (
+	RoleId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	GroupId INTEGER REFERENCES Groups(GroupId) ON DELETE CASCADE,
+	Name varchar(32) NOT NULL,
+	IconId INTEGER REFERENCES Icon(IconId) ON DELETE CASCADE,
+	Admin BOOLEAN NOT NULL DEFAULT FALSE,
+	-- Duolingo Group
+	DuolingoCreateGroup BOOLEAN NOT NULL  DEFAULT FALSE,
+	DuolingoDeleteGroup BOOLEAN NOT NULL  DEFAULT FALSE,
+	-- Duolingo Quest
+	DuolingoCreateQuest BOOLEAN NOT NULL DEFAULT FALSE,
+	DuolingoDeleteQuest BOOLEAN NOT NULL DEFAULT FALSE,
+	DuolingoValidationQuest BOOLEAN NOT NULL DEFAULT FALSE,
+	-- Event
+	EventDelete BOOLEAN NOT NULL DEFAULT FALSE,
+	EventCreate BOOLEAN NOT NULL DEFAULT FALSE,
+	-- Meeting Grade
+	MeetingGrade BOOLEAN NOT NULL DEFAULT FALSE,
+	-- Group
+	GroupKickUser BOOLEAN NOT NULL DEFAULT FALSE,
+	GroupBlockUser BOOLEAN NOT NULL DEFAULT FALSE,
+	GroupAcceptUser BOOLEAN NOT NULL DEFAULT FALSE,
+	GroupAddRole BOOLEAN NOT NULL DEFAULT FALSE,
+	-- Report
+	ReportView BOOLEAN NOT NULL DEFAULT FALSE,
+	ReportDelete BOOLEAN NOT NULL DEFAULT FALSE,
+	ReportAnswer BOOLEAN NOT NULL DEFAULT FALSE,
+	ReportEdit BOOLEAN NOT NULL DEFAULT FALSE,
+	-- Role
+	RoleCreate BOOLEAN NOT NULL DEFAULT FALSE,
+	RoleDelete BOOLEAN NOT NULL DEFAULT FALSE,
+	-- Member 
+	MemberAccept BOOLEAN NOT NULL DEFAULT FALSE,
+	MemberRemove BOOLEAN NOT NULL DEFAULT FALSE,
+	MemberBlock BOOLEAN NOT NULL DEFAULT FALSE,
+	-- Title
+	TitleCreate BOOLEAN NOT NULL DEFAULT FALSE,
+	TitleRemove BOOLEAN NOT NULL DEFAULT FALSE,
+	TitleSign BOOLEAN NOT NULL DEFAULT FALSE
+);
+
+CREATE TABLE UserRoles (
+	UserId INTEGER REFERENCES Users(UserId) ON DELETE CASCADE,
+	RoleId INTEGER REFERENCES Roles(RoleId) ON DELETE CASCADE,
+	PRIMARY KEY (UserId, RoleId)
+);
+
+-- Event Create
+
 CREATE TABLE Events (
 	EventId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	GroupId INTEGER NULL REFERENCES Groups(GroupId) ON DELETE CASCADE,
+	GroupId INTEGER NULL REFERENCES Groups(GroupId) ON DELETE CASCADE, -- NULL = UserEvent / NOT NULL = GroupEvent
 	Creator INTEGER REFERENCES Users(UserId) ON DELETE CASCADE,
-	GroupEvent BOOLEAN NOT NULL DEFAULT FALSE,
 	Name varchar(32) NOT NULL,
-	Color char(7) NULL DEFAULT '#FFCB69',
+	Color char(6) NULL DEFAULT '#FFCB69',
 	Description varchar(512) NOT NULL,
 	ProfilePic BYTEA NULL,
 	Address varchar(128) NOT NULL,
-	Begins TIMESTAMP NOT NULL,
-	Ends TIMESTAMP NOT NULL,
-	Date DATE NOT NULL,
-	CreatedAt TIMESTAMP DEFAULT NOW()
+	Begins DATE NOT NULL,
+	Ends DATE NOT NULL,
+	CreatedAt DATE DEFAULT NOW()
 );
+
 
 CREATE INDEX idx_event_group ON Events(GroupId);
 CREATE INDEX idx_event_creator ON Events(EventId);
 
--- TODO
--- vytvorit tabulku pro veci obrazek,barva,nazev, jaka skupina bude vlastnit svoje veci
--- vytvorit prirazovaci tabulku neboli spojovou
+-- Event items
 
 CREATE TABLE Item(
 	ItemId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	GroupId INTEGER REFERENCES Groups(GroupId) ON DELETE CASCADE,
-	Name varchar(32) NOT NULL,
-	Icon BYTEA NULL,
-	Color char(7) NOT NULL DEFAULT '#FFCB69'
+	EventId INTEGER REFERENCES Events(EventId) ON DELETE CASCADE,
+	IconId INTEGER REFERENCES Icon(IconId) ON DELETE CASCADE,
+	Name varchar(16) NOT NULL,
+	Count INT NOT NULL
 );
 
-CREATE TABLE EventItem(
+CREATE INDEX idx_item_event ON Item(EventId);
+
+CREATE TABLE CompletedItem(
+	UserId INTEGER REFERENCES Users(UserId) ON DELETE CASCADE,
 	ItemId INTEGER REFERENCES Item(ItemId) ON DELETE CASCADE,
-	EventId INTEGER REFERENCES Events(EventId) ON DELETE CASCADE,
-	Quantity INTEGER NOT NULL DEFAULT 1,
-	PRIMARY KEY (ItemId, EventId)
+	PickUp BOOLEAN NOT NULL DEFAULT FALSE,
+	PRIMARY KEY (UserId,ItemId)
 );
+
+-- Event Grading
 
 CREATE TYPE EventPart_status AS ENUM (
     'Včasný příchod',
@@ -186,7 +204,6 @@ CREATE TYPE EventPart_status AS ENUM (
     'Neomluven'
 );
 
-
 CREATE TABLE EventParticipants (
 	EventId INTEGER REFERENCES Events(EventId) ON DELETE CASCADE,
 	UserId INTEGER REFERENCES Users(UserId) ON DELETE CASCADE,
@@ -194,7 +211,41 @@ CREATE TABLE EventParticipants (
 	PRIMARY KEY (EventId, UserId)
 );
 
-CREATE INDEX idx_eventparticipants_userid ON EventParticipants(UserId);
+
+-- NOTIFICATIONS
+
+CREATE TABLE NotificationTypes (
+	NotificationTypeId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	Name varchar(64) NOT NULL UNIQUE,
+	Description varchar(255) NULL
+);
+
+CREATE TABLE Notifications (
+	NotificationId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	UserId INTEGER REFERENCES Users(UserId) ON DELETE CASCADE,
+	NotificationTypeId INTEGER REFERENCES NotificationTypes(NotificationTypeId) ON DELETE CASCADE,
+	Title varchar(32) NOT NULL,
+	Message varchar(255) NOT NULL,
+	CreatedAt TIMESTAMP DEFAULT NOW(),
+	Read BOOLEAN NOT NULL DEFAULT FALSE
+);
+
+CREATE INDEX idx_notifications_userid ON Notifications(UserId);
+
+-- REPORTS
+
+CREATE TABLE Reports (
+	ReportId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	UserId INTEGER REFERENCES Users(UserId) ON DELETE CASCADE,
+	Title varchar(32) NOT NULL,
+	Note varchar(512) NOT NULL,
+	Resolved BOOLEAN NOT NULL DEFAULT FALSE,
+	Resolver INTEGER REFERENCES Users(UserId),
+	CreatedAt TIMESTAMP DEFAULT NOW(),
+	Seen BOOLEAN NOT NULL DEFAULT FALSE
+);
+
+CREATE INDEX idx_reports_userid ON Reports(UserId);
 
 
 -- SKILL TREE
@@ -207,7 +258,7 @@ CREATE TABLE GroupTree(
 CREATE TABLE BubbleGroups(
 	BubbleGroupId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	TreeId INTEGER REFERENCES GroupTree(TreeId) ON DELETE CASCADE,
-	Name varchar(64) NOT NULL,
+	Name varchar(32) NOT NULL,
 	Icon BYTEA NOT NULL,
 	UnlockAfterComplete INTEGER REFERENCES BubbleGroups(BubbleGroupId) ON DELETE CASCADE NULL,
 	LevelReq INTEGER NULL DEFAULT 1
@@ -216,7 +267,7 @@ CREATE TABLE BubbleGroups(
 CREATE TABLE BubbleQuests(
 	BubbleQuestsId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	BubbleGroupId INTEGER REFERENCES BubbleGroups(BubbleGroupId) ON DELETE CASCADE,
-	Name varchar(64) NOT NULL,
+	Name varchar(32) NOT NULL,
 	QuestNote varchar(255) NOT NULL,
 	ProfilePic BYTEA NOT NULL,
 	Experience INTEGER NULL,
@@ -235,88 +286,9 @@ CREATE INDEX idx_completedquests_userid ON CompletedQuests(UserId);
 
 
 
--- CHAT
-
-CREATE TABLE Chat(
-	ChatId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	Name varchar(32) NULL,
-	Owner INTEGER REFERENCES Users(UserId) ON DELETE CASCADE NULL,
-	GroupChatId INTEGER REFERENCES Groups(GroupId) ON DELETE CASCADE NULL,
-	CreatedAt TIMESTAMP DEFAULT NOW()
-);
-
-CREATE TABLE ChatParticipants(
-	ChatId INTEGER REFERENCES Chat(ChatId) ON DELETE CASCADE,
-	UserId INTEGER REFERENCES Users(UserId) ON DELETE CASCADE,
-	PRIMARY KEY (ChatId, UserId)
-);
-
-CREATE TABLE Messages(
-	MessageId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	ChatId INTEGER REFERENCES Chat(ChatId) ON DELETE CASCADE,
-	UserId INTEGER REFERENCES Users(UserId) ON DELETE CASCADE,
-	Content TEXT NOT NULL,
-	SendAt TIMESTAMP DEFAULT NOW()
-);
-
-CREATE INDEX idx_messages_userid ON Messages(UserId);
-
-CREATE TABLE Reactions (
-	ReactionId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	MessageId INTEGER REFERENCES Messages(MessageId) ON DELETE CASCADE,
-	UserId INTEGER REFERENCES Users(UserId) ON DELETE CASCADE,
-	Emoji varchar(32) NOT NULL,
-	ReactedAt TIMESTAMP DEFAULT NOW()
-);
-
-
--- NOTIFICATIONS
-
-CREATE TABLE NotificationTypes (
-	NotificationTypeId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	Name varchar(64) NOT NULL UNIQUE,
-	Description varchar(255) NULL
-);
-
-CREATE TABLE Notifications (
-	NotificationId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	UserId INTEGER REFERENCES Users(UserId) ON DELETE CASCADE,
-	NotificationTypeId INTEGER REFERENCES NotificationTypes(NotificationTypeId) ON DELETE CASCADE,
-	Message varchar(255) NOT NULL,
-	CreatedAt TIMESTAMP DEFAULT NOW(),
-	Read BOOLEAN NOT NULL DEFAULT FALSE
-);
-
-CREATE INDEX idx_notifications_userid ON Notifications(UserId);
-
--- REPORTS
-
-CREATE TABLE Reports (
-	ReportId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	UserId INTEGER REFERENCES Users(UserId) ON DELETE CASCADE,
-	Thing varchar(32) NOT NULL,
-	Note varchar(512) NOT NULL,
-	Resolved BOOLEAN NOT NULL DEFAULT FALSE,
-	Resolver INTEGER REFERENCES Users(UserId),
-	CreatedAt TIMESTAMP DEFAULT NOW(),
-	Seen BOOLEAN NOT NULL DEFAULT FALSE
-);
-
-CREATE INDEX idx_reports_userid ON Reports(UserId);
-
-
 -- VIEWS
 
-CREATE VIEW email_exists AS
-SELECT 
-    email,
-    COUNT(*) AS email_count
-FROM 
-    users
-GROUP BY 
-    email;
-
- -- ALL GROUPS ONLY Profile and Name
+-- ALL GROUPS ONLY Profile and Name
 
 CREATE VIEW AllGroups AS 
 	SELECT 
@@ -325,8 +297,7 @@ CREATE VIEW AllGroups AS
 		G.profilepic,
 		G.city
 	FROM groups as G;
-
-
+	
 -- spojeny tituly zakladni aplikace a tituly skupiny uzivatele, ktera vraci potrebne veci pro zobrazeni
 CREATE OR REPLACE FUNCTION Func_get_all_titles(group_id INT)
 RETURNS TABLE (
@@ -362,7 +333,3 @@ BEGIN
 			WHERE titles.appdefault = TRUE;
 END;
 $$ LANGUAGE plpgsql;
-
-
-
-

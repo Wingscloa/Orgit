@@ -30,11 +30,40 @@ INSERT INTO public.eventitems (eventid,itemname,quantity)
 INSERT INTO public.eventparticipants (eventid,userid)
 	VALUES (1,1);
 
+-- Icon
+
+INSERT INTO Icon (Name,Content,Extension)
+	VALUES
+		('Zacatek','0101','jpg'),
+		('Skautik','0101','jpg'),
+		('Prvni','0101','jpg'),
+		('Fill_Formular','0101','jpg'),
+		('Mountains','0101','jpg');
+
+
+-- CATEGORY
+
+INSERT INTO Category(CategoryId,Name)
+	VALUES
+		('Základní'),
+		('Umělecké'),
+		('Technické'),
+		('Příroda'),
+		('Kulturní'),
+		('Vědecké'),
+		('Zdravotnické'),
+		('Vodácké'),
+		('Sportovní'),
+		('Duchovní'),
+		('Společný život');
 -- TITLE
 
-INSERT INTO public.titles (description,levelreq,titlecolor,titlegroup,titlename)
-	VALUES ('Prvni krucky v aplikaci',0,'#FF5733','level','Novacek');
+SELECT * FROM Icon;
 
-
-INSERT INTO public.usertitles(titleid,userid)
-	VALUES(1,1);
+INSERT INTO Titles(Name,CategoryId,Color,Icon,Describe,Rewardable)
+	VALUES
+		('Začátek',1,'0000ff',1,'po prvnim zapnuti, po registraci',false),
+		('Skautík',1,'0000ff',2,'po kliknuti skautika',false),
+		('První úkol',1,'0000ff',3,'po splneni prvniho ukolu v Scautlingo',false),
+		('Jsem plný',1,'0000ff',4,'po vyplneni všech údaju',false),
+		('Za desatero horami',1,'0000ff',5,'splnění 10 achievmentu, 10 úkolu',false);
