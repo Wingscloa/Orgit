@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:my_awesome_namer/Pages/Register/WelcomeScreen.dart';
-import 'package:my_awesome_namer/Pages/Register/MakeProfile.dart';
+import 'package:Orgit/Pages/Group/joinGroup.dart';
+import 'package:Orgit/Pages/Auth/profileForm.dart';
 
 class Navigationcontroller {
   static void goToWelcomeScreen(BuildContext context) {
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => WelcomeScreen()));
+        context, MaterialPageRoute(builder: (context) => Joingroup()));
   }
 
   static void goToMakeProfile(BuildContext context) {
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => MakeProfile()));
+        context, MaterialPageRoute(builder: (context) => Profileform()));
   }
 }

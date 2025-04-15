@@ -1,36 +1,38 @@
 from sqlalchemy.orm import Session
-from ..schemas.group import GroupCreate
-from ..db.models.groups import Group
+from schemas.group import GroupSchema
+from db.models.groups import Group
 
+def group_all(db : Session):
+    response = db.query(Group).all()
+    return response
 
-async def DBcreateGroup(groupModel: GroupCreate, db: Session):
+# Create a new group in the database
+def group_create(groupModel: GroupSchema, db: Session):
     _groupModel = Group(
         **groupModel.model_dump()
     )
     
     db.add(_groupModel)
-    db.flush()
     db.commit()
-    db.refresh(_groupModel)
 
-async def DBgetGroupById(groupid: int, db : Session):
+# Get a group by its ID
+def group_by_id(groupid: int, db : Session):
     result = (db.query(Group)
               .filter(Group.groupid == groupid)
               .first())
-    db.flush()
+    
+    if not result:
+        raise ValueError("Group not found")
+    
     return result
 
-async def DBdeleteGroup(groupid: int, db: Session):
+def group_delete(groupid: int, db: Session):
     _toDelete = (db.query(Group)
                  .filter(Group.groupid == groupid)
                  .first())
 
     if not _toDelete:
-        db.flush()
-        return False
+        raise ValueError("Group not found")
 
-    db.delete(_toDelete)
-    db.flush()
+    _toDelete.deleted = True
     db.commit()
-
-    return True

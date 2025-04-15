@@ -1,71 +1,59 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 from typing import Optional
 from datetime import datetime
-import base64
-
-class UserCreate(BaseModel):
-    useruid: str
-    firstname: str
-    lastname: str
-    nickname: str
-    email: EmailStr
-    profileicon: bytes
-    telephoneprefix: str
-    telephonenumber: str
-    lastactive : datetime
-    birthday : datetime
-
-    class Config:
-        json_encoders = {
-            bytes: lambda v: base64.b64encode(v).decode('utf-8'),
-        }
-
-class CreateProfileForm(BaseModel):
-    useruid: str
-    firstname: str
-    lastname: str
-    nickname: str
-    profileicon: bytes
-    telephoneprefix: str
-    telephonenumber: str
-    birthday : datetime
-
-    class Config:
-        json_encoders = {
-            bytes: lambda v: base64.b64encode(v).decode('utf-8'),
-        }
-
-class sch_userToEvent(BaseModel):
-    eventid: int
-    userid : int
-class DeleteUser(BaseModel):
-    userid : int
-    deleted : bool
-    deletedat : datetime
-    # lastactive == deletedat
 
 class UserResponse(BaseModel):
-    userid: int
-    useruid: str
-    firstname: str
-    lastname: str
-    nickname: Optional[str]
-    email: EmailStr
-    profileicon: Optional[bytes]
-    deleted: bool
-    deletedat: Optional[datetime]
-    createdat: Optional[datetime]
-    lastactive: datetime 
-    telephonenumber: Optional[str]
+    userid : Optional[int]
+    useruid : Optional[str]
+    firstname : Optional[str]
+    lastname : Optional[str]
+    nickname : Optional[str]
+    email : Optional[str]
+    birthday : Optional[datetime]
+    verified : Optional[bool]
+    deleted : Optional[bool]
+    telephonenumber : Optional[str]
     telephoneprefix: Optional[str]
-    level: int
-    experience: int
-    settingsconfig: Optional[bytes]
+    level : Optional[int]
+    experience : Optional[int]
+    profileicon : Optional[str]
+    deletedat : Optional[datetime]
+    createdat : Optional[datetime]
+    lastactive : Optional[datetime]
 
-    class Config:
-        from_attributes = True
+class RegisterSchema(BaseModel):
+    useruid : str
+    email: EmailStr
 
-class userToGroup(BaseModel):
-    userid : int
-    groupid: int
+class ProfileSchema(BaseModel):
+    useruid : str
+    firstname : str = Field(min_length=1, max_length=32)
+    lastname : str = Field(min_length=1, max_length=32)
+    nickname : str = Field(max_length=32)
+    telephoneprefix: str = Field(max_length=3, min_length=3)
+    telephonenumber: str = Field(max_length=9, min_length=9)
+    birthday : datetime
+    profileicon : bytes
 
+class VerifySchema(BaseModel):
+    useruid : str
+
+class UserEventSchema(BaseModel):
+    useruid : int
+    eventid: int
+
+class UserLevelUpSchema(BaseModel):
+    useruid : str
+    level : int = Field(ge=1)
+
+class UserExperienceSchema(BaseModel):
+    useruid : str
+    experience : int = Field(ge=0)
+
+class UserProfileSchema(BaseModel):
+    useruid : str
+    ProfileIcon : bytes
+
+class UserGroupSchema(BaseModel):
+    useruid : str
+    groupid : int

@@ -1,131 +1,77 @@
-from fastapi import APIRouter, HTTPException
-from ..db.session import SessionLocal
-from ..services._User import *
-from ..schemas.users import *
-from ..services._exists import *
-
+from fastapi import APIRouter, HTTPException, Depends
+from session import getDb, SessionLocal
+from fastapi.responses import JSONResponse
+from services._User import *
+from schemas.users import *
+from auth import verify_firebase_token
+from typing import List
 
 router = APIRouter()
 
-@router.get('/User')
-async def Users():
-    db = SessionLocal()
-
+@router.get('/User', response_model=List[UserResponse])
+async def get_user_all(verify = Depends(verify_firebase_token),db : Session = Depends(getDb)):
     try:
-        response = await DBgetUsers(db)
-        db.close()
-        return HTTPException(status_code=200, detail=response)
-
-    except NameError as err:
-        db.close()
-        return HTTPException(status_code=500, detail=f"{err}")
-    
+        response = get_users(db)
+        return response 
     except HTTPException as err:
-        db.close()
-        return err
+        raise HTTPException(status_code=500, detail=f"{err}")
     
-    except Exception as err:
-        db.close()
-        return HTTPException(status_code=500, detail=f"{err}")
-    
-
-@router.post('/User')
-async def addUser(userModel : UserCreate):
-    db = SessionLocal()
-
+@router.post('/User/')
+async def post_user_register(model : RegisterSchema, verify = Depends(verify_firebase_token),  db : Session = Depends(getDb)):
     try:
-        await DBcreateUser(userModel,db=db)
-        db.close()
-
-    except NameError as err:
-        db.close()
-        return HTTPException(status_code=400, detail=f"{err}")
-    
+        user_register(model,db)
+        return JSONResponse(status_code=200,content='',headers="User is registered")
     except Exception as err:
-        db.close()
-        return HTTPException(status_code=500, detail=f"{err}")
-
+        raise HTTPException(status_code=500, detail=f"{err}")
+    
 @router.put('/User')
-async def CreateProfile(model : CreateProfileForm):
-    db = SessionLocal()
-
+async def put_user_profile_form(model : ProfileSchema, verify = Depends(verify_firebase_token), db : Session = Depends(getDb)):
     try:
-        response = await DBCreateProfileForm(model=model, db=db)
-        db.close()   
-        return HTTPException(status_code=201, detail=f"{response}")  
+        user_UpdateProfile(model,db)
+        return JSONResponse(status_code=201,content=True,headers="User profile is updated")
     except Exception as err:
-        db.close()
-        return HTTPException(status_code=400, detail=f"{err}")
-    except HTTPException as err:
-        db.close()
-        return err
-    except NameError as err:
-        db.close()
-        return HTTPException(status_code=500, detail=f"{err}")
+        raise HTTPException(status_code=500, detail=f"{err}")
 
-@router.put('/UserAdmin')
-async def deleteUser(model : DeleteUser):
-    db = SessionLocal()
-
+@router.delete('/User')
+async def delete_user_by_id(useruid : str, verify = Depends(verify_firebase_token), db : Session = Depends(getDb)):
     try:
-        response = await DBdeleteUser(model=model,db=db)
-        db.close()
-        return HTTPException(status_code=201, detail=f"{response}")
-    except Exception as err:
-        db.close()
-        return HTTPException(status_code=500, detail=f"{err}")
-    except NameError as err:
-        db.close()
-        return HTTPException(status_code=500, detail=f"{err}")
-
-
-@router.get('/UserByUId/{useruid}')
-async def userByUid(useruid: str):
-    db = SessionLocal()
-
-    try:
-        response = await DBgetUserByUid(useruid=useruid,db=db)
-        db.close()
-        return HTTPException(status_code=200,detail=f"{response}")
-    except Exception as err:
-        db.close()
-        return HTTPException(status_code=500, detail=f"{err}")
-    except HTTPException as err:
-        db.close()
-        return err
-    except NameError as err:
-        db.close()
-        return HTTPException(status_code=500, detail=f"{err}")
-
-
-@router.post('/UserToGroup')
-async def userToGroup(model: userToGroup):
-    db = SessionLocal()
-
-    try:
-        response = await DBuserToGroup(model=model, db=db)
-        db.close()
-        
-        return HTTPException(status_code=200, detail="Success")
-    
-    except Exception as err:
-        db.close()
-        return HTTPException(status_code=400, detail=f"Contact support - Exception error : {err}")
-    
-
-@router.post('/UserToEvent')
-async def userToEvent(model: sch_userToEvent):
-    db = SessionLocal()
-    
-    try:
-        response = await DBuserToEvent(model=model,db=db)
-        db.close()
-    
+        response = delete_user(useruid,db)
         if not response:
-            return HTTPException(status_code=404, detail="Not Found")
-    
-        return HTTPException(status_code=200, detail="Success")
-    
+            return JSONResponse(status_code=404,content=False,headers="User is deleted")
+        
     except Exception as err:
-        return HTTPException(status_code=404, detail=f"{err}")
+        raise HTTPException(status_code=500, detail=f"{err}")
     
+# @router.get('/UserByUId/{useruid}')
+# async def userByUid(useruid: str, db : SessionDep):
+#     try:
+#         response = await DBgetUserByUid(useruid=useruid,db=db)
+#         return HTTPException(status_code=200,detail=f"{response}")
+#     except Exception as err:
+#         return HTTPException(status_code=500, detail=f"{err}")
+#     finally:
+#         db.close()
+
+
+# @router.post('/UserToGroup')
+# async def userToGroup(model: userToGroup, db : SessionDep):
+#     try:
+#         response = await DBuserToGroup(model=model, db=db)
+#         return HTTPException(status_code=200, detail="Success")
+#     except Exception as err:
+#         return HTTPException(status_code=400, detail=f"Contact support - Exception error : {err}")
+#     finally:
+#         db.close()
+    
+
+# @router.post('/UserToEvent')
+# async def userToEvent(model: sch_userToEvent, db : SessionDep):    
+#     try:
+#         response = await DBuserToEvent(model=model,db=db)    
+#         if not response:
+#             return HTTPException(status_code=404, detail="Not Found")
+#         return HTTPException(status_code=200, detail="Success")
+#     except Exception as err:
+#         return HTTPException(status_code=404, detail=f"{err}")
+#     finally:
+#         db.close()

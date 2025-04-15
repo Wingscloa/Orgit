@@ -3,14 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
-import 'package:my_awesome_namer/Pages/Register/MainMenu.dart';
-import 'package:my_awesome_namer/Pages/Register/MakeProfile.dart';
-import 'package:dio/dio.dart';
-import 'package:my_awesome_namer/Pages/Register/WelcomeScreen.dart';
-import 'package:my_awesome_namer/models/user_model.dart';
-import 'package:my_awesome_namer/service/api_service.dart';
+import 'package:Orgit/Pages/Group/joinGroup.dart';
 import 'dart:async';
-import 'package:my_awesome_namer/Pages/FigmaPages/ErrorPage.dart';
+import 'package:Orgit/Pages/Information/ErrorPage.dart';
 
 class UserInfo {
   static String uid = "";
@@ -37,23 +32,29 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: "Orgit",
       theme: ThemeData(
+        navigationBarTheme: const NavigationBarThemeData(
+            labelTextStyle: WidgetStatePropertyAll(TextStyle(
+          fontSize: 16,
+          color: Colors.white,
+        ))),
         brightness: Brightness.light,
-        primaryColor: Color(0xFFFBE79F),
+        primaryColor: const Color(0xFFFBE79F),
         colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFFFBE79F)),
       ),
       debugShowCheckedModeBanner: false,
-      home: FutureBuilder(
-        future: _checkUserProfile(),
-        builder: (context, AsyncSnapshot<Widget> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Container();
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else {
-            return snapshot.data!;
-          }
-        },
-      ),
+      // home: FutureBuilder(
+      //   future: _checkUserProfile(),
+      //   builder: (context, AsyncSrnapshot<Widget> snapshot) {
+      //     if (snapshot.connectionState == ConnectionState.waiting) {
+      //       return Container();
+      //     } else if (snapshot.hasError) {
+      //       return Center(child: Text('Error: ${snapshot.error}'));
+      //     } else {
+      //       return snapshot.data!;
+      //     }
+      //   },
+      // ),
+      home: Joingroup(),
     );
   }
 
@@ -64,19 +65,17 @@ class _MyAppState extends State<MyApp> {
       UserInfo.uid = FirebaseAuth.instance.currentUser!.uid;
       // API service - Is profile made?
       try {
-        final client = RestClient(Dio());
-
-        ApiResponseUser response = await client.getUserByUid(UserInfo.uid);
-
         Logger log = Logger();
 
-        log.i(response.detail.nickname);
+        // log.i(response.detail.nickname);
 
-        if (response.detail.nickname == "") {
-          return MakeProfile();
-        } else {
-          return WelcomeScreen();
-        }
+        // if (response.detail.nickname == "") {
+        //   return MakeProfile();
+        // } else {
+        //   return WelcomeScreen();
+        // }
+        return Joingroup();
+        // return Modcreategroup();
       } on Exception catch (_) {
         Logger log = Logger();
         log.i(_);
@@ -84,7 +83,7 @@ class _MyAppState extends State<MyApp> {
       }
     } else {
       //sign out
-      return MainMenu();
+      return Joingroup();
     }
   }
 }

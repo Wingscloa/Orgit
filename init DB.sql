@@ -1,23 +1,28 @@
+-- checked
 CREATE TABLE Users (
 	UserId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	UserUID varchar(255) NOT NULL,
-	FirstName varchar(64) NOT NULL,
-	LastName varchar(64) NOT NULL,
-	Nickname varchar(64) NOT NULL,
-	Email varchar(128) NOT NULL UNIQUE,
-	Birthday DATE NOT NULL,
-	Verified BOOLEAN NOT NULL DEFAULT FALSE,
-	ProfileIcon BYTEA NOT NULL,
+	FirstName varchar(32) NULL,
+	LastName varchar(32) NULL,
+	Nickname varchar(32) NULL,
+	Email varchar(64) NOT NULL UNIQUE,
+	Birthday DATE NULL,
+	Verified BOOLEAN NULL DEFAULT FALSE,
 	Deleted BOOLEAN NOT NULL DEFAULT FALSE,
-	DeletedAt DATE NULL,
-	CreatedAt DATE DEFAULT NOW(),
-	LastActive DATE NULL,
-	TelephoneNumber varchar(9) NOT NULL,
-	TelephonePrefix varchar(5) NOT NULL,
+	TelephoneNumber char(9) NULL ,
+	TelephonePrefix char(3) NULL,
 	Level INTEGER NOT NULL DEFAULT 1,
 	Experience INTEGER NOT NULL DEFAULT 0,
-	SettingsConfig BYTEA NULL,
-	OnNotify BOOLEAN NOT NULL DEFAULT TRUE
+	ProfileIcon TEXT NULL,
+	DeletedAt DATE NULL,
+	CreatedAt DATE DEFAULT NOW(),
+	LastActive DATE NULL
+);
+
+CREATE TABLE user_settings(
+	UserId INTEGER PRIMARY KEY REFERENCES Users(UserId) ON DELETE CASCADE,
+	notification_on BOOLEAN DEFAULT TRUE,
+	theme TEXT DEFAULT 'default'
 );
 
 CREATE INDEX idx_users_email ON Users(Email);
@@ -28,12 +33,13 @@ CREATE INDEX idx_users_useruid ON Users(UserUID);
 CREATE TABLE Icon(
 	IconId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	Name varchar(16) NOT NULL,
-	Content BYTEA NOT NULL,
+	Content TEXT NOT NULL,
 	Extension varchar(8) NOT NULL
 );
 
 -- Titles
 
+--created
 CREATE TABLE Category(
 	CategoryId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	Name varchar(16) NOT NULL
@@ -65,8 +71,7 @@ CREATE TABLE ToDo(
 	WhenComplete TIMESTAMP NOT NULL,
 	ToComplete TIMESTAMP NULL,
 	Completed BOOLEAN DEFAULT FALSE,
-	CreatedAt TIMESTAMP DEFAULT NOW(),
-	Music varchar(16) NULL DEFAULT 'joy'
+	CreatedAt TIMESTAMP DEFAULT NOW()
 );
 
 
@@ -74,9 +79,11 @@ CREATE INDEX idx_todo_userid ON ToDo(UserId);
 
 -- GROUPS & EVENTS
 
+-- created
+
 CREATE TABLE Groups (
 	GroupId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	ProfilePic BYTEA NOT NULL,
+	ProfilePicture TEXT NOT NULL,
 	Name varchar(32) NOT NULL UNIQUE,
 	City varchar(32) NOT NULL,
 	Region varchar(32) NOT NULL,
@@ -87,6 +94,7 @@ CREATE TABLE Groups (
 	Deleted BOOLEAN DEFAULT FALSE
 );
 
+-- created
 CREATE TABLE LevelName(
 	LevelId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	GroupId INTEGER REFERENCES groups(GroupId) ON DELETE CASCADE,
@@ -94,12 +102,7 @@ CREATE TABLE LevelName(
 	LevelReq INTEGER NOT NULL
 );
 
-CREATE TABLE GroupTitles(
-	TitleId INTEGER REFERENCES Titles(TitleId) ON DELETE CASCADE,
-	GroupId INTEGER REFERENCES Groups(GroupId) ON DELETE CASCADE,
-	PRIMARY KEY (TitleId, GroupId)
-);
-
+-- created
 CREATE TABLE GroupMembers (
 	GroupId INTEGER REFERENCES Groups(GroupId) ON DELETE CASCADE,
 	UserId INTEGER REFERENCES Users(UserId) ON DELETE CASCADE,
@@ -157,7 +160,7 @@ CREATE TABLE UserRoles (
 );
 
 -- Event Create
-
+-- created
 CREATE TABLE Events (
 	EventId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	GroupId INTEGER NULL REFERENCES Groups(GroupId) ON DELETE CASCADE, -- NULL = UserEvent / NOT NULL = GroupEvent
@@ -165,11 +168,11 @@ CREATE TABLE Events (
 	Name varchar(32) NOT NULL,
 	Color char(6) NULL DEFAULT '#FFCB69',
 	Description varchar(512) NOT NULL,
-	ProfilePic BYTEA NULL,
 	Address varchar(128) NOT NULL,
 	Begins DATE NOT NULL,
 	Ends DATE NOT NULL,
-	CreatedAt DATE DEFAULT NOW()
+	CreatedAt DATE DEFAULT NOW(),
+	IconId INTEGER REFERENCES Icon(IconId) ON DELETE CASCADE
 );
 
 
@@ -188,28 +191,32 @@ CREATE TABLE Item(
 
 CREATE INDEX idx_item_event ON Item(EventId);
 
+-- Po insertu Event ==> vyplnit lidem veci, aby si mohli lehce odkliknout, jestli to maji odkliknuto
 CREATE TABLE CompletedItem(
 	UserId INTEGER REFERENCES Users(UserId) ON DELETE CASCADE,
 	ItemId INTEGER REFERENCES Item(ItemId) ON DELETE CASCADE,
-	PickUp BOOLEAN NOT NULL DEFAULT FALSE,
+	PickUp BOOLEAN NOT NULL,
 	PRIMARY KEY (UserId,ItemId)
 );
 
 -- Event Grading
 
-CREATE TYPE EventPart_status AS ENUM (
+-- created
+CREATE TYPE EventPartStatus AS ENUM (
     'Včasný příchod',
     'Pozdní příchod',
     'Omluven',
     'Neomluven'
 );
-
+-- created
 CREATE TABLE EventParticipants (
 	EventId INTEGER REFERENCES Events(EventId) ON DELETE CASCADE,
 	UserId INTEGER REFERENCES Users(UserId) ON DELETE CASCADE,
-	State EventPart_status NULL,
+	State EventPartStatus NULL,
 	PRIMARY KEY (EventId, UserId)
 );
+
+CREATE INDEX idx_eventparticipants_userid ON EventParticipants(UserId);
 
 
 -- NOTIFICATIONS
@@ -250,32 +257,37 @@ CREATE INDEX idx_reports_userid ON Reports(UserId);
 
 -- SKILL TREE
 
+-- created
+
 CREATE TABLE GroupTree(
 	TreeId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	GroupId INTEGER REFERENCES Groups(GroupId) ON DELETE CASCADE
 );
 
+-- created
 CREATE TABLE BubbleGroups(
 	BubbleGroupId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	TreeId INTEGER REFERENCES GroupTree(TreeId) ON DELETE CASCADE,
 	Name varchar(32) NOT NULL,
-	Icon BYTEA NOT NULL,
+	IconId INTEGER REFERENCES Icon(IconId) ON DELETE CASCADE,
 	UnlockAfterComplete INTEGER REFERENCES BubbleGroups(BubbleGroupId) ON DELETE CASCADE NULL,
 	LevelReq INTEGER NULL DEFAULT 1
 );
 
+-- created
 CREATE TABLE BubbleQuests(
 	BubbleQuestsId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	BubbleGroupId INTEGER REFERENCES BubbleGroups(BubbleGroupId) ON DELETE CASCADE,
 	Name varchar(32) NOT NULL,
 	QuestNote varchar(255) NOT NULL,
-	ProfilePic BYTEA NOT NULL,
+	IconId INTEGER REFERENCES Icon(IconId) ON DELETE CASCADE,
 	Experience INTEGER NULL,
 	Title INTEGER REFERENCES Titles(TitleId) ON DELETE CASCADE NULL,
 	CreatedBy INTEGER REFERENCES Users(UserId) ON DELETE CASCADE,
 	CreatedAt TIMESTAMP DEFAULT NOW()
 );
 
+-- created
 CREATE TABLE CompletedQuests(
 	BubbleQuestsId INTEGER REFERENCES BubbleQuests(BubbleQuestsId) ON DELETE CASCADE,
 	UserId INTEGER REFERENCES Users(UserId) ON DELETE CASCADE,
@@ -294,9 +306,10 @@ CREATE VIEW AllGroups AS
 	SELECT 
 		G.groupid,
 		G."name",
-		G.profilepic,
+		G.ProfilePicture,
 		G.city
-	FROM groups as G;
+	FROM groups as G
+	WHERE G.deleted = FALSE;
 	
 -- spojeny tituly zakladni aplikace a tituly skupiny uzivatele, ktera vraci potrebne veci pro zobrazeni
 CREATE OR REPLACE FUNCTION Func_get_all_titles(group_id INT)
@@ -333,3 +346,7 @@ BEGIN
 			WHERE titles.appdefault = TRUE;
 END;
 $$ LANGUAGE plpgsql;
+
+-- add admin user and grand all permissions
+CREATE user admin;
+GRANT postgres TO admin;

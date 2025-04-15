@@ -1,6 +1,6 @@
-from ..schemas.notifications import *
-from ..db.models.users import User
-from ..db.models.notifications import Notification
+from schemas.notifications import *
+from db.models.users import User
+from db.models.notifications import Notification
 from sqlalchemy.orm import Session
 
 async def DBcreateNotification(model : createNotification, db : Session):

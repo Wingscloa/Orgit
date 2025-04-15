@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy import Index
-from ...db.base import Base
+from base import Base
 
 class CompletedQuest(Base):
     __tablename__ = 'completedquests'

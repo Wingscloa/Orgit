@@ -1,130 +1,81 @@
-from fastapi import APIRouter, HTTPException
-from ..db.session import SessionLocal
-from ..services._Group import *
-from ..schemas.group import *
-from ..services._views import DBallGroupsFromTo, DBsearchGroupByName, DBnearGroup
-
+from fastapi import APIRouter, HTTPException, Depends
+from fastapi.encoders import jsonable_encoder
+from fastapi.responses import JSONResponse
+from session import getDb, SessionLocal
+from services._Group import *
+from schemas.group import *
+from services._views import group_search, group_search_name, group_search_city
+from auth import verify_firebase_token
+from typing import List
 
 router = APIRouter()
 
-@router.get('/AllGroupFrTo/{from}/{to}')
-async def allGroup(start :int, count: int):
-
-    if(start < 0):
-        return HTTPException(status_code=400, detail="Start can't be negative")
-    elif count <= 0:
-        return HTTPException(status_code=400, detail="Count can't be less or equal to zero")
-
-    db = SessionLocal()
-
+@router.get('/Group', response_model=List[GroupResponse])
+async def get_group_all(verify = Depends(verify_firebase_token), db : Session = Depends(getDb)):
     try:
-        result = await DBallGroupsFromTo(start=start,count=count,db=db)
-        db.close()
-
-        if not result:
-            return HTTPException(status_code=400,detail="Groups doesn't exists")
-
-        return HTTPException(status_code=200, detail=result)
-        
+        response = group_all(db)
+        return response
     except Exception as err:
-        db.close()
-        print("Exception Error : ", err)
-        return HTTPException(status_code=400, detail="Error contact support")
+        raise HTTPException(status_code=500, detail=f"Contact support\nException error : {err}")
     
-
-    
-# View GroupInNear
-
-
-@router.delete('/Group')
-async def deleteGroup(groupid: int):
-    db = SessionLocal()
-    
-    try:
-        response = await DBdeleteGroup(groupid=groupid,db=db)
-        db.close()
-    
-        if not response:
-            return HTTPException(status_code=404, detail="Not Found")
-    
-        return HTTPException(status_code=200, detail="Success")
-    
-    except Exception as err:
-        return HTTPException(status_code=400, detail=f"Contact support - Exception error : {err}")
-
-@router.get('/GroupInNear/{city}/{start}/{count}')
-async def GroupInNear(city : str, start: int, count : int):
-
-    if(start < 0):
-        return HTTPException(status_code=400, detail="Start can't be negative")
-    elif count <= 0:
-        return HTTPException(status_code=400, detail="Count can't be less or equal to zero")
-
-    db = SessionLocal()
-
-    try:
-        result = await DBnearGroup(city=city, start=start, count=count, db=db)
-        db.close()
-        
-        if not result:  
-            return HTTPException(status_code=400, detail="City doesn't have a group")
-
-        return HTTPException(status_code=200,detail=result)
-    except Exception as err:
-        db.close()
-        return HTTPException(status_code=400, detail="Contact Support\nException error : {err}")
-    
-@router.get('/searchGroupByName/{name}/{start}/{count}')
-async def searchGroupByName(name: str, start: int, count: int):
-
-    if(start < 0):
-        return HTTPException(status_code=400, detail="Start can't be negative")
-    elif count <= 0:
-        return HTTPException(status_code=400, detail="Count can't be less or equal to zero")
-
-    db = SessionLocal()
-
-    try:
-        result = await DBsearchGroupByName(name=name,start=start,count=count,db=db)
-        db.close()
-
-        if not result:
-            return HTTPException(status_code=400, detail="Group was not found")
-        
-        return HTTPException(status_code=200, detail=result)
-    
-    except Exception as err:
-        db.close()
-        return HTTPException(status_code=400, detail="Contact Support\nException error : {err}")
-
-
-# Group
-
 @router.post('/Group')
-async def addGroup(groupModel : GroupCreate):
-    db = SessionLocal()
+async def create_group(groupModel : GroupSchema, verify = Depends(verify_firebase_token), db : Session = Depends(getDb)):
+    try:
+        group_create(groupModel,db=db)
+        return True
+    except Exception as err:
+        raise HTTPException(status_code=400, detail="Parameters are not correct")
+    
+@router.delete('/Group')
+async def delete_group_by_id(groupid: int, verify = Depends(verify_firebase_token), db : Session = Depends(getDb)):
+    try:
+        group_delete(groupid,db)
+        return JSONResponse(status_code=200, content={"message": "Group deleted"})
+    except Exception as err:
+        raise HTTPException(status_code=500, detail=f"Contact support - Exception error : {err}")
+
+@router.get('/Group/{groupid}',  response_model=List[GroupResponse])
+async def get_group_by_id(groupid:int, verify = Depends(verify_firebase_token), db : Session = Depends(getDb)):
+    try:
+        result = group_by_id(groupid=groupid,db=db)
+        return result
+    except Exception as err:
+        raise HTTPException(status_code=500, detail=f"Contact support\nException error : {err}")
+
+@router.get('/Groups/{start}/{count}', response_model=list[GroupSearchResponse])
+async def get_groups_paginated(start :int, count: int, verify = Depends(verify_firebase_token), db : Session = Depends(getDb)):
+    if(start < 0):
+        raise HTTPException(status_code=400, detail="Start can't be negative")
+    elif count <= 0:
+        raise HTTPException(status_code=400, detail="Count can't be less or equal to zero")
 
     try:
-        await DBcreateGroup(groupModel,db=db)
-        return HTTPException(status_code=201, detail="Successfully created")
+        result = group_search(start,count,db)
+        return result
     except Exception as err:
-        db.close()
-        print("Exception error : ", err)
-        return HTTPException(status_code=400, detail="Parameters are not correct")
+        raise HTTPException(status_code=500, detail=f"Error contact support: {err}")
 
-@router.get('/GroupById/{groupid}')
-async def groupById(groupid:int):
-    db = SessionLocal()
+@router.get('/Group/{city}', response_model=list[GroupSearchResponse])
+async def get_group_by_city(city : str, start: int, count : int, verify = Depends(verify_firebase_token), db : Session = Depends(getDb)):
+    if(start < 0):
+        raise HTTPException(status_code=400, detail="Start can't be negative")
+    elif count <= 0:
+        raise HTTPException(status_code=400, detail="Count can't be less or equal to zero")
 
     try:
-        result = await DBgetGroupById(groupid=groupid,db=db)
-        db.close()
-
-        if not result:
-            return HTTPException(status_code=400,detail="Group is not found")
-        
-        return HTTPException(status_code=200, detail=result)
+        result = group_search_city(city, start, count, db)
+        return result
     except Exception as err:
-        db.close()
-        return HTTPException(status_code=400, detail=f"Contact support\nException error : {err}")
+        raise HTTPException(status_code=500, detail="Contact Support\nException error : {err}")
 
+@router.get('/Group/{name}', response_model=list[GroupSearchResponse])
+async def get_group_by_name(name: str, start: int, count: int, verify = Depends(verify_firebase_token), db : Session = Depends(getDb)):
+    if(start < 0):
+        raise HTTPException(status_code=400, detail="Start can't be negative")
+    elif count <= 0:
+        raise HTTPException(status_code=400, detail="Count can't be less or equal to zero")
+    try:
+        result = group_search_name(name,start,count,db)
+        return result
+    except Exception as err:
+        raise HTTPException(status_code=400, detail="Contact Support\nException error : {err}")

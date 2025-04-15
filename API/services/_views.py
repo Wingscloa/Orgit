@@ -1,56 +1,37 @@
 from sqlalchemy.orm import Session
-from ..db.models.EmailExists import EmailExists
-from ..db.models.AllGroups import AllGroups
+from db.models.View.AllGroups import AllGroups
 from fastapi import HTTPException
 
-async def DBemailExists(email:str, db : Session):
-    try:
-        result = db.query(EmailExists).filter(EmailExists.email == email).first()
-        db.flush()
-        
-        if not result:
-            raise HTTPException(status_code=404, detail="Email doesn't exists")
-        return result
-    except Exception as err:
-        raise Exception(err)
+# result can be null, it's searching
 
-
-async def DBallGroupsFromTo(start : int, count : int, db: Session):
+def group_search(start : int, count : int, db: Session):
     try:
         result = (db.query(AllGroups)
-                .offset(start)
-                .limit(count)
-                .all())
-        
-        if not result:
-            raise HTTPException(status_code=404, detail="Groups has not found")
-        db.flush()
+                    .offset(start)
+                    .limit(count)
+                    .all())
         return result
     except Exception as err:
-        raise Exception(err)
+        raise err
 
-async def DBnearGroup(city : str,start: int, count : int, db : Session):
+def group_search_city(city : str,start: int, count : int, db : Session):
     try:
         result = (db.query(AllGroups)
                 .filter(AllGroups.name == city)
                 .offset(start)
                 .limit(count)
                 .all())
-        # result can be null, it's searching so if it's null ==> city doesn't have groups
-        db.flush()
         return result
     except Exception as err:
-        raise Exception(err)
+        raise err
 
-async def DBsearchGroupByName(name : str, start: int, count: int, db : Session):
+def group_search_name(name : str, start: int, count: int, db : Session):
     try:
         result = (db.query(AllGroups)
                 .filter(AllGroups.name.like(f"%{name}%"))
                 .offset(start)
                 .limit(count)
                 .all())
-        db.flush()
-        # result can be null, cuz of searching
         return result
     except Exception as err:
-        raise Exception(err)
+        raise HTTPException(status_code=400, detail=f"Contact support\nException error : {err}")
