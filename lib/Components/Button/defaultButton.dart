@@ -15,11 +15,9 @@ class Defaultbutton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return 
-    InkWell(
+    return InkWell(
       onTap: onTap,
-      child: 
-      Container(
+      child: Container(
         width: 240,
         height: 60,
         decoration: BoxDecoration(
@@ -30,12 +28,13 @@ class Defaultbutton extends StatelessWidget {
           child: Text(
             text,
             style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.bold,
+              fontSize: 17.5,
+              fontWeight: FontWeight.w900,
               color: textColor,
             ),
           ),
         ),
-    ),);
+      ),
+    );
   }
 }

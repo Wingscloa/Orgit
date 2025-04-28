@@ -8,16 +8,16 @@ class Itemview extends StatefulWidget {
   final double headerFont;
   final String textFooter;
   final GestureTapCallback onTapFooter;
-  final List<Widget> cards;
-  bool opened = false;
+  late List<Widget> cards;
+  late bool opened;
 
-  Itemview({
-    required this.textHeader,
-    required this.headerFont,
-    required this.textFooter,
-    required this.onTapFooter,
-    required this.cards,
-  });
+  Itemview(
+      {required this.textHeader,
+      required this.headerFont,
+      required this.textFooter,
+      required this.onTapFooter,
+      required this.cards,
+      this.opened = false});
 
   @override
   State<Itemview> createState() => _ItemviewState();
@@ -41,12 +41,12 @@ class _ItemviewState extends State<Itemview> {
               child: Scrollheader(
                 text: widget.textHeader,
                 fontSize: widget.headerFont,
-                isOpened: widget.opened,
+                isOpened: widget.opened!,
               ),
             ),
           ],
         ),
-        widget.opened
+        widget.opened!
             ? Animate(
                 effects: [
                   FadeEffect(duration: 350.ms),

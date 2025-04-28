@@ -61,6 +61,7 @@ class _MdlgroupjoinState extends State<Mdlgroupjoin> {
                     children: [
                       Itemview(
                         textHeader: 'Skupiny v okolí',
+                        opened: true,
                         textFooter: 'Zobrazit více',
                         onTapFooter: () => {print('Show more')},
                         headerFont: 20,

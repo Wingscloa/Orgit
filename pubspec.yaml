@@ -24,6 +24,8 @@ dependencies:
   icons_plus: ^5.0.0
   image_picker: ^1.1.2
   email_validator: ^3.0.0
+  blur: ^4.0.0
+
 
 dev_dependencies:
   retrofit_generator: ^9.1.7

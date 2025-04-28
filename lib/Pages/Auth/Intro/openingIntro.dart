@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:Orgit/Components/Background/MenuBckg.dart';
 import 'package:Orgit/Components/Feature/BottomDots.dart';
 
 class Openingintro extends StatelessWidget {
@@ -9,7 +8,6 @@ class Openingintro extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
-          MenuBckg(),
           Column(
             children: [
               SizedBox(

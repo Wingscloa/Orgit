@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:Orgit/Auth/Auth.dart';
-import 'package:Orgit/Components/Background/MenuBckg.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:Orgit/Components/Feature/BottomDots.dart';
 import 'package:Orgit/Components/Inputs/FormInput.dart';
@@ -27,7 +26,6 @@ class _ProfileformState extends State<Profileform> {
         resizeToAvoidBottomInset: false,
         body: Stack(
           children: [
-            MenuBckg(),
             Column(
               children: [
                 SizedBox(

@@ -1,18 +1,18 @@
 import 'package:Orgit/Components/Modals/Group/mdlGroupCreate.dart';
 import 'package:Orgit/Components/Modals/Group/mdlGroupJoin.dart';
 import 'package:flutter/material.dart';
-import 'package:Orgit/Components/Background/MenuBckg.dart';
 import 'package:Orgit/Components/Feature/BottomDots.dart';
 import 'package:Orgit/Components/Button/defaultButton.dart';
+import 'package:Orgit/statics.dart';
 
 class Joingroup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Statics.background,
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
-          MenuBckg(),
           Column(
             children: [
               const Image(

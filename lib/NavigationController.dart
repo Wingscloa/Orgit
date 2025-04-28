@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:Orgit/Pages/Group/joinGroup.dart';
+import 'package:Orgit/Pages/Main/Group/joinGroup.dart';
 import 'package:Orgit/Pages/Auth/profileForm.dart';
 
 class Navigationcontroller {

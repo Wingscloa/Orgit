@@ -2,7 +2,6 @@ import 'package:Orgit/NavigationController.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:Orgit/Components/Background/MenuBckg.dart';
 import 'package:Orgit/Components/Feature/BottomDots.dart';
 import 'package:Orgit/Components/Inputs/FormInput.dart';
 import 'package:icons_plus/icons_plus.dart';
@@ -40,7 +39,6 @@ class _RegisterState extends State<Register> {
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
-          MenuBckg(),
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [

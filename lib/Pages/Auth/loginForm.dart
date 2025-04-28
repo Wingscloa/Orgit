@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:Orgit/Auth/Auth.dart';
-import 'package:Orgit/Components/Background/MenuBckg.dart';
 import 'package:Orgit/Components/Feature/BottomDots.dart';
 import 'package:Orgit/Components/Inputs/FormInput.dart';
 import 'package:icons_plus/icons_plus.dart';
@@ -14,9 +13,7 @@ class LoginForm extends StatelessWidget {
 
   final password = TextEditingController();
 
-  LoginForm({
-    required this.onLogin
-  });
+  LoginForm({required this.onLogin});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +21,6 @@ class LoginForm extends StatelessWidget {
         resizeToAvoidBottomInset: false,
         body: Stack(
           children: [
-            MenuBckg(),
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
