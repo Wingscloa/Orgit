@@ -1,24 +1,8 @@
+import 'package:Orgit/Pages/Main/homepage.dart';
 import 'package:flutter/material.dart';
-import 'package:Orgit/Pages/Main/Calendar/calendarPage.dart';
-import 'package:Orgit/Pages/Main/Event/eventPage.dart';
-import 'package:Orgit/Pages/Main/Group/groupPage.dart';
-import 'package:Orgit/Pages/Main/Profil/profilPage.dart';
-import 'package:Orgit/Pages/Main/TodoList/todolistPage.dart';
-import 'package:Orgit/Pages/Main/Settings/settings.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:Orgit/statics.dart';
 
-class Homepage extends StatefulWidget {
-  final int initPage;
-
-  Homepage({required this.initPage});
-  @override
-  State<Homepage> createState() => _HomepageState();
-}
-
-class _HomepageState extends State<Homepage> {
-  final _pageController = new PageController();
-  int _selectedIndex = 0;
+class Settings extends StatelessWidget {
   static double marginItem = 35;
   @override
   Widget build(BuildContext context) {
@@ -40,7 +24,14 @@ class _HomepageState extends State<Homepage> {
               width: 35,
             ),
             InkWell(
-              onTap: () => onTapItem(0),
+              onTap: () => {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Homepage(
+                              initPage: 0,
+                            )))
+              },
               child: Icon(
                 Icons.calendar_month,
                 color: Colors.white,
@@ -51,7 +42,16 @@ class _HomepageState extends State<Homepage> {
               width: marginItem,
             ),
             InkWell(
-              onTap: () => onTapItem(1),
+              onTap: () => {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Homepage(
+                      initPage: 1,
+                    ),
+                  ),
+                ),
+              },
               child: Icon(
                 Icons.calendar_month,
                 color: Colors.white,
@@ -62,7 +62,16 @@ class _HomepageState extends State<Homepage> {
               width: marginItem,
             ),
             InkWell(
-              onTap: () => onTapItem(2),
+              onTap: () => {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Homepage(
+                      initPage: 2,
+                    ),
+                  ),
+                ),
+              },
               child: Icon(
                 Icons.calendar_month,
                 color: Colors.white,
@@ -73,7 +82,16 @@ class _HomepageState extends State<Homepage> {
               width: marginItem,
             ),
             InkWell(
-              onTap: () => onTapItem(3),
+              onTap: () => {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Homepage(
+                      initPage: 3,
+                    ),
+                  ),
+                ),
+              },
               child: Icon(
                 Icons.calendar_month,
                 color: Colors.white,
@@ -84,7 +102,16 @@ class _HomepageState extends State<Homepage> {
               width: marginItem,
             ),
             InkWell(
-              onTap: () => onTapItem(4),
+              onTap: () => {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Homepage(
+                      initPage: 4,
+                    ),
+                  ),
+                ),
+              },
               child: Icon(
                 Icons.calendar_month,
                 color: Colors.white,
@@ -95,35 +122,7 @@ class _HomepageState extends State<Homepage> {
         ),
       ),
       resizeToAvoidBottomInset: false,
-      body: Stack(
-        children: <Widget>[
-          PageView(
-            controller: _pageController,
-            children: <Widget>[
-              // v navbaru
-              Calendarpage(),
-              Eventpage(),
-              Grouppage(),
-              Todolistpage(),
-              Profilpage(),
-            ],
-            onPageChanged: (page) {
-              setState(() {
-                _selectedIndex = page;
-              });
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  void onTapItem(int value) {
-    setState(() {
-      _selectedIndex = value;
-    });
-    _pageController.jumpToPage(
-      value,
+      body: Column(),
     );
   }
 }

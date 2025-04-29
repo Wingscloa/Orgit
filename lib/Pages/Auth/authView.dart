@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:Orgit/Pages/Intro/openingIntro.dart';
+import 'package:Orgit/Pages/Auth/Intro/openingIntro.dart';
 import 'package:Orgit/Pages/Auth/loginForm.dart';
 import 'package:Orgit/Pages/Auth/Register.dart';
-import 'package:Orgit/Pages/Intro/openingIntro.dart';
+import 'package:Orgit/Pages/Auth/Intro/openingIntro.dart';
 
 class Authview extends StatefulWidget {
   final bool isRegistered = false;

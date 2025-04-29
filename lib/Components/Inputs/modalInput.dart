@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:Orgit/Components/Inputs/TitleInput.dart';
 
-void showModalInput(
-    BuildContext context, TextEditingController controller, String hintText) {
+void showModalInput(BuildContext context, TextEditingController controller,
+    String hintText, GlobalKey<TitleInputState> targeKey) {
   OverlayState overlayState = Overlay.of(context);
 
   late OverlayEntry entry;
@@ -15,7 +16,10 @@ void showModalInput(
         color: Colors.black54,
         elevation: 12,
         child: InkWell(
-          onTap: entry.remove,
+          onTap: () {
+            // targeKey.currentState?.updateIcon();
+            entry.remove();
+          },
           child: SizedBox(
             height: MediaQuery.sizeOf(context).height,
             child: Column(

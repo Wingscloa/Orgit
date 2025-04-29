@@ -52,8 +52,8 @@ class _MyAppState extends State<MyApp> {
       //     }
       //   },
       // ),
-      // home: Joingroup(),
-      home: Homepage(),
+      home: Joingroup(),
+      // home: Homepage(),
     );
   }
 
