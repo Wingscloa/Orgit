@@ -28,10 +28,11 @@ lib/generated_plugin_registrant.dart
 **/android/key.properties
 **/android/local.properties
 **/android/**/GeneratedPluginRegistrant.java
-
+**/android/.cxx/**/
 # End of https://www.toptal.com/developers/gitignore/api/flutter
 
 ## FAST API ##
+
 .idea/
 .metadata
 _.erd.json
