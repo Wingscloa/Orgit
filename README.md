@@ -40,7 +40,7 @@ Orgit je mobilní aplikace navržená pro zjednodušení komunikace a organizace
 | **Člen týmu** | **Role**                | **Hlavní úkoly**                               |  
 |----------------|-------------------------|-----------------------------------------------|  
 | Wingscloa     | Fullstack vývojář       | Vývoj backendu, integrace a podpora týmu.     |  
-| Lukylo        | UI design & Frontend    | Návrh uživatelského rozhraní a implementace.  |  
+| Lukylo        | UI design    | Návrh uživatelského rozhraní.  |  
 
 ---
 
