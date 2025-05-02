@@ -2,8 +2,7 @@ import 'package:orgit/pages/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:orgit/global_vars.dart';
 import 'package:blur/blur.dart';
-import 'package:orgit/components/Overlays/Overlay.dart';
-import 'package:orgit/components/Overlays/ovr_notification.dart';
+import 'package:orgit/components/overlays/ovr_notification.dart';
 import 'package:orgit/pages/settings/components/section_header.dart';
 import 'package:orgit/pages/settings/components/section_entry.dart';
 import 'package:orgit/pages/settings/components/section_line.dart';
@@ -190,27 +189,27 @@ class Settings extends StatelessWidget {
                             SettingEntry(
                               icon: Icons.person,
                               label: "Profil",
-                              onTap: () => nothing(),
+                              onTap: () => Global.nothing(),
                             ),
                             SettingEntry(
                               icon: Icons.forum,
                               label: "Osobní údaje",
-                              onTap: () => nothing(),
+                              onTap: () => Global.nothing(),
                             ),
                             SettingEntry(
                               icon: Icons.shield,
                               label: "Zabezpečení",
-                              onTap: () => nothing(),
+                              onTap: () => Global.nothing(),
                             ),
                             SettingEntry(
                               icon: Icons.group,
                               label: "Role skupiny",
-                              onTap: () => nothing(),
+                              onTap: () => Global.nothing(),
                             ),
                           ],
                         ),
                         SectionLine(
-                          p_bot: 40,
+                          pBot: 40,
                         ),
                         // sekce obecne nastaveni
                         SectionHeader(header: "Obecné nastavení"),
@@ -221,7 +220,7 @@ class Settings extends StatelessWidget {
                             SettingEntry(
                               icon: Icons.notification_add,
                               label: "Upozornění",
-                              onTap: () => showOverlay(
+                              onTap: () => OverlayHelper.showOverlay(
                                 context,
                                 OverlayNotification(),
                               ),
@@ -229,12 +228,12 @@ class Settings extends StatelessWidget {
                             SettingEntry(
                               icon: Icons.color_lens,
                               label: "Motiv",
-                              onTap: () => nothing(),
+                              onTap: () => Global.nothing(),
                             ),
                             SettingEntry(
                               icon: Icons.info,
                               label: "Informace o aplikaci",
-                              onTap: () => nothing(),
+                              onTap: () => Global.nothing(),
                             ),
                           ],
                         )
@@ -246,23 +245,5 @@ class Settings extends StatelessWidget {
             ),
           ],
         ));
-  }
-
-  // !! FUNGUJE TO !!
-  void showOverlay(BuildContext context, StatefulOverlay widget) {
-    final overlay = Overlay.of(context, rootOverlay: true);
-    late OverlayEntry overlayEntry;
-    final widgetOnClose = widget.copyWith(
-      onClose: () {
-        overlayEntry.remove();
-        widget.onClose?.call();
-      },
-    );
-    overlayEntry = OverlayEntry(builder: (context) => widgetOnClose);
-    overlay.insert(overlayEntry);
-  }
-
-  void nothing() {
-    print("Settings - activate inkwell");
   }
 }

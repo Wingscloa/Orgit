@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:orgit/components/overlays/Overlay.dart';
-import 'package:orgit/components/Overlays/ovr_notification.dart';
+import 'package:orgit/components/overlays/overlay.dart';
 
 class OverlayHelper {
-  static void _showOverlay(BuildContext context, StatefulOverlay widget) {
+  static void showOverlay(BuildContext context, StatefulOverlay widget) {
     final overlay = Overlay.of(context, rootOverlay: true);
     late OverlayEntry overlayEntry;
     widget.onClose = () => overlayEntry.remove();

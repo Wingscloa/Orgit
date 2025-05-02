@@ -14,7 +14,7 @@ class Profileform extends StatefulWidget {
   final telephonePrefixCont = TextEditingController();
   final telephoneCont = TextEditingController();
   final dateCont = TextEditingController();
-  XFile? selectedImage;
+  late final XFile? selectedImage;
   @override
   State<Profileform> createState() => _ProfileformState();
 }
@@ -62,7 +62,7 @@ class _ProfileformState extends State<Profileform> {
                   height: 30,
                 ),
                 ProfileIcon(
-                  Ontap: _pickImageFromGallery,
+                  onTap: _pickImageFromGallery,
                   // image: widget.selectedImage,
                 ),
                 SizedBox(
@@ -290,11 +290,11 @@ class TelephoneInput extends StatelessWidget {
 // TODO: Opravit Profilovky
 
 class ProfileIcon extends StatelessWidget {
-  final VoidCallback Ontap;
+  final VoidCallback onTap;
   // final Image image;
   const ProfileIcon({
     super.key,
-    required this.Ontap,
+    required this.onTap,
     // required this.image,
   });
 
@@ -324,7 +324,7 @@ class ProfileIcon extends StatelessWidget {
                 ),
                 child: IconButton(
                   icon: Icon(Icons.edit, color: Colors.black, size: 16),
-                  onPressed: Ontap,
+                  onPressed: onTap,
                 ),
               ),
             ),

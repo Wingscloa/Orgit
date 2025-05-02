@@ -1,5 +1,4 @@
 import 'package:email_validator/email_validator.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:orgit/Components/Feature/bottom_dots.dart';
 import 'package:orgit/Components/Inputs/from_input.dart';
@@ -337,7 +336,7 @@ class _RegisterState extends State<Register> {
         try {
           await AuthService().createUserWithEmailAndPassword(email, password);
           // taking useruid
-          String userUID = FirebaseAuth.instance.currentUser!.uid;
+          // String userUID = FirebaseAuth.instance.currentUser!.uid;
           // ini. model
           // userAddSchema user = userAddSchema(
           //     useruid: userUID,

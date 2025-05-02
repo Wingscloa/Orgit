@@ -10,7 +10,7 @@ class Mdlgroupjoin extends StatefulWidget {
 }
 
 class _MdlgroupjoinState extends State<Mdlgroupjoin> {
-  final TextEditingController searchControl = new TextEditingController();
+  final TextEditingController searchControl = TextEditingController();
 
   @override
   Widget build(BuildContext context) {

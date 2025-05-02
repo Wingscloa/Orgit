@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:orgit/global_vars.dart';
-import 'package:orgit/components/Overlays/Overlay.dart';
-import 'package:orgit/components/Overlays/ovr_header.dart';
-import 'package:orgit/pages/settings/components/section_entry.dart';
-import 'package:orgit/pages/settings/components/section_line.dart';
-import 'package:orgit/pages/settings/components/section_switch.dart';
+import 'package:orgit/components/overlays/overlay.dart';
 
 class OverlaySilentMode extends StatefulOverlay {
   OverlaySilentMode({super.key, super.onClose});

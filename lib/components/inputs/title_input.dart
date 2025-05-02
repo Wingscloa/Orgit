@@ -1,25 +1,26 @@
-import 'package:orgit/components/Inputs/modal_input.dart';
+import 'package:orgit/components/inputs/modal_input.dart';
 import 'package:flutter/material.dart';
 
 class TitleInput extends StatefulWidget {
   final TextEditingController controller;
-  late String value;
-  Offset iconPos = Offset.zero;
+  final String value;
+  late final Offset iconPos;
 
   TitleInput({
-    Key? key,
+    this.iconPos = Offset.zero,
     required this.controller,
     required this.value,
-  }) : super(key: key);
+  });
 
   @override
   State<TitleInput> createState() => TitleInputState();
-  final GlobalKey<TitleInputState> key = GlobalKey<TitleInputState>();
+  final GlobalKey<TitleInputState> globalkey = GlobalKey<TitleInputState>();
 }
 
 class TitleInputState extends State<TitleInput> {
   GlobalKey titleKey = GlobalKey();
-  bool? visible = null;
+
+  bool? visible;
   @override
   void initState() {
     super.initState();
@@ -45,7 +46,8 @@ class TitleInputState extends State<TitleInput> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () => {
-        showModalInput(context, widget.controller, widget.value, widget.key)
+        showModalInput(
+            context, widget.controller, widget.value, widget.globalkey)
       },
       child: Stack(
         children: [

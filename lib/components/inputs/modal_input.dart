@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:orgit/Components/Inputs/title_input.dart';
+import 'package:orgit/components/inputs/title_input.dart';
 
 void showModalInput(BuildContext context, TextEditingController controller,
     String hintText, GlobalKey<TitleInputState> targeKey) {

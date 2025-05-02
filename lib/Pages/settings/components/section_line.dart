@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 
 class SectionLine extends StatelessWidget {
-  final double p_top;
-  final double p_bot;
+  final double pTop;
+  final double pBot;
   const SectionLine({
     super.key,
-    this.p_top = 15,
-    this.p_bot = 15,
+    this.pTop = 15,
+    this.pBot = 15,
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: p_top, bottom: p_bot),
+      padding: EdgeInsets.only(top: pTop, bottom: pBot),
       child: Container(
         width: MediaQuery.of(context).size.width,
         height: 0.5,

@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 class FormInput extends StatefulWidget {
   final String labelText;
   final TextEditingController controller;
-  IconData icon;
+  final IconData icon;
   final Color iconColor;
-  bool obscureText;
-  bool showObscureText;
-  bool changePassword;
-  bool readonly;
-  bool dateInput;
-  String righText;
-  Color rightTextColor;
-  GestureTapCallback? righTextOnTap;
+  late final bool obscureText;
+  final bool showObscureText;
+  final bool changePassword;
+  final bool readonly;
+  final bool dateInput;
+  final String righText;
+  final Color rightTextColor;
+  final GestureTapCallback? righTextOnTap;
 
   FormInput(
       {required this.labelText,
@@ -28,7 +28,6 @@ class FormInput extends StatefulWidget {
       this.righText = "",
       this.rightTextColor = const Color.fromARGB(255, 255, 203, 105),
       this.icon = Icons.check});
-
   @override
   State<FormInput> createState() => _FormInputState();
 }

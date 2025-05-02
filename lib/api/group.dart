@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:orgit/api/config.dart';
 
 Future<List<GroupResponse>> fetchGroups() async {
-  final List<GroupResponse> Groups = [];
+  final List<GroupResponse> groups = [];
   final header = API.requestHeaders;
   header['Authorization'] = "Bearer ${API.tempToken}";
   final uri = Uri.parse("${API.baseURL}/Group");
@@ -18,15 +18,15 @@ Future<List<GroupResponse>> fetchGroups() async {
 
   if (response.statusCode == 200) {
     dynamic jsonGroups = jsonDecode(response.body);
-    for (var Group in jsonGroups) {
+    for (var group in jsonGroups) {
       try {
-        Groups.add(GroupResponse.fromJson(Group));
-        logger.f(Groups.last.name);
+        groups.add(GroupResponse.fromJson(group));
+        logger.f(groups.last.name);
       } catch (e, stack) {
         logger.e('Fail while parsing Group: $e', stackTrace: stack);
       }
     }
-    return Groups;
+    return groups;
   } else {
     throw Exception('Failed to load Groups');
   }

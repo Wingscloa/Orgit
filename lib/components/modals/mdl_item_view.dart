@@ -8,8 +8,8 @@ class Itemview extends StatefulWidget {
   final double headerFont;
   final String textFooter;
   final GestureTapCallback onTapFooter;
-  late List<Widget> cards;
-  late bool opened;
+  late final List<Widget> cards;
+  late final bool opened;
 
   Itemview(
       {required this.textHeader,

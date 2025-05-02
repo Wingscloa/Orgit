@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:orgit/components/overlays/overlay.dart';
 
 class Global {
   static Color background = Color.fromARGB(255, 19, 20, 22);

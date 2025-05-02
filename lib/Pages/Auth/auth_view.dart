@@ -4,8 +4,13 @@ import 'package:orgit/pages/auth/login_form.dart';
 import 'package:orgit/pages/auth/register.dart';
 
 class Authview extends StatefulWidget {
-  final bool isRegistered = false;
-  bool inRegister = false;
+  final bool isRegistered;
+  late final bool inRegister;
+
+  Authview({
+    required this.isRegistered,
+    required this.inRegister,
+  });
   @override
   State<Authview> createState() => _MainMenuState();
 }

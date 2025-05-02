@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 abstract class StatefulOverlay extends StatefulWidget {
-  final GestureTapCallback? onClose;
+  late final GestureTapCallback? onClose;
   StatefulOverlay({
     super.key,
     this.onClose,
@@ -9,6 +9,6 @@ abstract class StatefulOverlay extends StatefulWidget {
 }
 
 abstract class StatelessOverlay extends StatelessWidget {
-  final Function? onClose;
+  late final Function? onClose;
   StatelessOverlay({super.key, this.onClose});
 }

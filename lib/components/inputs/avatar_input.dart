@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class AvatarInput extends StatelessWidget {
   final GestureTapCallback? onTap;
-  late Uint8List? image;
+  final Uint8List? image;
   AvatarInput({
     required this.onTap,
     required this.image,
