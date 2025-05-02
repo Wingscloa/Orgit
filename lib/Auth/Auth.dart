@@ -55,7 +55,7 @@ class AuthService {
     }
   }
 
-  Future<void> ChangePassword(String email) async {
+  Future<void> changePassword(String email) async {
     try {
       if (_auth.isSignInWithEmailLink(email)) {
         log('Email existuje');

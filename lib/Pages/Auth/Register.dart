@@ -1,13 +1,12 @@
-import 'package:Orgit/NavigationController.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:Orgit/Components/Feature/BottomDots.dart';
-import 'package:Orgit/Components/Inputs/FormInput.dart';
+import 'package:orgit/Components/Feature/bottom_dots.dart';
+import 'package:orgit/Components/Inputs/from_input.dart';
 import 'package:icons_plus/icons_plus.dart';
-import 'package:Orgit/Components/Button/SocialButton.dart';
+import 'package:orgit/Components/Button/social_button.dart';
 import 'package:logger/logger.dart';
-import 'package:Orgit/Auth/Auth.dart';
+import 'package:orgit/auth/auth.dart';
 
 class Register extends StatefulWidget {
   final VoidCallback onRegister;
@@ -78,7 +77,7 @@ class _RegisterState extends State<Register> {
                           color: Colors.white),
                     ),
                     Text(
-                      'Vítejte v Orgitu!',
+                      'Vítejte v orgitu!',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 15,
@@ -356,7 +355,7 @@ class _RegisterState extends State<Register> {
           // final client = RestClient(dio);
           // await client.createUser(user.toJson()); // des. user and post to API
           // Push to page
-          Navigationcontroller.goToMakeProfile(context);
+          // Navigationcontroller.goToMakeProfile(context);
         } on Exception catch (_) {
           Logger log = Logger();
           log.i(_);

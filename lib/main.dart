@@ -1,8 +1,7 @@
-import 'package:Orgit/Pages/Main/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
-import 'package:Orgit/Pages/Main/Group/joinGroup.dart';
+import 'package:orgit/pages/settings/settings.dart';
 import 'dart:async';
 
 class UserInfo {
@@ -52,8 +51,9 @@ class _MyAppState extends State<MyApp> {
       //     }
       //   },
       // ),
-      home: Joingroup(),
-      // home: Homepage(),
+      // home: Joingroup(),
+      // home: Homepage(initPage: 0),
+      home: Settings(),
     );
   }
 
