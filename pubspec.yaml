@@ -1,5 +1,5 @@
-name: Orgit
-description: A new Flutter project.
+name: orgit
+description: Organizační aplikace se znamýma funkcema
 
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
