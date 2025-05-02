@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 class Defaultbutton extends StatelessWidget {
   final String text;
   final Color color;
+  final double width;
+  final double height;
   final Color? textColor;
   final GestureTapCallback onTap;
 
@@ -11,15 +13,17 @@ class Defaultbutton extends StatelessWidget {
       required this.text,
       required this.color,
       required this.onTap,
+      required this.width,
+      required this.height,
       this.textColor = Colors.white});
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 240,
-        height: 60,
+        width: width,
+        height: height,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           color: color,

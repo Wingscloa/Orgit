@@ -6,11 +6,14 @@ import 'package:orgit/components/overlays/ovr_header.dart';
 import 'package:orgit/pages/settings/components/section_entry.dart';
 import 'package:orgit/pages/settings/components/section_line.dart';
 import 'package:orgit/pages/settings/components/section_switch.dart';
+import 'package:orgit/utils/overlay_helper.dart';
+import 'package:orgit/components/Overlays/ovr_silentmode.dart';
+import 'package:orgit/components/Overlays/ovr_message.dart';
+import 'package:orgit/components/Overlays/ovr_orlingo.dart';
 
 class OverlayNotification extends StatefulOverlay {
   OverlayNotification({
     super.key,
-    super.onClose,
   });
   @override
   State<OverlayNotification> createState() => OverlayNotificationState();
@@ -68,18 +71,27 @@ class OverlayNotificationState extends State<OverlayNotification> {
                 SettingEntry(
                   icon: Icons.no_cell,
                   label: "Tichý režim",
-                  onTap: () => Global.nothing(),
+                  onTap: () => OverlayHelper.showOverlay(
+                    context,
+                    OverlaySilentMode(),
+                  ),
                 ),
-                SettingEntry(
-                  icon: Icons.message,
-                  label: "Zprávy",
-                  onTap: () => Global.nothing(),
-                ),
-                SettingEntry(
-                  icon: Icons.school,
-                  label: "Orlingo",
-                  onTap: () => Global.nothing(),
-                ),
+                // SettingEntry(
+                //   icon: Icons.message,
+                //   label: "Zprávy",
+                //   onTap: () => OverlayHelper.showOverlay(
+                //     context,
+                //     OverlayMessageMute(),
+                //   ),
+                // ),
+                // SettingEntry(
+                //   icon: Icons.school,
+                //   label: "Orlingo",
+                //   onTap: () => OverlayHelper.showOverlay(
+                //     context,
+                //     OverlayOrlingoMute(),
+                //   ),
+                // ),
               ],
             )
           ],

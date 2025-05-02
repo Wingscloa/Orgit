@@ -4,7 +4,6 @@ abstract class StatefulOverlay extends StatefulWidget {
   late final GestureTapCallback? onClose;
   StatefulOverlay({
     super.key,
-    this.onClose,
   });
 }
 

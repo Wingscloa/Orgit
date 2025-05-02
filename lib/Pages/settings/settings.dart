@@ -7,6 +7,7 @@ import 'package:orgit/pages/settings/components/section_header.dart';
 import 'package:orgit/pages/settings/components/section_entry.dart';
 import 'package:orgit/pages/settings/components/section_line.dart';
 import 'package:orgit/utils/overlay_helper.dart';
+import 'package:orgit/components/Overlays/ovr_information_app.dart';
 
 class Settings extends StatelessWidget {
   static double marginItem = 35;
@@ -233,7 +234,8 @@ class Settings extends StatelessWidget {
                             SettingEntry(
                               icon: Icons.info,
                               label: "Informace o aplikaci",
-                              onTap: () => Global.nothing(),
+                              onTap: () => OverlayHelper.showOverlay(
+                                  context, OverlayInformationApp()),
                             ),
                           ],
                         )

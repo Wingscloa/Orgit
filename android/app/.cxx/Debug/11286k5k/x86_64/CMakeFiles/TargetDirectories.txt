@@ -1,0 +1,2 @@
+C:/Projects/test/Orgit/android/app/.cxx/Debug/11286k5k/x86_64/CMakeFiles/edit_cache.dir
+C:/Projects/test/Orgit/android/app/.cxx/Debug/11286k5k/x86_64/CMakeFiles/rebuild_cache.dir
