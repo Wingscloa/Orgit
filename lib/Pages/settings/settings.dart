@@ -1,3 +1,5 @@
+import 'package:orgit/components/overlays/ovr_motive.dart';
+import 'package:orgit/components/overlays/ovr_role_creator.dart';
 import 'package:orgit/pages/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:orgit/global_vars.dart';
@@ -205,7 +207,10 @@ class Settings extends StatelessWidget {
                             SettingEntry(
                               icon: Icons.group,
                               label: "Role skupiny",
-                              onTap: () => Global.nothing(),
+                              onTap: () => OverlayHelper.showOverlay(
+                                context,
+                                OverlayRoleCreate(),
+                              ),
                             ),
                           ],
                         ),
@@ -229,13 +234,18 @@ class Settings extends StatelessWidget {
                             SettingEntry(
                               icon: Icons.color_lens,
                               label: "Motiv",
-                              onTap: () => Global.nothing(),
+                              onTap: () => OverlayHelper.showOverlay(
+                                context,
+                                OverlayMotive(),
+                              ),
                             ),
                             SettingEntry(
                               icon: Icons.info,
                               label: "Informace o aplikaci",
                               onTap: () => OverlayHelper.showOverlay(
-                                  context, OverlayInformationApp()),
+                                context,
+                                OverlayInformationApp(),
+                              ),
                             ),
                           ],
                         )

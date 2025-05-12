@@ -95,6 +95,7 @@ class OverlaySilentModeState extends State<OverlaySilentMode> {
                   width: 170,
                   height: 50,
                   text: "Zrušit",
+                  textColor: Colors.grey,
                   color: Color.fromARGB(255, 26, 27, 29),
                   onTap: () => {
                         print("ahoj"),
@@ -103,7 +104,7 @@ class OverlaySilentModeState extends State<OverlaySilentMode> {
                   width: 170,
                   height: 50,
                   text: "Uložit",
-                  textColor: Colors.black,
+                  textColor: Colors.white,
                   color: Color.fromARGB(255, 255, 203, 105),
                   onTap: () => {
                         print("ahoj"),

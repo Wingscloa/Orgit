@@ -179,6 +179,8 @@ class _MdlgroupcreateState extends State<Mdlgroupcreate> {
                     height: 20,
                   ),
                   Defaultbutton(
+                      width: 200,
+                      height: 75,
                       textColor: Colors.black,
                       text: "Vytvořit skupinu",
                       color: Color.fromARGB(255, 255, 203, 105),

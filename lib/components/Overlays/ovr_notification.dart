@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:orgit/global_vars.dart';
 import 'package:orgit/components/overlays/overlay.dart';
-import 'package:orgit/components/overlays/ovr_header.dart';
+import 'package:orgit/components/header/ovr_header.dart';
 import 'package:orgit/pages/settings/components/section_entry.dart';
 import 'package:orgit/pages/settings/components/section_line.dart';
 import 'package:orgit/pages/settings/components/section_switch.dart';
 import 'package:orgit/utils/overlay_helper.dart';
 import 'package:orgit/components/Overlays/ovr_silentmode.dart';
-import 'package:orgit/components/Overlays/ovr_message.dart';
-import 'package:orgit/components/Overlays/ovr_orlingo.dart';
 
 class OverlayNotification extends StatefulOverlay {
   OverlayNotification({

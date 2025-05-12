@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
+import 'package:orgit/Pages/role/role_create.dart';
 import 'package:orgit/pages/settings/settings.dart';
 import 'dart:async';
 
@@ -53,7 +54,8 @@ class _MyAppState extends State<MyApp> {
       // ),
       // home: Joingroup(),
       // home: Homepage(initPage: 0),
-      home: Settings(),
+      // home: Settings(),
+      home: RoleCreate(),
     );
   }
 

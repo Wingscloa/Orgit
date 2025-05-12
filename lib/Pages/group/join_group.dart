@@ -43,6 +43,8 @@ class Joingroup extends StatelessWidget {
               Column(
                 children: [
                   Defaultbutton(
+                    width: 200,
+                    height: 75,
                     onTap: () {
                       showModalBottomSheet(
                           isScrollControlled: true,
@@ -59,6 +61,8 @@ class Joingroup extends StatelessWidget {
                     height: 20,
                   ),
                   Defaultbutton(
+                    width: 200,
+                    height: 75,
                     onTap: () {
                       showModalBottomSheet(
                           isScrollControlled: true,
