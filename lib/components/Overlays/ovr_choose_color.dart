@@ -5,8 +5,8 @@ import 'package:orgit/global_vars.dart';
 import 'package:orgit/components/overlays/overlay.dart';
 
 class OverlayChooseColor extends StatefulOverlay {
-  late final ValueNotifier<Color> input;
-  final Function(ValueNotifier<Color>) onSelect;
+  final Color input;
+  final Function(Color) onSelect;
 
   OverlayChooseColor({
     super.key,
@@ -19,6 +19,7 @@ class OverlayChooseColor extends StatefulOverlay {
 }
 
 class OverlayChooseColorState extends State<OverlayChooseColor> {
+  late Color _input;
   List<Color> colors = [
     Colors.red,
     Colors.blue,
@@ -32,6 +33,12 @@ class OverlayChooseColorState extends State<OverlayChooseColor> {
     Colors.deepPurple,
     Colors.lightBlue,
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _input = widget.input;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -136,13 +143,14 @@ class OverlayChooseColorState extends State<OverlayChooseColor> {
                                                       SizedBox(
                                                         height: 290,
                                                         child: ColorPicker(
-                                                          pickerColor: widget
-                                                              .input.value,
+                                                          pickerColor: _input,
                                                           onColorChanged:
                                                               (color) {
-                                                            widget.onSelect(
-                                                                ValueNotifier(
-                                                                    color));
+                                                            setState(() {
+                                                              _input = color;
+                                                              widget.onSelect(
+                                                                  color);
+                                                            });
                                                           },
                                                           enableAlpha: false,
                                                           displayThumbColor:
@@ -239,14 +247,18 @@ class OverlayChooseColorState extends State<OverlayChooseColor> {
                               return RoleIcon(
                                 width: 50,
                                 height: 50,
-                                color: widget.input.value != color
+                                color: _input != color
                                     ? color
                                     : color.withAlpha(100),
                                 icon: Icons.color_lens,
                                 iconColor: Colors.white,
-                                choosen: color == widget.input.value,
-                                function: () =>
-                                    widget.onSelect(ValueNotifier(color)),
+                                choosen: color == _input,
+                                function: () => {
+                                  setState(() {
+                                    _input = color;
+                                    widget.onSelect(color);
+                                  })
+                                },
                               );
                             }).toList(),
                           ),

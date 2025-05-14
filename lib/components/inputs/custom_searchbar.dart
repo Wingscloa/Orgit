@@ -3,8 +3,13 @@ import 'package:flutter/material.dart';
 class Customsearchbar extends StatefulWidget {
   final TextEditingController controller;
   final List<String> suggestions;
+  final String hintText;
 
-  const Customsearchbar({required this.controller, required this.suggestions});
+  const Customsearchbar({
+    required this.controller,
+    required this.suggestions,
+    required this.hintText,
+  });
   @override
   State<Customsearchbar> createState() => _CustomsearchbarState();
 }
@@ -21,7 +26,7 @@ class _CustomsearchbarState extends State<Customsearchbar> {
           hintStyle: WidgetStatePropertyAll(
             TextStyle(color: Colors.white12),
           ),
-          hintText: 'Klub poctivých skautu',
+          hintText: widget.hintText,
           controller: widget.controller,
           textStyle: WidgetStatePropertyAll(
               TextStyle(color: Colors.white70, fontSize: 18)),

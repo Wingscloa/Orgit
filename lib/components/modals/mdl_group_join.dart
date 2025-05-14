@@ -50,6 +50,7 @@ class _MdlgroupjoinState extends State<Mdlgroupjoin> {
                   width: 330,
                   height: 40,
                   child: Customsearchbar(
+                    hintText: "Klub poctivých skautu",
                     controller: searchControl,
                     suggestions: ["ahoj", "prdelko", "pookie", "ojel bych te"],
                   ),

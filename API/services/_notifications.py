@@ -2,8 +2,10 @@ from schemas.notifications import *
 from db.models.users import User
 from db.models.notifications import Notification
 from sqlalchemy.orm import Session
+from session import getDb
+from fastapi import Depends
 
-async def DBcreateNotification(model : createNotification, db : Session):
+async def DBcreateNotification(model : createNotification, db : Session = Depends(getDb)):
     newNotify = Notification(**model.model_dump())
 
     db.add(newNotify)
@@ -13,7 +15,7 @@ async def DBcreateNotification(model : createNotification, db : Session):
     return True
 
 
-async def DBupdateNotification(model: updateNotification, db: Session):
+async def DBupdateNotification(model: updateNotification, db : Session = Depends(getDb)):
     _old = (db.query(Notification)
             .filter(Notification.notificationid == model.notificationid)
             .first())
@@ -27,7 +29,7 @@ async def DBupdateNotification(model: updateNotification, db: Session):
 
 
 
-async def DBgetNotificationUser(userid: int, db: Session):
+async def DBgetNotificationUser(userid: int, db : Session = Depends(getDb)):
     result = (db.query(Notification)
             .filter(Notification.userid == userid)
             .all()) # userTodo
@@ -38,7 +40,7 @@ async def DBgetNotificationUser(userid: int, db: Session):
     
     return result
 
-async def DBdeleteNotification(NotifyId: int, db : Session):
+async def DBdeleteNotification(NotifyId: int, db : Session = Depends(getDb)):
     _toDelete = (db.query(Notification)
                  .filter(Notification.notificationid == NotifyId)
                  .first())    

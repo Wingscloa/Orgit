@@ -8,8 +8,8 @@ class Itemview extends StatefulWidget {
   final double headerFont;
   final String textFooter;
   final GestureTapCallback onTapFooter;
-  late final List<Widget> cards;
-  late final bool opened;
+  final List<Widget> cards;
+  final bool opened;
 
   Itemview(
       {required this.textHeader,
@@ -24,6 +24,14 @@ class Itemview extends StatefulWidget {
 }
 
 class _ItemviewState extends State<Itemview> {
+  late bool _opened;
+
+  @override
+  void initState() {
+    super.initState();
+    _opened = widget.opened;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -34,9 +42,9 @@ class _ItemviewState extends State<Itemview> {
             InkWell(
               onTap: () => {
                 setState(() {
-                  widget.opened = !widget.opened;
+                  _opened = !_opened;
                 }),
-                print('ItemView : ${widget.opened}'),
+                print('ItemView : $_opened'),
               },
               child: Scrollheader(
                 text: widget.textHeader,
@@ -46,7 +54,7 @@ class _ItemviewState extends State<Itemview> {
             ),
           ],
         ),
-        widget.opened
+        _opened
             ? Animate(
                 effects: [
                   FadeEffect(duration: 350.ms),

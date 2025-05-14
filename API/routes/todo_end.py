@@ -12,11 +12,11 @@ async def get_todo_by_userid(userid: int, verify = Depends(verify_firebase_token
     try:
         userExist = db.query(User).filter(User.userid == userid).first()
         if not userExist:
-            return JSONResponse(status=404,content=False,headers="User doesn't exist")   
+            return JSONResponse(status=404,content={"message" : "User doesn't exist"})
         response = DBgetToDoUser(userid,db)
         if not response:
-            return JSONResponse(status_code=404, detail=False, headers="User doesn't have todos")
-        return response        
+            return JSONResponse(status_code=404, detail={"message" : "User doesn't have todos"})
+        return response
     except Exception as err:
         raise HTTPException(status_code=400, detail=f"Contact support - Exception error : {err}")
 
@@ -24,17 +24,17 @@ async def get_todo_by_userid(userid: int, verify = Depends(verify_firebase_token
 async def create_todo(model : ToDoCreate, verify = Depends(verify_firebase_token), db : Session = Depends(getDb)):
     try:
         response = DBcreateToDo(model,db)
-        return JSONResponse(status_code=200,content="Todo is created")
+        return JSONResponse(status_code=200,content={"message" : "Todo is created"})
     except Exception as err:
         raise HTTPException(status_code=400, detail=f"Contact support - Exception error : {err}")
 
 @router.delete('/Todo/{Id}')
 async def delete_Todo_by_id(Id: int, verify = Depends(verify_firebase_token), db : Session = Depends(getDb)):
     try:
-        response = DBdeleteTodo(TodoId, db)
+        response = DBdeleteTodo(Id, db)
         if not response:
-            return JSONResponse(status_code=404,content=False,headers="Something want wrong")
-        return JSONResponse(status_code=201,content=True,headers="Todo is deleted")
+            return JSONResponse(status_code=404,content={"message" : "Something went wrong"})
+        return JSONResponse(status_code=201,content={"message" : "Todo is deleted"})
     except Exception as err:
         raise HTTPException(status_code=400, detail=f"Contact support - Exception error : {err}")
 
@@ -43,17 +43,17 @@ async def put_update_todo(model : ToDoUpdate, verify = Depends(verify_firebase_t
     try:
         response = DBUpdateTodo(model=model,db=db)
         if not response:
-            return JSONResponse(status_code=404,content=False,headers="Something want wrong")        
-        return JSONResponse(status_code=201, content="ToDo is changed")
+            return JSONResponse(status_code=404,content={"message" : "Something went wrong"})
+        return JSONResponse(status_code=201, content={"message" : "ToDo is changed"})
     except Exception as err:
         raise HTTPException(status_code=400,detail=f"Contact support - Exception error : {err}")
     
 @router.put('/Todo/{id}')
 async def put_complete_todo_by_id(id : int, verify = Depends(verify_firebase_token), db : Session = Depends(getDb)):
     try:
-        response = DBcompleteTodo(TodoId,db)
+        response = DBcompleteTodo(id,db)
         if not response:
-            return JSONResponse(status_code=404, content=False, headers="Something want wrong")
-        return JSONResponse(status_code=201,content=True, headers="ToDo is completed")
+            return JSONResponse(status_code=404, content={"message" : "Something went wrong"})
+        return JSONResponse(status_code=201,content={"message" : "ToDo is completed"})
     except Exception as err:
         raise HTTPException(status_code=400,detail=f"Contact support - Exception error : {err}")

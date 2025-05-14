@@ -6,8 +6,8 @@ import 'package:orgit/components/icons/icon.dart';
 import 'package:orgit/components/overlays/overlay.dart';
 
 class OverlayChooseIcon extends StatefulOverlay {
-  late final ValueNotifier<IconTransfer> input;
-  final Function(IconTransfer) onSelect;
+  final IconTransfer input;
+  final Function(IconData) onSelect;
   OverlayChooseIcon({
     super.key,
     required this.input,
@@ -18,94 +18,93 @@ class OverlayChooseIcon extends StatefulOverlay {
 }
 
 class OverlayChooseIconState extends State<OverlayChooseIcon> {
-  List<IconTransfer> icons = [
-    IconTransfer(
-      icon: Icons.person,
-      iconColor: Colors.white,
-      backgroundColor: Colors.blueAccent,
-    ),
-    IconTransfer(
-      icon: Icons.settings,
-      iconColor: Colors.white,
-      backgroundColor: Colors.grey,
-    ),
-    IconTransfer(
-      icon: Icons.notifications,
-      iconColor: Colors.white,
-      backgroundColor: Colors.deepOrange,
-    ),
-    IconTransfer(
-      icon: Icons.chat,
-      iconColor: Colors.white,
-      backgroundColor: Colors.green,
-    ),
-    IconTransfer(
-      icon: Icons.map,
-      iconColor: Colors.white,
-      backgroundColor: Colors.purple,
-    ),
-    IconTransfer(
-      icon: Icons.camera_alt,
-      iconColor: Colors.white,
-      backgroundColor: Colors.teal,
-    ),
-    IconTransfer(
-      icon: Icons.favorite,
-      iconColor: Colors.white,
-      backgroundColor: Colors.redAccent,
-    ),
-    IconTransfer(
-      icon: Icons.music_note,
-      iconColor: Colors.white,
-      backgroundColor: Colors.indigo,
-    ),
-    IconTransfer(
-      icon: Icons.work,
-      iconColor: Colors.white,
-      backgroundColor: Colors.brown,
-    ),
-    IconTransfer(
-      icon: Icons.flight,
-      iconColor: Colors.white,
-      backgroundColor: Colors.cyan,
-    ),
-    IconTransfer(
-      icon: Icons.shopping_cart,
-      iconColor: Colors.white,
-      backgroundColor: Colors.pinkAccent,
-    ),
-    IconTransfer(
-      icon: Icons.language,
-      iconColor: Colors.white,
-      backgroundColor: Colors.lightBlue,
-    ),
-    IconTransfer(
-      icon: Icons.calendar_today,
-      iconColor: Colors.white,
-      backgroundColor: Colors.deepPurple,
-    ),
-    IconTransfer(
-      icon: Icons.lock,
-      iconColor: Colors.white,
-      backgroundColor: Colors.black,
-    ),
-    IconTransfer(
-      icon: Icons.book,
-      iconColor: Colors.white,
-      backgroundColor: Colors.amber,
-    ),
-    IconTransfer(
-      icon: Icons.more_horiz,
-      iconColor: Colors.white,
-      backgroundColor: Colors.black,
-    ),
-  ];
+  late IconData _input;
+  late List<IconTransfer> icons;
+
   @override
   void initState() {
     super.initState();
-    widget.input.addListener(() => setState(() {}));
+    _input = widget.input.icon;
+    icons = [
+      IconTransfer(
+        icon: Icons.anchor,
+        iconColor: widget.input.iconColor,
+        backgroundColor: widget.input.backgroundColor,
+      ),
+      IconTransfer(
+        icon: Icons.sailing,
+        iconColor: widget.input.iconColor,
+        backgroundColor: widget.input.backgroundColor,
+      ),
+      IconTransfer(
+        icon: Icons.directions_boat,
+        iconColor: widget.input.iconColor,
+        backgroundColor: widget.input.backgroundColor,
+      ),
+      IconTransfer(
+        icon: Icons.water,
+        iconColor: widget.input.iconColor,
+        backgroundColor: widget.input.backgroundColor,
+      ),
+      IconTransfer(
+        icon: Icons.waves,
+        iconColor: widget.input.iconColor,
+        backgroundColor: widget.input.backgroundColor,
+      ),
+      IconTransfer(
+        icon: Icons.beach_access,
+        iconColor: widget.input.iconColor,
+        backgroundColor: widget.input.backgroundColor,
+      ),
+      IconTransfer(
+        icon: Icons.kayaking,
+        iconColor: widget.input.iconColor,
+        backgroundColor: widget.input.backgroundColor,
+      ),
+      IconTransfer(
+        icon: Icons.surfing,
+        iconColor: widget.input.iconColor,
+        backgroundColor: widget.input.backgroundColor,
+      ),
+      IconTransfer(
+        icon: Icons.water_drop,
+        iconColor: widget.input.iconColor,
+        backgroundColor: widget.input.backgroundColor,
+      ),
+      IconTransfer(
+        icon: Icons.pool,
+        iconColor: widget.input.iconColor,
+        backgroundColor: widget.input.backgroundColor,
+      ),
+      IconTransfer(
+        icon: Icons.water_damage,
+        iconColor: widget.input.iconColor,
+        backgroundColor: widget.input.backgroundColor,
+      ),
+      IconTransfer(
+        icon: Icons.flood,
+        iconColor: widget.input.iconColor,
+        backgroundColor: widget.input.backgroundColor,
+      ),
+      IconTransfer(
+        icon: Icons.tsunami,
+        iconColor: widget.input.iconColor,
+        backgroundColor: widget.input.backgroundColor,
+      ),
+      IconTransfer(
+        icon: Icons.water_outlined,
+        iconColor: widget.input.iconColor,
+        backgroundColor: widget.input.backgroundColor,
+      ),
+      IconTransfer(
+        icon: Icons.more_horiz,
+        iconColor: Colors.white,
+        backgroundColor: Colors.black,
+      ),
+    ];
   }
 
+  @override
   Widget build(BuildContext context) {
     return Material(
       color: Colors.transparent,
@@ -169,16 +168,21 @@ class OverlayChooseIconState extends State<OverlayChooseIcon> {
                               return RoleIcon(
                                 width: 50,
                                 height: 50,
-                                color: widget.input != item
+                                color: widget.input != item.icon
                                     ? item.backgroundColor
                                     : item.backgroundColor.withAlpha(100),
                                 icon: item.icon,
-                                iconColor: widget.input != item
+                                iconColor: widget.input != item.icon
                                     ? item.iconColor
                                     : item.iconColor.withAlpha(100),
-                                choosen: item == widget.input.value,
+                                choosen: item.icon == _input,
                                 function: icons.last != item
-                                    ? () => widget.onSelect(item)
+                                    ? () {
+                                        setState(() {
+                                          _input = item.icon;
+                                          widget.onSelect(item.icon);
+                                        });
+                                      }
                                     : () => previewIcons(),
                               );
                             }).toList(),
@@ -194,12 +198,6 @@ class OverlayChooseIconState extends State<OverlayChooseIcon> {
         ],
       ),
     );
-  }
-
-  void chooseIcon(IconTransfer iconSelf) {
-    setState(() {
-      widget.input.value = iconSelf;
-    });
   }
 
   void previewIcons() {

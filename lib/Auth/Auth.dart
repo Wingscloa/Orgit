@@ -27,6 +27,9 @@ class AuthService {
     try {
       final cred = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
+      log('User created: ${cred.user}');
+      log('User UID: ${cred.user?.uid}');
+      log('User email: ${cred.user?.email}');
       return cred.user;
     } catch (e) {
       log('CreateUserWithEmailAndPassword went wrong');
@@ -66,5 +69,54 @@ class AuthService {
     } catch (e) {
       print(e.toString());
     }
+  }
+
+  Future<String?> getIdToken() async {
+    try {
+      final user = _auth.currentUser;
+      if (user != null) {
+        final token = await user.getIdToken();
+        log('Token: $token');
+        return token;
+      } else {
+        log('User is not signed in');
+        return null;
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+    return null;
+  }
+
+  bool isUserLoggedIn() {
+    try {
+      final user = _auth.currentUser;
+      if (user != null) {
+        log('User is logged in');
+        return true;
+      } else {
+        log('User is not logged in');
+        return false;
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+    return false;
+  }
+
+  String getUserUid() {
+    try {
+      final user = _auth.currentUser;
+      if (user != null) {
+        log('User UID: ${user.uid}');
+        return user.uid;
+      } else {
+        log('User is not logged in');
+        return "-1";
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+    return "-1";
   }
 }

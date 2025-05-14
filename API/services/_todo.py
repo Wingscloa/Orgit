@@ -3,8 +3,10 @@ from db.models.users import User
 from db.models.toDo import ToDo
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
+from session import getDb
+from fastapi import Depends
 
-def DBcreateToDo(model : ToDoCreate, db : Session):
+def DBcreateToDo(model : ToDoCreate, db : Session = Depends(getDb)):
     try:
         newTodo = ToDo(**model.model_dump())
         db.add(newTodo)
@@ -12,7 +14,7 @@ def DBcreateToDo(model : ToDoCreate, db : Session):
     except Exception as err:
         raise err
 
-def DBUpdateTodo(model : ToDoUpdate, db : Session):
+def DBUpdateTodo(model : ToDoUpdate, db : Session = Depends(getDb)):
     _current = (db.query(ToDo)
                 .filter(ToDo.todoid == model.todoid)
                 .first())
@@ -28,7 +30,7 @@ def DBgetToDoUser(userid: int, db: Session):
             .all()) # userTodo        
     return result
 
-def DBdeleteTodo(TodoId: int, db : Session):
+def DBdeleteTodo(TodoId: int, db : Session = Depends(getDb)):
     _toDelete = (db.query(ToDo)
                  .filter(ToDo.todoid == TodoId)
                  .first())    
@@ -37,7 +39,7 @@ def DBdeleteTodo(TodoId: int, db : Session):
     db.delete(_toDelete)
     db.commit()
 
-def DBcompleteTodo(TodoId : int, db : Session):
+def DBcompleteTodo(TodoId : int, db : Session = Depends(getDb)):
     toComplete = (db.query(ToDo)
                    .filter(ToDo.todoid == TodoId)
                    .first())

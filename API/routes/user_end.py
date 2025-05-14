@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Depends
-from session import getDb, SessionLocal
+from session import getDb
 from fastapi.responses import JSONResponse
 from services._User import *
 from schemas.users import *
@@ -17,18 +17,18 @@ async def get_user_all(verify = Depends(verify_firebase_token),db : Session = De
         raise HTTPException(status_code=500, detail=f"{err}")
     
 @router.post('/User/')
-async def post_user_register(model : RegisterSchema, verify = Depends(verify_firebase_token),  db : Session = Depends(getDb)):
+async def post_user_register(model : RegisterSchema,  db : Session = Depends(getDb)):
     try:
         user_register(model,db)
-        return JSONResponse(status_code=200,content='',headers="User is registered")
+        return JSONResponse(status_code=200,content={"message" : "User is registered"})
     except Exception as err:
         raise HTTPException(status_code=500, detail=f"{err}")
-    
+
 @router.put('/User')
 async def put_user_profile_form(model : ProfileSchema, verify = Depends(verify_firebase_token), db : Session = Depends(getDb)):
     try:
         user_UpdateProfile(model,db)
-        return JSONResponse(status_code=201,content=True,headers="User profile is updated")
+        return JSONResponse(status_code=201,content={"message" : "User profile is updated"})
     except Exception as err:
         raise HTTPException(status_code=500, detail=f"{err}")
 
@@ -37,8 +37,7 @@ async def delete_user_by_id(useruid : str, verify = Depends(verify_firebase_toke
     try:
         response = delete_user(useruid,db)
         if not response:
-            return JSONResponse(status_code=404,content=False,headers="User is deleted")
-        
+            return JSONResponse(status_code=404,content={"message" : "User is deleted"})
     except Exception as err:
         raise HTTPException(status_code=500, detail=f"{err}")
     

@@ -5,7 +5,7 @@ class FormInput extends StatefulWidget {
   final TextEditingController controller;
   final IconData icon;
   final Color iconColor;
-  late final bool obscureText;
+  final bool obscureText;
   final bool showObscureText;
   final bool changePassword;
   final bool readonly;
@@ -33,6 +33,15 @@ class FormInput extends StatefulWidget {
 }
 
 class _FormInputState extends State<FormInput> {
+  late bool _obscureText;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _obscureText = widget.obscureText;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -86,7 +95,7 @@ class _FormInputState extends State<FormInput> {
                       ? () => _selectDate()
                       : () => print('ahoj'),
                   readOnly: widget.readonly,
-                  obscureText: widget.obscureText,
+                  obscureText: _obscureText,
                   decoration: InputDecoration(
                     border: InputBorder.none, // Odstranění čáry pod textem
                   ),
@@ -113,7 +122,7 @@ class _FormInputState extends State<FormInput> {
               child: InkWell(
                 onTap: widget.showObscureText
                     ? () => (setState(() {
-                          widget.obscureText = !widget.obscureText;
+                          _obscureText = !_obscureText;
                         }))
                     : () => (),
                 child: Icon(

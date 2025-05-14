@@ -1,11 +1,17 @@
 import 'dart:collection';
 import 'dart:typed_data';
-import 'package:orgit/Components/Button/default_button.dart';
-import 'package:orgit/Components/Inputs/title_input.dart';
 import 'package:flutter/material.dart';
-import 'package:orgit/Components/Bar/slide_bar.dart';
-import 'package:orgit/Components/Inputs/avatar_input.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:orgit/components/inputs/title_input.dart';
+import 'package:orgit/components/inputs/avatar_input.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:orgit/components/inputs/title_input.dart';
+import 'package:flutter/material.dart';
+import 'package:orgit/components/bar/slide_bar.dart';
+import 'package:orgit/components/inputs/avatar_input.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:orgit/components/inputs/title_input.dart';
+import 'package:orgit/components/button/default_button.dart';
 
 class Mdlgroupcreate extends StatefulWidget {
   @override

@@ -41,6 +41,7 @@ class Modcreategroup extends StatelessWidget {
                       width: 330,
                       height: 40,
                       child: Customsearchbar(
+                        hintText: "Hledej skupinu",
                         controller: searchControl,
                         suggestions: [
                           "ahoj",

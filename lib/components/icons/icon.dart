@@ -1,9 +1,9 @@
 import 'package:flutter/widgets.dart';
 
 class IconTransfer {
-  final IconData icon;
-  final Color iconColor;
-  final Color backgroundColor;
+  IconData icon;
+  Color iconColor;
+  Color backgroundColor;
 
   IconTransfer(
       {required this.icon,

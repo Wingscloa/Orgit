@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:orgit/Components/Button/default_button.dart';
+import 'package:orgit/Pages/role/role_permission.dart';
 import 'package:orgit/Pages/settings/components/section_line.dart';
 import 'package:orgit/components/bar/top_bar_down.dart';
 import 'package:orgit/components/icons/icon.dart';
@@ -15,24 +18,15 @@ class RoleCreate extends StatefulWidget {
 }
 
 class _RoleCreateState extends State<RoleCreate> {
-  final role = TextEditingController();
-  late ValueNotifier<IconTransfer> icon = ValueNotifier(
+  final name = TextEditingController();
+  late final ValueNotifier<IconTransfer> icon = ValueNotifier(
     IconTransfer(
         icon: Icons.school,
-        iconColor: Colors.yellow,
-        backgroundColor: Colors.white),
+        iconColor: Colors.white,
+        backgroundColor: Colors.grey),
   );
-  late ValueNotifier<Color> iconColor =
-      ValueNotifier(icon.value.backgroundColor);
 
   @override
-  void initState() {
-    super.initState();
-    icon.addListener(() => setState(() {
-          iconColor.value = icon.value.backgroundColor;
-        }));
-  }
-
   Widget build(BuildContext context) {
     return Material(
       color: Global.background,
@@ -133,9 +127,9 @@ class _RoleCreateState extends State<RoleCreate> {
                           onTap: () => OverlayHelper.showOverlay(
                             context,
                             OverlayChooseIcon(
-                              input: icon,
+                              input: icon.value,
                               onSelect: (p0) => setState(() {
-                                icon.value = p0;
+                                icon.value.icon = p0;
                               }),
                             ),
                           ),
@@ -166,12 +160,12 @@ class _RoleCreateState extends State<RoleCreate> {
                         color: Global.settingsDescription.withAlpha(100),
                       ),
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: 30),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "BARVA ROLE".toUpperCase(),
+                          "BARVA POZADI IKONY".toUpperCase(),
                           style: TextStyle(
                             fontSize: 16,
                             color: Global.settingsDescription,
@@ -182,13 +176,9 @@ class _RoleCreateState extends State<RoleCreate> {
                           onTap: () => OverlayHelper.showOverlay(
                             context,
                             OverlayChooseColor(
-                              input: iconColor,
+                              input: icon.value.backgroundColor,
                               onSelect: (p0) => setState(() {
-                                icon.value = IconTransfer(
-                                  icon: icon.value.icon,
-                                  iconColor: icon.value.iconColor,
-                                  backgroundColor: p0.value,
-                                );
+                                icon.value.backgroundColor = p0;
                               }),
                             ),
                           ),
@@ -206,7 +196,7 @@ class _RoleCreateState extends State<RoleCreate> {
                                   ),
                                   SizedBox(width: 8),
                                   Text(
-                                    '#${icon.value.backgroundColor.value.toRadixString(16).substring(2).toUpperCase()}',
+                                    '#${icon.value.backgroundColor.toHexString().replaceRange(0, 2, '')}',
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 14,
@@ -234,6 +224,93 @@ class _RoleCreateState extends State<RoleCreate> {
                         color: Global.settingsDescription.withAlpha(100),
                       ),
                     ),
+                    SizedBox(height: 30),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "BARVA IKONY".toUpperCase(),
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Global.settingsDescription,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () => OverlayHelper.showOverlay(
+                            context,
+                            OverlayChooseColor(
+                              input: icon.value.iconColor,
+                              onSelect: (p0) => setState(() {
+                                icon.value.iconColor = p0;
+                              }),
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Row(
+                                children: [
+                                  Container(
+                                    width: 24,
+                                    height: 24,
+                                    decoration: BoxDecoration(
+                                      color: icon.value.iconColor,
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                  ),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    '#${icon.value.iconColor.toHexString().replaceRange(0, 2, '')}',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Transform.rotate(
+                                angle: pi,
+                                child: Icon(
+                                  size: 20,
+                                  Icons.arrow_back_ios,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    Text(
+                      "Vyber barvu, která bude roli reprezentovat.",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        color: Global.settingsDescription.withAlpha(100),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 70,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // vytvori roli v DB, ktera muze byt v budoucnu zmenena, momentalne ji muze editovat
+                        Defaultbutton(
+                          text: "Vytvořit roli",
+                          color: Color.fromARGB(255, 255, 203, 105),
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => RolePermission(
+                                      icon: icon,
+                                      name: name.text,
+                                    )));
+                          },
+                          width: 250,
+                          height: 45,
+                          textColor: Colors.black,
+                        ),
+                      ],
+                    )
                   ],
                 ),
               )

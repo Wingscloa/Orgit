@@ -1,22 +1,19 @@
-from fastapi import HTTPException
+from fastapi import HTTPException, Depends
+from session import getDb
 from db.models.users import User 
 from sqlalchemy.orm import Session
 from schemas.users import *
 from db.models.users import User
-from db.models.groupMembers import GroupMember
-from db.models.eventParticipants import EventParticipant
 
-def user_register(userModel: RegisterSchema, db: Session):
+def user_register(userModel: RegisterSchema, db : Session = Depends(getDb)):
     try:
-        user = User()
-        user.email = userModel.email
-        user.useruid = userModel.useruid
+        user = User(**userModel.model_dump())
         db.add(user)
         db.commit()
     except Exception as err:
         raise HTTPException(status_code=500, detail=f"{err}")
 
-def user_UpdateProfile(userModel: ProfileSchema, db: Session):
+def user_UpdateProfile(userModel: ProfileSchema, db : Session = Depends(getDb)):
     try:
         user = db.query(User).filter(User.useruid == userModel.useruid).first()
         user.firstname = userModel.firstname
@@ -31,7 +28,7 @@ def user_UpdateProfile(userModel: ProfileSchema, db: Session):
         raise HTTPException(status_code=500, detail=f"{err}")
     
 
-def get_users(db: Session):
+def get_users(db : Session = Depends(getDb)):
     try:   
         result = db.query(User).all()
         if not result:
@@ -40,7 +37,7 @@ def get_users(db: Session):
     except Exception as err:
         raise HTTPException(status_code=500, detail=str(err))
 
-def delete_user(useruid : str, db : Session):
+def delete_user(useruid : str, db : Session = Depends(getDb)):
     try:
         user = (db.query(User)
                 .filter(User.useruid == useruid)
@@ -54,7 +51,7 @@ def delete_user(useruid : str, db : Session):
     except Exception as err:
         raise Exception(err)
 
-# async def DBgetUserByUid(useruid: str, db: Session):
+# async def DBgetUserByUid(useruid: str, db : Session = Depends(getDb)):
 #     try:
 #         result = (db.query(User).
 #                 filter(User.useruid == useruid)
@@ -88,7 +85,7 @@ def delete_user(useruid : str, db : Session):
 #     except Exception as err:
 #         raise Exception(err)
 
-# async def DBuserToEvent(model: UserEvent, db: Session):
+# async def DBuserToEvent(model: UserEvent, db : Session = Depends(getDb)):
 #     # Exceptions
 #     # if not await eventExists(model.eventid,db=db):
 #     #     raise HTTPException(status_code=404, detail="Event has not found")

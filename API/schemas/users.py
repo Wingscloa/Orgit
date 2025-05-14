@@ -22,7 +22,7 @@ class UserResponse(BaseModel):
     lastactive : Optional[datetime]
 
 class RegisterSchema(BaseModel):
-    useruid : str
+    useruid : str   
     email: EmailStr
 
 class ProfileSchema(BaseModel):

@@ -1,8 +1,10 @@
 from sqlalchemy.orm import Session
 from db.models.reports import Report
 from schemas.reports import *
+from session import getDb
+from fastapi import Depends
 
-async def DBCreateReport(model: CreateReport, db: Session):
+async def DBCreateReport(model: CreateReport, db : Session = Depends(getDb)):
     _newReport = Report(**model.model_dump())
 
     db.add(_newReport)
@@ -13,7 +15,7 @@ async def DBCreateReport(model: CreateReport, db: Session):
     return True
 
 
-async def DBgetReport(userid: int, db: Session):
+async def DBgetReport(userid: int, db : Session = Depends(getDb)):
     _result = (db.query(Report)
                .filter(Report.userid == userid)
                .all())
@@ -24,7 +26,7 @@ async def DBgetReport(userid: int, db: Session):
     
     return _result
 
-async def DBdeleteReport(reportid: int, db: Session):
+async def DBdeleteReport(reportid: int, db : Session = Depends(getDb)):
     _toDelete = (db.query(Report)
                  .filter(Report.reportid == reportid)
                  .first())

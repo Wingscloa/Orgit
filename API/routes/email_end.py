@@ -1,17 +1,16 @@
 from fastapi import APIRouter, HTTPException
-from session import SessionDep
 from services._views import *
+from fastapi import APIRouter, HTTPException, Depends
+from fastapi.responses import JSONResponse
+from services._User import *
+from schemas.users import *
 
 router = APIRouter()
 
-@router.get('/EmailExists/{email}')
-async def EmailExist(email: str, db : SessionDep):
+@router.get('/email/',)
+async def get_email_exists(email : str,db : Session = Depends(getDb)):
     try:
-        result = await DBemailExists(email=email,db=db)
-        if not result:
-            return HTTPException(status_code=404,detail=False,headers="Doesn't exists") 
-        return HTTPException(status_code=200,detail=True, headers="Email is already in Database")
-    except Exception as err:
-        return HTTPException(status_code=400, detail=f"Contact support - Exception Error {err}")
-    finally:
-        db.close()
+        response = email_exists(email, db)
+        return response
+    except HTTPException as err:
+        raise HTTPException(status_code=500, detail=f"{err}")

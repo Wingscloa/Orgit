@@ -1,5 +1,6 @@
 class API {
-  static const baseURL = 'http://192.168.0.81:8080';
+  // static const baseURL = 'http://192.168.0.81:8080';
+  static const baseURL = 'http://10.20.9.6:8080';
 
   static Map<String, String> requestHeaders = {
     'accept': 'application/json',

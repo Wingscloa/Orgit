@@ -6,6 +6,8 @@ import 'package:icons_plus/icons_plus.dart';
 import 'package:orgit/Components/Button/social_button.dart';
 import 'package:logger/logger.dart';
 import 'package:orgit/auth/auth.dart';
+import 'package:orgit/global_vars.dart';
+import 'package:orgit/services/api_client.dart';
 
 class Register extends StatefulWidget {
   final VoidCallback onRegister;
@@ -34,6 +36,7 @@ class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Global.background,
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
@@ -240,27 +243,25 @@ class _RegisterState extends State<Register> {
       return false;
     } else if (!EmailValidator.validate(email)) {
       setState(() {
-        emailError = "Email je neplatný";
-        emailCont.text = "";
+        emailError = "Email není validní";
         emailValid = Colors.red;
       });
       return false;
     }
-    // API service
-    // try {
-    //   // bool emailExist = await emailExists(email);
+    // check if email already exists
+    ApiClient _api = ApiClient();
+    bool doesExists = await _api.getWithParams(
+      "/email/",
+      {"email": email},
+    );
+    if (doesExists) {
+      setState(() {
+        emailError = "Email již existuje";
+        emailValid = Colors.red;
+      });
+      return false;
+    }
 
-    //   // if (emailExist) {
-    //   //   setState(() {
-    //   //     emailError = "Tento email již existuje";
-    //   //     emailValid = Colors.red;
-    //   //   });
-    //   //   return false;
-    //   // }
-    // } on Exception catch (_) {
-    //   Logger logger = Logger();
-    //   logger.i(_);
-    // }
     // Alls good
     setState(() {
       emailError = "";
@@ -323,10 +324,9 @@ class _RegisterState extends State<Register> {
     String repeatPassword,
     BuildContext context,
   ) async {
-    Logger logger = Logger();
-    logger.i(email);
-    logger.i(password);
-    logger.i(repeatPassword);
+    print("Email: $email");
+    print("Password: $password");
+    print("Repeat Password: $repeatPassword");
     try {
       bool isValidEmail = await emailValidation(email);
       bool isValidPassword = await passwordValidation(password, repeatPassword);
@@ -364,14 +364,4 @@ class _RegisterState extends State<Register> {
       print(e.toString());
     }
   }
-
-  // Future<bool> emailExists(String email) async {
-  //   // final dio = Dio();
-
-  //   // final client = RestClient(dio);
-
-  //   // boolResponse bool = await client.doesEmailExists(email);
-
-  //   // return bool.detail;
-  // }
 }

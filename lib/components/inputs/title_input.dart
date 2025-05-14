@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class TitleInput extends StatefulWidget {
   final TextEditingController controller;
   final String value;
-  late final Offset iconPos;
+  final Offset iconPos;
 
   TitleInput({
     this.iconPos = Offset.zero,
@@ -18,14 +18,16 @@ class TitleInput extends StatefulWidget {
 }
 
 class TitleInputState extends State<TitleInput> {
+  late Offset _iconPos;
   GlobalKey titleKey = GlobalKey();
 
   bool? visible;
   @override
   void initState() {
     super.initState();
+    _iconPos = widget.iconPos;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (widget.iconPos == Offset.zero) {
+      if (_iconPos == Offset.zero) {
         updateIcon();
       } else {
         visible = false;
@@ -36,7 +38,7 @@ class TitleInputState extends State<TitleInput> {
   void updateIcon() {
     setState(() {
       RenderBox box = titleKey.currentContext!.findRenderObject() as RenderBox;
-      widget.iconPos =
+      _iconPos =
           box.localToGlobal(Offset.zero) + box.size.bottomRight(Offset.zero);
       visible = true;
     });
@@ -69,7 +71,7 @@ class TitleInputState extends State<TitleInput> {
           ),
           Positioned(
             top: 29.5,
-            left: 0 + widget.iconPos.dx - 5,
+            left: 0 + _iconPos.dx - 5,
             child: Visibility(
               visible: visible == true,
               child: Icon(
