@@ -8,6 +8,7 @@ import 'package:orgit/services/api_client.dart';
 import 'package:orgit/auth/auth.dart';
 import 'package:orgit/Pages/group/join_group.dart';
 import 'package:orgit/Pages/Auth/Register.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class UserInfo {
   static String uid = "";
@@ -19,6 +20,7 @@ Future<void> main() async {
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
+  await dotenv.load(fileName: ".vars");
 
   runApp(MyApp());
 }
@@ -99,6 +101,27 @@ class wrapped extends StatelessWidget {
                         "8filipino@gmail.com", "99tablet"),
                     child: Text(
                       "Prihlasit se",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                height: 100,
+                width: 100,
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 190, 155, 155),
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                ),
+                child: Center(
+                  child: GestureDetector(
+                    onTap: () => print(ApiClient.getBaseUrl()),
+                    child: Text(
+                      "Print IpHost",
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,

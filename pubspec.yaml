@@ -26,6 +26,7 @@ dependencies:
   email_validator: ^3.0.0
   blur: ^4.0.0
   flutter_colorpicker: ^1.0.3
+  flutter_dotenv: ^5.2.1
 
 
 dev_dependencies:
@@ -43,3 +44,4 @@ flutter:
 
   assets:
     - assets/
+    - .env

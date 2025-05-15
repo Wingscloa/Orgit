@@ -1,12 +1,24 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ApiClient {
-  static const String baseUrl =
-      'http://192.168.0.81:8080'; // Change this to your API URL
-
   final http.Client _client = http.Client();
+  static String baseUrl = '';
+
+  ApiClient() {
+    if (baseUrl.isEmpty) {
+      baseUrl = dotenv.get("HOST");
+    }
+  }
+
+  static String getBaseUrl() {
+    if (baseUrl.isEmpty) {
+      baseUrl = dotenv.get("HOST");
+    }
+    return baseUrl;
+  }
 
   Future<String?> _getAuthToken() async {
     return await FirebaseAuth.instance.currentUser?.getIdToken(true);
