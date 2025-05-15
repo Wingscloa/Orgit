@@ -43,5 +43,5 @@ linux/
 macos/
 web/
 windows/
-API/pyvenv.cfg
-API/serviceAccountKey.json
+api/pyvenv.cfg
+api/serviceAccountKey.json
