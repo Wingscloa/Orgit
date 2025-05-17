@@ -115,4 +115,7 @@ else {
     Write-Host "✅ pgAdmin je již nainstalován."
 }
 
+
+
+
 Read-Host -Prompt "Installer - Stiskni Enter pro ukončení"

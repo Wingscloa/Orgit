@@ -1,1 +1,0 @@
-Start-Process powershell -ArgumentList '-File ".\Scripts\installcheck.ps1"' -Verb RunAs -Wait
