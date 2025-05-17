@@ -45,3 +45,4 @@ web/
 windows/
 api/pyvenv.cfg
 api/serviceAccountKey.json
+.env
