@@ -5,9 +5,9 @@ import 'package:orgit/Components/Inputs/from_input.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:orgit/Components/Button/social_button.dart';
 import 'package:logger/logger.dart';
-import 'package:orgit/auth/auth.dart';
+import 'package:orgit/services/auth/auth.dart';
 import 'package:orgit/global_vars.dart';
-import 'package:orgit/services/api_client.dart';
+import 'package:orgit/services/api/api_client.dart';
 
 class Register extends StatefulWidget {
   final VoidCallback onRegister;

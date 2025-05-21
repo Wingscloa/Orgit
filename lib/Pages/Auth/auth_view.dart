@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:orgit/pages/auth/Intro/opening_intro.dart';
+import 'package:orgit/Pages/opening_intro.dart';
 import 'package:orgit/pages/auth/login_form.dart';
 import 'package:orgit/pages/auth/register.dart';
 

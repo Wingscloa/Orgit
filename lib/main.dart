@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
-import 'package:orgit/auth/auth.dart';
 import 'package:orgit/models/user.dart';
 import 'dart:async';
-import 'package:orgit/services/api_client.dart';
-import 'package:orgit/auth/auth.dart';
 import 'package:orgit/Pages/group/join_group.dart';
 import 'package:orgit/Pages/Auth/Register.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:orgit/services/auth/auth.dart';
+import 'package:orgit/services/api/api_client.dart';
 
 class UserInfo {
   static String uid = "";
@@ -17,10 +16,8 @@ class UserInfo {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-  ]);
-  await dotenv.load(fileName: ".vars");
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  await dotenv.load(fileName: ".env");
 
   runApp(MyApp());
 }
@@ -39,14 +36,15 @@ class _MyAppState extends State<MyApp> {
       title: "Orgit",
       theme: ThemeData(
         navigationBarTheme: const NavigationBarThemeData(
-            labelTextStyle: WidgetStatePropertyAll(TextStyle(
-          fontSize: 16,
-          color: Colors.white,
-        ))),
+          labelTextStyle: WidgetStatePropertyAll(
+            TextStyle(fontSize: 16, color: Colors.white),
+          ),
+        ),
         brightness: Brightness.light,
         primaryColor: const Color.fromARGB(255, 5, 5, 4),
-        colorScheme:
-            ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 0, 0, 0)),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Color.fromARGB(255, 0, 0, 0),
+        ),
       ),
       debugShowCheckedModeBanner: false,
       home: wrapped(auth: _auth),
@@ -72,10 +70,7 @@ class _MyAppState extends State<MyApp> {
 }
 
 class wrapped extends StatelessWidget {
-  const wrapped({
-    super.key,
-    required AuthService auth,
-  }) : _auth = auth;
+  const wrapped({super.key, required AuthService auth}) : _auth = auth;
 
   final AuthService _auth;
 
@@ -98,7 +93,9 @@ class wrapped extends StatelessWidget {
                 child: Center(
                   child: GestureDetector(
                     onTap: () => _auth.logInUserWithEmailAndPassword(
-                        "8filipino@gmail.com", "99tablet"),
+                      "8filipino@gmail.com",
+                      "99tablet",
+                    ),
                     child: Text(
                       "Prihlasit se",
                       style: TextStyle(
@@ -176,14 +173,8 @@ class wrapped extends StatelessWidget {
                   ),
                 ),
               ),
-              apiTesting(
-                endpoint: "/email/",
-                header: "Email",
-              ),
-              apiTesting(
-                endpoint: "/email/",
-                header: "Todos2",
-              ),
+              apiTesting(endpoint: "/email/", header: "Email"),
+              apiTesting(endpoint: "/email/", header: "Todos2"),
             ],
           ),
         ),
@@ -198,14 +189,11 @@ class wrapped extends StatelessWidget {
       String email = "9filipino@gmail.com";
       String password = "99tablet";
       auth.createUserWithEmailAndPassword(email, password);
-      UserRegister user =
-          UserRegister(useruid: auth.getUserUid(), email: email);
-      ApiClient()
-          .post(
-        '/User/',
-        user.toJson(),
-      )
-          .then((value) {
+      UserRegister user = UserRegister(
+        useruid: auth.getUserUid(),
+        email: email,
+      );
+      ApiClient().post('/User/', user.toJson()).then((value) {
         print(value);
       });
     }

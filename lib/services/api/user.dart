@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:logger/logger.dart';
 import 'package:orgit/models/user_dto.dart';
 import 'package:http/http.dart' as http;
-import 'package:orgit/api/config.dart';
+import 'package:orgit/services/api/config.dart';
 
 Future<List<UserResponse>> fetchUsers() async {
   final List<UserResponse> users = [];

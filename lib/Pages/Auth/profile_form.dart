@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:orgit/auth/auth.dart';
+import 'package:orgit/services/auth/auth.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:orgit/Components/Feature/bottom_dots.dart';
 import 'package:orgit/Components/Inputs/from_input.dart';

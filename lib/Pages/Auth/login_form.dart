@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:orgit/auth/auth.dart';
+import 'package:orgit/services/auth/auth.dart';
 import 'package:orgit/components/Feature/bottom_dots.dart';
 import 'package:orgit/components/Inputs/from_input.dart';
 import 'package:icons_plus/icons_plus.dart';

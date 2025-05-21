@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:logger/logger.dart';
 import 'package:orgit/models/group_dto.dart';
 import 'package:http/http.dart' as http;
-import 'package:orgit/api/config.dart';
+import 'package:orgit/services/api/config.dart';
 
 Future<List<GroupResponse>> fetchGroups() async {
   final List<GroupResponse> groups = [];
