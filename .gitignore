@@ -30,7 +30,7 @@ lib/generated_plugin_registrant.dart
 **/android/**/GeneratedPluginRegistrant.java
 **/android/.cxx/**/
 android/app/**
-android/app/.cxx/**
+android/app/.cxx/**x``
 # End of https://www.toptal.com/developers/gitignore/api/flutter
 
 ## FAST API ##

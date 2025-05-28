@@ -1,4 +1,4 @@
-# Vytvoření databáze Orgit pomocí pgAdmin (psql)
+# Vytvoreni databaze Orgit pomoci pgAdmin (psql)
 $dbName = "Orgit"
 $sqlInitFile = "..\database\init DB.sql"
 $sqlMockData = "..\database\mockData.sql"
@@ -7,87 +7,125 @@ $pgHost = "localhost"
 $pgPort = "5432"
 $pgPassword = $null
 
-# Získání hesla od uživatele pouze jednou
-if (-not $pgPassword) {
-    $pgPassword = Read-Host -Prompt "Zadejte heslo k PostgreSQL uživateli '$pgUser'" -AsSecureString
-    $pgPasswordPlain = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($pgPassword))
+# Funkce pro barevny vystup s prefixem
+function Write-Log {
+    param(
+        [string]$Message,
+        [string]$Level = "INFO",
+        [string]$Color = "White"
+    )
+    $prefix = "[$Level]"
+    Write-Host "$prefix $Message" -ForegroundColor $Color
 }
 
-# Funkce pro spuštění psql/createdb s heslem v proměnné prostředí
+# Nacti .env a ziskej pSQLPassword, pokud chybi nebo je prazdne, zeptej se uzivatele a uloz do .env
+$envPath = Join-Path $PSScriptRoot '..\.env'
+$envLines = Get-Content $envPath
+$pSQLPasswordLine = $envLines | Where-Object { $_ -match '^pSQLPassword=' }
+$pSQLPassword = $null
+if ($pSQLPasswordLine) {
+    $pSQLPassword = $pSQLPasswordLine -replace '^pSQLPassword=', ''
+}
+if (-not $pSQLPassword -or [string]::IsNullOrWhiteSpace($pSQLPassword)) {
+    $securePass = Read-Host -Prompt "Zadejte heslo k PostgreSQL uzivateli '$pgUser' (ulozi se do .env)" -AsSecureString
+    $ptr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($securePass)
+    $pSQLPassword = [Runtime.InteropServices.Marshal]::PtrToStringAuto($ptr)
+    [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($ptr)
+    # Uloz do 6. radku .env
+    $envLines[5] = "pSQLPassword=$pSQLPassword"
+    Set-Content -Path $envPath -Value $envLines
+    Write-Log "Heslo bylo ulozeno do .env na radek 6." "INFO" "Cyan"
+}
+$pgPasswordPlain = $pSQLPassword
+
+# Funkce pro spusteni psql/createdb s heslem v promenne prostredi
 function Invoke-PgCommand {
     param(
-        [string]$command
+        [string]$command,
+        [switch]$IgnoreErrors
     )
-    $env:PGPASSWORD = $pgPasswordPlain
-    Invoke-Expression $command
-    Remove-Item Env:PGPASSWORD
+    try {
+        $env:PGPASSWORD = $pgPasswordPlain
+        $result = Invoke-Expression $command -ErrorAction SilentlyContinue
+        Remove-Item Env:PGPASSWORD
+        return $result
+    }
+    catch {
+        Remove-Item Env:PGPASSWORD -ErrorAction SilentlyContinue
+        if (-not $IgnoreErrors) {
+            Write-Log "Chyba pri provadeni prikazu: $command" "ERROR" "Red"
+            Write-Log "Error: $_" "ERROR" "Red"
+        }
+        return $false
+    }
 }
 
-# Pokud existuje tabulka Users a obsahuje data, přeskoč celý skript
-$checkUsersDataCmd = 'psql -U {0} -h {1} -p {2} -d {3} -tAc "SELECT 1 FROM ""Users"" LIMIT 1;"' -f $pgUser, $pgHost, $pgPort, $dbName
-$hasUsers = Invoke-PgCommand $checkUsersDataCmd
-if ($hasUsers) {
-    Write-Host "Databaze Orgit již existuje a obsahuje data. Skript bude ukončen."
-    exit 0
-}
-
+# KROK 1: Kontrola existence databaze Orgit
+Write-Log "KROK 1: Kontroluji existenci databaze '$dbName'..." "INFO" "Cyan"
 $checkDbCmd = "psql -U $pgUser -h $pgHost -p $pgPort -lqt | Select-String -Pattern '\b$($dbName)\b'"
 $dbExists = Invoke-PgCommand $checkDbCmd
-# Databáze
-# Vytvoření databáze Orgit
+
+# Pokud databaze neexistuje, vytvor ji
 if (-not $dbExists) {
+    Write-Log "Databaze '$dbName' neexistuje, vytvarim novou..." "INFO" "Yellow"
     $createDbCmd = "createdb -U $pgUser -h $pgHost -p $pgPort $dbName"
     Invoke-PgCommand $createDbCmd
     if ($LASTEXITCODE -ne 0) {
-        Write-Host "❌ Chyba při vytváření databáze Orgit."
+        Write-Log "Chyba pri vytvareni databaze '$dbName'." "ERROR" "Red"
+        Write-Log "Zkontrolujte, zda je PostgreSQL spusteny a pristupny." "ERROR" "Red"
         exit 1
     }
     else {
-        Write-Host "✅ Databáze Orgit byla vytvořena."   
+        Write-Log "Databaze '$dbName' byla uspesne vytvorena." "SUCCESS" "Green"   
     }
 }
 else {
-    Write-Host "✅ Databáze Orgit již existuje."
+    Write-Log "Databaze '$dbName' jiz existuje." "SUCCESS" "Green"
 }
 
-# Tabulky
-# Kontrola, zda databáze Orgit obsahuje tabulku Users
+# KROK 2: Kontrola existence tabulek
+Write-Log "KROK 2: Kontroluji existenci tabulek..." "INFO" "Cyan"
 $checkUsersTableCmd = 'psql -U {0} -h {1} -p {2} -d {3} -tAc "SELECT 1 FROM pg_tables WHERE schemaname = ''public'' AND tablename = ''users'';"' -f $pgUser, $pgHost, $pgPort, $dbName
-$tableExists = Invoke-PgCommand $checkUsersTableCmd
+$tableExists = Invoke-PgCommand $checkUsersTableCmd -IgnoreErrors
 
 if (-not $tableExists) {
-    Write-Host "❌ Tabulka 'Users' neexistuje. Inicializuji dle $sqlInitFile..."
+    Write-Log "Tabulka 'Users' neexistuje, inicializuji tabulky dle souboru '$sqlInitFile'..." "INFO" "Yellow"
     $initCmd = "psql -U $pgUser -h $pgHost -p $pgPort -d $dbName -f '$sqlInitFile'"
     Invoke-PgCommand $initCmd
     if ($LASTEXITCODE -eq 0) {
-        Write-Host "✅ Tabulky byly úspěšně inicializovány."
+        Write-Log "Tabulky byly uspesne inicializovany." "SUCCESS" "Green"
     }
     else {
-        Write-Host "❌ Chyba při inicializaci tabulek."
+        Write-Log "Chyba pri inicializaci tabulek." "ERROR" "Red"
+        Write-Log "Zkontrolujte soubor $sqlInitFile." "INFO" "Yellow"
         exit 1
     }
 }
 else {
-    Write-Host "✅ Tabulka 'Users' již existuje."
+    Write-Log "Tabulka 'Users' jiz existuje." "SUCCESS" "Green"
 }
 
-# Hodnoty
-# Kontrola, zda tabulka Users obsahuje nějaká data
+# KROK 3: Kontrola existence dat v tabulkach
+Write-Log "KROK 3: Kontroluji existenci dat v tabulkach..." "INFO" "Cyan"
 $checkUsersDataCmd = 'psql -U {0} -h {1} -p {2} -d {3} -tAc "SELECT 1 FROM ""Users"" LIMIT 1;"' -f $pgUser, $pgHost, $pgPort, $dbName
-$hasUsers = Invoke-PgCommand $checkUsersDataCmd
+$hasUsers = Invoke-PgCommand $checkUsersDataCmd -IgnoreErrors
 
 if (-not $hasUsers) {
-    Write-Host "❌ Tabulka 'Users' je prázdná. Inicializuji mock data..."
+    Write-Log "Tabulka 'Users' je prazdna, inicializuji testovaci data dle souboru '$sqlMockData'..." "INFO" "Yellow"
     $mockDataCmd = "psql -U $pgUser -h $pgHost -p $pgPort -d $dbName -f '$sqlMockData'"
     Invoke-PgCommand $mockDataCmd
     if ($LASTEXITCODE -eq 0) {
-        Write-Host "✅ Mock data byla úspěšně inicializována."
+        Write-Log "Testovaci data byla uspesne inicializovana." "SUCCESS" "Green"
     }
     else {
-        Write-Host "❌ Chyba při inicializaci mock dat."
+        Write-Log "Chyba pri inicializaci testovacich dat." "ERROR" "Red"
+        Write-Log "Zkontrolujte soubor $sqlMockData." "INFO" "Yellow"
         exit 1
     }
 }
+
 else {
-    Write-Host "✅ Tabulka 'Users' obsahuje data."
+    Write-Log "Tabulka 'Users' jiz obsahuje data." "SUCCESS" "Green"
 }
+
+Write-Log "Inicializace databaze '$dbName' byla dokoncena." "SUCCESS" "Green"
