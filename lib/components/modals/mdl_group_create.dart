@@ -4,14 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:orgit/components/inputs/title_input.dart';
 import 'package:orgit/components/inputs/avatar_input.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:orgit/components/inputs/title_input.dart';
-import 'package:flutter/material.dart';
 import 'package:orgit/components/bar/slide_bar.dart';
-import 'package:orgit/components/inputs/avatar_input.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:orgit/components/inputs/title_input.dart';
 import 'package:orgit/components/button/default_button.dart';
+import 'package:orgit/utils/responsive_utils.dart';
 
 class Mdlgroupcreate extends StatefulWidget {
   @override
@@ -53,7 +48,7 @@ class _MdlgroupcreateState extends State<Mdlgroupcreate> {
         style: ButtonStyle(
           foregroundColor: WidgetStatePropertyAll(Colors.white),
           textStyle: WidgetStatePropertyAll(TextStyle(
-            fontSize: 18,
+            fontSize: 18, // ResponsiveUtils bude použito později
             fontWeight: FontWeight.w600,
           )),
           backgroundColor: WidgetStatePropertyAll(
@@ -98,7 +93,7 @@ class _MdlgroupcreateState extends State<Mdlgroupcreate> {
         style: ButtonStyle(
           foregroundColor: WidgetStatePropertyAll(Colors.white),
           textStyle: WidgetStatePropertyAll(TextStyle(
-            fontSize: 18,
+            fontSize: 18, // ResponsiveUtils bude použito později
             fontWeight: FontWeight.w600,
           )),
           backgroundColor: WidgetStatePropertyAll(
@@ -121,6 +116,7 @@ class _MdlgroupcreateState extends State<Mdlgroupcreate> {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
     return Container(
       decoration: BoxDecoration(
         color: Color.fromARGB(255, 19, 20, 22),
@@ -129,72 +125,90 @@ class _MdlgroupcreateState extends State<Mdlgroupcreate> {
           topRight: Radius.circular(27),
         ),
       ),
-      height: 725,
+      height: screenHeight * 0.9,
       width: double.infinity,
-      child: Stack(
+      child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 15),
+            padding:
+                EdgeInsets.only(top: ResponsiveUtils.getSpacingSmall(context)),
             child: SlideBar(),
           ),
-          Positioned(
-            left: 55,
-            top: 40,
-            child: Text(
-              'Vytvořit skupinu',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                fontSize: 30,
-              ),
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: ResponsiveUtils.getPaddingHorizontal(context),
+              vertical: ResponsiveUtils.getSpacingSmall(context),
+            ),
+            child: Row(
+              children: [
+                Text(
+                  'Vytvořit skupinu',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    fontSize: ResponsiveUtils.getHeadingFontSize(context) * 0.9,
+                  ),
+                ),
+              ],
             ),
           ),
-          Positioned(
-            top: 100,
-            child: SizedBox(
-              width: MediaQuery.sizeOf(context).width,
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: ResponsiveUtils.getPaddingHorizontal(context),
+              ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   AvatarInput(
                     image: image,
                     onTap: _selectImage,
                   ),
-                  SizedBox(height: 20),
-                  TitleInput(controller: _titleCont, value: 'Název skupiny'),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  MineDropDown(
-                    regionCont: _regionCont,
-                    regionEntries: regionEntries,
-                    labelText: "KRAJ",
-                  ),
-                  SizedBox(
-                    height: 25,
-                  ),
-                  MineDropDown(
-                      regionCont: _city,
-                      regionEntries: citiesEntries,
-                      labelText: "MĚSTO"),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  TextArea(controller: _description),
-                  SizedBox(
-                    height: 20,
+                  Column(
+                    children: [
+                      TitleInput(
+                          controller: _titleCont, value: 'Název skupiny'),
+                      SizedBox(
+                          height:
+                              ResponsiveUtils.getSpacingSmall(context) * 0.5),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: MineDropDown(
+                              regionCont: _regionCont,
+                              regionEntries: regionEntries,
+                              labelText: "KRAJ",
+                            ),
+                          ),
+                          SizedBox(
+                              width: ResponsiveUtils.getSpacingSmall(context) *
+                                  0.5),
+                          Expanded(
+                            child: MineDropDown(
+                              regionCont: _city,
+                              regionEntries: citiesEntries,
+                              labelText: "MĚSTO",
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                          height:
+                              ResponsiveUtils.getSpacingSmall(context) * 0.5),
+                      TextArea(controller: _description),
+                    ],
                   ),
                   Defaultbutton(
-                      width: 200,
-                      height: 75,
+                      width: ResponsiveUtils.getButtonWidth(context),
+                      height: ResponsiveUtils.getButtonHeight(context) * 0.8,
                       textColor: Colors.black,
                       text: "Vytvořit skupinu",
                       color: Color.fromARGB(255, 255, 203, 105),
-                      onTap: () => {print("vytvorit skupinu")})
+                      onTap: () => {print("vytvorit skupinu")}),
                 ],
               ),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -212,29 +226,29 @@ class TextArea extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 300,
-      height: 125,
+      width: double.infinity,
+      height: ResponsiveUtils.isSmallScreen(context)
+          ? MediaQuery.of(context).size.height * 0.08
+          : MediaQuery.of(context).size.height * 0.1,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(
-          Radius.circular(4),
-        ),
-        border: Border.all(
-          color: Color.fromARGB(255, 94, 95, 96),
-        ),
+        borderRadius: BorderRadius.all(Radius.circular(4)),
+        border: Border.all(color: Color.fromARGB(255, 94, 95, 96)),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: EdgeInsets.all(ResponsiveUtils.getSpacingSmall(context) * 0.8),
         child: TextField(
           controller: _controller,
-          maxLines: 8, //or null
+          maxLines: ResponsiveUtils.isSmallScreen(context) ? 3 : 4,
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.w600,
+            fontSize: ResponsiveUtils.getBodyTextFontSize(context) * 0.9,
           ),
           decoration: InputDecoration.collapsed(
             hintStyle: TextStyle(
               color: Colors.white60,
               fontWeight: FontWeight.w600,
+              fontSize: ResponsiveUtils.getBodyTextFontSize(context) * 0.9,
             ),
             hintText: "popis",
           ),
@@ -267,16 +281,17 @@ class MineDropDown extends StatelessWidget {
       enableSearch: false,
       enableFilter: false,
       textStyle: TextStyle(
-        fontSize: 18,
+        fontSize: ResponsiveUtils.getBodyTextFontSize(context) * 0.85,
         color: Colors.white,
       ),
-      menuHeight: 200,
+      menuHeight: MediaQuery.of(context).size.height * 0.35,
       controller: _regionCont,
       label: Text(
         labelText,
         style: TextStyle(
           fontWeight: FontWeight.w600,
           color: Colors.white,
+          fontSize: ResponsiveUtils.getBodyTextFontSize(context) * 1.25,
         ),
       ),
       dropdownMenuEntries: regionEntries,

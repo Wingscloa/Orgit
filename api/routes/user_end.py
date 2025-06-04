@@ -24,6 +24,30 @@ async def post_user_register(model : RegisterSchema,  db : Session = Depends(get
     except Exception as err:
         raise HTTPException(status_code=500, detail=f"{err}")
 
+@router.get('/User/exists/')
+async def check_if_user_exists(useruid: str, db: Session = Depends(getDb)):
+    try:
+        exists = check_user_exists(useruid, db)
+        return exists
+    except Exception as err:
+        raise HTTPException(status_code=500, detail=f"{err}")
+
+@router.get('/User/profile-complete/')
+async def check_if_user_profile_complete(useruid: str, db: Session = Depends(getDb)):
+    try:
+        profile_complete = check_user_profile_complete(useruid, db)
+        return {"profile_complete": profile_complete}
+    except Exception as err:
+        raise HTTPException(status_code=500, detail=f"{err}")
+
+@router.get('/User/in-group/')
+async def check_if_user_in_group(useruid: str, db: Session = Depends(getDb)):
+    try:
+        in_group = check_user_in_group(useruid, db)
+        return {"in_group": in_group}
+    except Exception as err:
+        raise HTTPException(status_code=500, detail=f"{err}")
+
 @router.put('/User')
 async def put_user_profile_form(model : ProfileSchema, verify = Depends(verify_firebase_token), db : Session = Depends(getDb)):
     try:

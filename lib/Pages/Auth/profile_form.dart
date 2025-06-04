@@ -1,10 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:orgit/services/auth/auth.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:orgit/Components/Feature/bottom_dots.dart';
 import 'package:orgit/Components/Inputs/from_input.dart';
+import 'package:orgit/Components/Modals/confirmation_modal.dart';
+import 'package:orgit/services/auth/auth.dart';
+import '../../utils/responsive_utils.dart';
+import 'dart:io';
 
 class Profileform extends StatefulWidget {
   final useruid = FirebaseAuth.instance.currentUser!.uid;
@@ -14,7 +17,12 @@ class Profileform extends StatefulWidget {
   final telephonePrefixCont = TextEditingController();
   final telephoneCont = TextEditingController();
   final dateCont = TextEditingController();
-  late final XFile? selectedImage;
+  XFile? selectedImage;
+
+  Profileform() {
+    telephonePrefixCont.text = "+420";
+  }
+
   @override
   State<Profileform> createState() => _ProfileformState();
 }
@@ -23,150 +31,174 @@ class _ProfileformState extends State<Profileform> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Stack(
-          children: [
-            Column(
+        backgroundColor: Color(0xFF131416),
+        resizeToAvoidBottomInset: true,
+        body: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: ResponsiveUtils.getPaddingHorizontal(context),
+            ),
+            child: Column(
               children: [
                 SizedBox(
-                  height: 60,
+                  height: ResponsiveUtils.getSpacingMedium(context),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 46),
-                  child: InkWell(
-                    onTap: AuthService().signOut,
-                    child: Row(children: [
-                      Transform.rotate(
-                        angle: 3.14,
-                        child: Icon(
-                          Icons.arrow_right_alt,
-                          color: Colors.white,
-                          size: 35,
-                        ),
-                      ),
-                      SizedBox(
-                        width: 22,
-                      ),
-                      Text(
-                        'Profil',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 30,
-                        ),
-                      )
-                    ]),
-                  ),
-                ),
-                SizedBox(
-                  height: 30,
-                ),
-                ProfileIcon(
-                  onTap: _pickImageFromGallery,
-                  // image: widget.selectedImage,
-                ),
-                SizedBox(
-                  height: 30,
-                ),
+                // Header with back button
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Column(
-                      children: [
-                        FormInput(
-                          labelText: 'Jméno',
-                          controller: widget.firstNameCont,
-                          iconColor: Colors.white,
-                        ),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        FormInput(
-                          labelText: 'Příjmení',
-                          controller: widget.lastNameCont,
-                          iconColor: Colors.white,
-                        ),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        FormInput(
-                          labelText: 'Přezdívka',
-                          controller: widget.nicknameCont,
-                          iconColor: Colors.white,
-                        ),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        TelephoneInput(widget: widget),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        FormInput(
-                          labelText: 'Datum narození',
-                          controller: widget.dateCont,
-                          iconColor: Colors.white,
-                          icon: Bootstrap.calendar,
-                          readonly: true,
-                          dateInput: true,
-                        )
-                      ],
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: 30,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     InkWell(
-                      onTap: () => (),
-                      child: Container(
-                        width: 290,
-                        height: 60,
-                        decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 255, 203, 105),
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(6),
-                            bottomLeft: Radius.circular(6),
+                      onTap: () => _showSignOutConfirmation(context),
+                      child: Row(children: [
+                        Transform.rotate(
+                          angle: 3.14,
+                          child: Icon(
+                            Icons.arrow_right_alt,
+                            color: Colors.white,
+                            size: ResponsiveUtils.getIconSize(context) * 1.5,
                           ),
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        SizedBox(
+                          width: ResponsiveUtils.getSpacingMedium(context),
+                        ),
+                        Text(
+                          'Profil',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize:
+                                ResponsiveUtils.getHeadingFontSize(context),
+                          ),
+                        )
+                      ]),
+                    ),
+                  ],
+                ),
+
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      // Profile Image
+                      ProfileIcon(
+                        onTap: _pickImageFromGallery,
+                        selectedImage: widget.selectedImage,
+                      ),
+
+                      // Form Fields
+                      Flexible(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text(
-                              'Dokončit registraci',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
+                            FormInput(
+                              labelText: 'Jméno',
+                              controller: widget.firstNameCont,
+                              iconColor: Colors.white,
                             ),
                             SizedBox(
-                              width: 15,
+                                height:
+                                    ResponsiveUtils.getSpacingSmall(context)),
+                            FormInput(
+                              labelText: 'Příjmení',
+                              controller: widget.lastNameCont,
+                              iconColor: Colors.white,
                             ),
-                            Icon(
-                              Icons.arrow_right_alt_rounded,
-                              size: 50,
-                            )
+                            SizedBox(
+                                height:
+                                    ResponsiveUtils.getSpacingSmall(context)),
+                            FormInput(
+                              labelText: 'Přezdívka',
+                              controller: widget.nicknameCont,
+                              iconColor: Colors.white,
+                            ),
+                            SizedBox(
+                                height:
+                                    ResponsiveUtils.getSpacingSmall(context)),
+                            TelephoneInput(widget: widget),
+                            SizedBox(
+                                height:
+                                    ResponsiveUtils.getSpacingSmall(context)),
+                            FormInput(
+                              labelText: 'Datum narození',
+                              controller: widget.dateCont,
+                              iconColor: Colors.white,
+                              icon: Bootstrap.calendar,
+                              readonly: true,
+                              dateInput: true,
+                            ),
                           ],
                         ),
                       ),
-                    ),
+
+                      // Submit Button
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          InkWell(
+                            onTap: () => (),
+                            child: Container(
+                              width: ResponsiveUtils.isSmallScreen(context)
+                                  ? MediaQuery.of(context).size.width * 0.8
+                                  : MediaQuery.of(context).size.width * 0.7,
+                              height: ResponsiveUtils.getButtonHeight(context),
+                              decoration: BoxDecoration(
+                                color: Color.fromARGB(255, 255, 203, 105),
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(6),
+                                  bottomLeft: Radius.circular(6),
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black26,
+                                    blurRadius: 8,
+                                    offset: Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Dokončit registraci',
+                                    style: TextStyle(
+                                      fontSize:
+                                          ResponsiveUtils.getSubtitleFontSize(
+                                              context),
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: ResponsiveUtils.getSpacingMedium(
+                                        context),
+                                  ),
+                                  Icon(
+                                    Icons.arrow_right_alt_rounded,
+                                    size: ResponsiveUtils.getIconSize(context) *
+                                        1.5,
+                                    color: Colors.black,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Bottom Dots
+                Column(
+                  children: [
+                    BottomDots(currentIndex: 1, totalDots: 3),
+                    SizedBox(
+                      height: ResponsiveUtils.getSpacingMedium(context),
+                    )
                   ],
                 ),
               ],
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                BottomDots(currentIndex: 1, totalDots: 3),
-                SizedBox(
-                  height: 18,
-                )
-              ],
-            )
-          ],
+          ),
         ));
   }
 
@@ -181,9 +213,39 @@ class _ProfileformState extends State<Profileform> {
         });
       }
     } catch (e) {
-      // Handle the error here, e.g., show a dialog or a snackbar
       print('Error picking image: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Chyba při výběru obrázku: $e')),
+      );
     }
+  }
+
+  void _showSignOutConfirmation(BuildContext context) {
+    ConfirmationModal.show(
+      context,
+      title: "Odhlášení",
+      message:
+          "Opravdu se chcete odhlásit? Budete přesměrováni na registrační stránku.",
+      confirmText: "Ano, odhlásit",
+      cancelText: "Zrušit",
+      onConfirm: () async {
+        try {
+          await AuthService().signOut();
+          if (context.mounted) {
+            Navigator.of(context).pushNamedAndRemoveUntil(
+              '/register',
+              (route) => false,
+            );
+          }
+        } catch (e) {
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Chyba při odhlašování: $e')),
+            );
+          }
+        }
+      },
+    );
   }
 }
 
@@ -201,7 +263,11 @@ class TelephoneInput extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(bottom: 2.5, left: 8, right: 28),
+          padding: EdgeInsets.only(
+            bottom: ResponsiveUtils.getSpacingSmall(context) * 0.25,
+            left: ResponsiveUtils.getSpacingSmall(context),
+            right: ResponsiveUtils.getSpacingLarge(context),
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -210,7 +276,7 @@ class TelephoneInput extends StatelessWidget {
                 'Telefon',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 10,
+                  fontSize: ResponsiveUtils.getBodyTextFontSize(context) * 0.8,
                   color: Color.fromARGB(255, 87, 88, 90),
                 ),
               ),
@@ -220,8 +286,8 @@ class TelephoneInput extends StatelessWidget {
         Row(
           children: [
             Container(
-              width: 55,
-              height: 45,
+              width: ResponsiveUtils.isSmallScreen(context) ? 55 : 70,
+              height: ResponsiveUtils.getButtonHeight(context) * 0.75,
               decoration: BoxDecoration(
                 color: Color.fromARGB(255, 26, 27, 29),
                 borderRadius: BorderRadius.only(
@@ -229,14 +295,15 @@ class TelephoneInput extends StatelessWidget {
                     bottomLeft: Radius.circular(6)),
               ),
               child: Padding(
-                padding: const EdgeInsets.all(12.0),
+                padding:
+                    EdgeInsets.all(ResponsiveUtils.getSpacingSmall(context)),
                 child: TextField(
                   decoration: null,
                   controller: widget.telephonePrefixCont,
                   style: TextStyle(
                     color: Colors.grey,
                     fontWeight: FontWeight.bold,
-                    fontSize: 15,
+                    fontSize: ResponsiveUtils.getBodyTextFontSize(context),
                   ),
                   cursorHeight: 25,
                   cursorColor: Colors.white.withAlpha(125),
@@ -244,20 +311,23 @@ class TelephoneInput extends StatelessWidget {
               ),
             ),
             Container(
-              width: 215,
-              height: 45,
+              width: ResponsiveUtils.isSmallScreen(context)
+                  ? MediaQuery.of(context).size.width * 0.45
+                  : 215,
+              height: ResponsiveUtils.getButtonHeight(context) * 0.75,
               decoration: BoxDecoration(
                   color: Color.fromARGB(255, 26, 27, 29),
                   border: Border.all(color: Colors.white, width: 0.05)),
               child: Padding(
-                padding: const EdgeInsets.all(12.0),
+                padding:
+                    EdgeInsets.all(ResponsiveUtils.getSpacingSmall(context)),
                 child: TextField(
                   decoration: null,
                   controller: widget.telephoneCont,
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontSize: 15,
+                    fontSize: ResponsiveUtils.getBodyTextFontSize(context),
                   ),
                   cursorHeight: 25,
                   cursorColor: Colors.white.withAlpha(125),
@@ -266,7 +336,7 @@ class TelephoneInput extends StatelessWidget {
             ),
             Container(
               width: 30,
-              height: 45,
+              height: ResponsiveUtils.getButtonHeight(context) * 0.75,
               decoration: BoxDecoration(
                 color: Color.fromARGB(255, 26, 27, 29),
                 borderRadius: BorderRadius.only(
@@ -277,6 +347,7 @@ class TelephoneInput extends StatelessWidget {
                 child: Icon(
                   Icons.check,
                   color: Colors.white,
+                  size: ResponsiveUtils.getIconSize(context) * 0.7,
                 ),
               ),
             ),
@@ -287,15 +358,14 @@ class TelephoneInput extends StatelessWidget {
   }
 }
 
-// TODO: Opravit Profilovky
-
 class ProfileIcon extends StatelessWidget {
   final VoidCallback onTap;
-  // final Image image;
+  final XFile? selectedImage;
+
   const ProfileIcon({
     super.key,
     required this.onTap,
-    // required this.image,
+    this.selectedImage,
   });
 
   @override
@@ -305,25 +375,30 @@ class ProfileIcon extends StatelessWidget {
       children: [
         Stack(
           children: [
-            // CircleAvatar(
-            //   radius: 50,
-            //   backgroundImage: image != null
-            //       ? FileImage(image)
-            //       : AssetImage('assets/profile.png') as ImageProvider,
-            // ),
+            CircleAvatar(
+              radius: ResponsiveUtils.isSmallScreen(context) ? 50 : 60,
+              backgroundImage: selectedImage != null
+                  ? FileImage(File(selectedImage!.path))
+                  : AssetImage('assets/profile.png') as ImageProvider,
+              backgroundColor: Color.fromARGB(255, 53, 54, 55),
+            ),
             Positioned(
               bottom: 0,
               right: 0,
               child: Container(
-                width: 30,
-                height: 30,
+                width: ResponsiveUtils.isSmallScreen(context) ? 30 : 35,
+                height: ResponsiveUtils.isSmallScreen(context) ? 30 : 35,
                 decoration: BoxDecoration(
                   shape: BoxShape.rectangle,
                   color: Color.fromARGB(255, 255, 203, 105),
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: IconButton(
-                  icon: Icon(Icons.edit, color: Colors.black, size: 16),
+                  icon: Icon(
+                    Icons.edit,
+                    color: Colors.black,
+                    size: ResponsiveUtils.isSmallScreen(context) ? 16 : 20,
+                  ),
                   onPressed: onTap,
                 ),
               ),

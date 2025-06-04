@@ -4,6 +4,7 @@ from db.models.users import User
 from sqlalchemy.orm import Session
 from schemas.users import *
 from db.models.users import User
+from datetime import datetime
 
 def user_register(userModel: RegisterSchema, db : Session = Depends(getDb)):
     try:
@@ -34,6 +35,48 @@ def get_users(db : Session = Depends(getDb)):
         if not result:
             raise HTTPException(status_code=404, detail="Users not found")
         return result
+    except Exception as err:
+        raise HTTPException(status_code=500, detail=str(err))
+
+def check_user_exists(useruid: str, db: Session = Depends(getDb)):
+    try:
+        user = db.query(User).filter(User.useruid == useruid).first()
+        return user is not None
+    except Exception as err:
+        raise HTTPException(status_code=500, detail=str(err))
+
+def check_user_profile_complete(useruid: str, db: Session = Depends(getDb)):
+    try:
+        user = db.query(User).filter(User.useruid == useruid).first()
+        if not user:
+            return False
+        
+        # Check if all required profile fields are filled
+        profile_complete = (
+            user.firstname is not None and user.firstname.strip() != "" and
+            user.lastname is not None and user.lastname.strip() != "" and
+            user.nickname is not None and user.nickname.strip() != "" and
+            user.telephoneprefix is not None and user.telephoneprefix.strip() != "" and
+            user.telephonenumber is not None and user.telephonenumber.strip() != "" and
+            user.birthday is not None
+        )
+        
+        return profile_complete
+    except Exception as err:
+        raise HTTPException(status_code=500, detail=str(err))
+
+def check_user_in_group(useruid: str, db: Session = Depends(getDb)):
+    try:
+        from db.models.groupMembers import GroupMember
+        
+        user = db.query(User).filter(User.useruid == useruid).first()
+        if not user:
+            return False
+        
+        # Check if user is member of any group
+        group_membership = db.query(GroupMember).filter(GroupMember.userid == user.userid).first()
+        
+        return group_membership is not None
     except Exception as err:
         raise HTTPException(status_code=500, detail=str(err))
 

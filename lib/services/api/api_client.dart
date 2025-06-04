@@ -9,13 +9,15 @@ class ApiClient {
 
   ApiClient() {
     if (baseUrl.isEmpty) {
-      baseUrl = dotenv.get("HOST");
+      baseUrl =
+          "http://" + dotenv.get("HOST") + ":" + dotenv.get("FASTAPI_PORT");
     }
   }
 
   static String getBaseUrl() {
     if (baseUrl.isEmpty) {
-      baseUrl = dotenv.get("HOST");
+      baseUrl =
+          "http://" + dotenv.get("HOST") + ":" + dotenv.get("FASTAPI_PORT");
     }
     return baseUrl;
   }

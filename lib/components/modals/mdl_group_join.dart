@@ -3,6 +3,7 @@ import 'package:orgit/components/cards/card_group.dart';
 import 'package:orgit/components/Modals/mdl_item_view.dart';
 import 'package:orgit/components/Bar/slide_bar.dart';
 import 'package:orgit/components/Inputs/custom_searchbar.dart';
+import 'package:orgit/utils/responsive_utils.dart';
 
 class Mdlgroupjoin extends StatefulWidget {
   @override
@@ -11,13 +12,15 @@ class Mdlgroupjoin extends StatefulWidget {
 
 class _MdlgroupjoinState extends State<Mdlgroupjoin> {
   final TextEditingController searchControl = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return SizedBox(
-      height: 725,
+      height: screenHeight * 0.9, // 90% výšky obrazovky
       child: Container(
-        height: 725,
+        height: screenHeight * 0.9,
         width: double.infinity,
         decoration: BoxDecoration(
           color: Color.fromARGB(255, 19, 20, 22),
@@ -29,26 +32,27 @@ class _MdlgroupjoinState extends State<Mdlgroupjoin> {
         child: Stack(
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 15),
+              padding: EdgeInsets.only(
+                  top: ResponsiveUtils.getSpacingMedium(context)),
               child: SlideBar(),
             ),
             Positioned(
-                left: 55,
-                top: 40,
+                left: ResponsiveUtils.getPaddingHorizontal(context),
+                top: screenHeight * 0.04,
                 child: Text(
                   'Připojit se ke skupině',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
-                    fontSize: 30,
+                    fontSize: ResponsiveUtils.getHeadingFontSize(context),
                   ),
                 )),
             Positioned(
-                left: 35,
-                top: 100,
+                left: ResponsiveUtils.getPaddingHorizontal(context) * 0.8,
+                top: screenHeight * 0.13,
                 child: SizedBox(
-                  width: 330,
-                  height: 40,
+                  width: screenWidth * 0.85,
+                  height: ResponsiveUtils.getButtonHeight(context) * 0.6,
                   child: Customsearchbar(
                     hintText: "Klub poctivých skautu",
                     controller: searchControl,
@@ -56,7 +60,7 @@ class _MdlgroupjoinState extends State<Mdlgroupjoin> {
                   ),
                 )),
             Padding(
-                padding: EdgeInsets.only(top: 180),
+                padding: EdgeInsets.only(top: screenHeight * 0.22),
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
@@ -65,7 +69,8 @@ class _MdlgroupjoinState extends State<Mdlgroupjoin> {
                         opened: true,
                         textFooter: 'Zobrazit více',
                         onTapFooter: () => {print('Show more')},
-                        headerFont: 20,
+                        headerFont:
+                            ResponsiveUtils.getSubtitleFontSize(context),
                         cards: List.generate(
                           4,
                           (index) => Cardgroup(
@@ -85,13 +90,14 @@ class _MdlgroupjoinState extends State<Mdlgroupjoin> {
                         ),
                       ),
                       SizedBox(
-                        height: 25,
+                        height: ResponsiveUtils.getSpacingLarge(context),
                       ),
                       Itemview(
                         textHeader: 'Všechny skupiny',
                         textFooter: 'Zobrazit více',
                         onTapFooter: () => {print('Show more')},
-                        headerFont: 20,
+                        headerFont:
+                            ResponsiveUtils.getSubtitleFontSize(context),
                         cards: List.generate(
                           4,
                           (index) => Cardgroup(

@@ -1,20 +1,22 @@
-import 'package:orgit/components/inputs/modal_input.dart';
+import 'package:orgit/Components/inputs/modal_input.dart';
 import 'package:flutter/material.dart';
 
 class TitleInput extends StatefulWidget {
   final TextEditingController controller;
   final String value;
   final Offset iconPos;
+  final int maxLength;
 
   TitleInput({
     this.iconPos = Offset.zero,
     required this.controller,
     required this.value,
-  });
+    this.maxLength = 50,
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<TitleInput> createState() => TitleInputState();
-  final GlobalKey<TitleInputState> globalkey = GlobalKey<TitleInputState>();
 }
 
 class TitleInputState extends State<TitleInput> {
@@ -48,37 +50,36 @@ class TitleInputState extends State<TitleInput> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () => {
-        showModalInput(
-            context, widget.controller, widget.value, widget.globalkey)
+        showModalInput(context, widget.controller, widget.value, updateIcon)
       },
-      child: Stack(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                key: titleKey,
-                widget.controller.text.isEmpty
-                    ? widget.value
-                    : widget.controller.text,
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
-              ),
-            ],
-          ),
-          Positioned(
-            top: 29.5,
-            left: 0 + _iconPos.dx - 5,
-            child: Visibility(
-              visible: visible == true,
-              child: Icon(
-                Icons.edit,
+          Flexible(
+            child: Text(
+              key: titleKey,
+              widget.controller.text.isEmpty
+                  ? widget.value
+                  : widget.controller.text.length > widget.maxLength
+                      ? '${widget.controller.text.substring(0, widget.maxLength)}...'
+                      : widget.controller.text,
+              style: TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.w600,
                 color: Colors.white,
-                size: 19,
               ),
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          SizedBox(width: 8),
+          Visibility(
+            visible: visible == true,
+            child: Icon(
+              Icons.edit,
+              color: Colors.white.withOpacity(0.7),
+              size: 20,
             ),
           ),
         ],

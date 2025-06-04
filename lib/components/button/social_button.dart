@@ -19,8 +19,8 @@ class SocialButton extends StatelessWidget {
     return InkWell(
       onTap: onPressed,
       child: Container(
-        width: 140,
-        height: 70,
+        width: MediaQuery.of(context).size.width * 0.35,
+        height: MediaQuery.of(context).size.height * 0.07,
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(6),

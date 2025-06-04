@@ -6,14 +6,11 @@ import 'package:icons_plus/icons_plus.dart';
 import 'package:orgit/components/Button/social_button.dart';
 
 class LoginForm extends StatelessWidget {
-  final VoidCallback onLogin;
-
   final email = TextEditingController();
 
   final password = TextEditingController();
 
-  LoginForm({required this.onLogin});
-
+  LoginForm();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +33,7 @@ class LoginForm extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           InkWell(
-                            onTap: () => onLogin(),
+                            onTap: () => throw new Exception('Not implemented'),
                             child: Text(
                               'Registrovat se',
                               style: TextStyle(

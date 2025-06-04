@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:orgit/components/inputs/title_input.dart';
 
+// Modified to remove circular dependency
 void showModalInput(BuildContext context, TextEditingController controller,
-    String hintText, GlobalKey<TitleInputState> targeKey) {
+    String hintText, Function updateIconCallback) {
   OverlayState overlayState = Overlay.of(context);
 
   late OverlayEntry entry;
@@ -17,7 +17,8 @@ void showModalInput(BuildContext context, TextEditingController controller,
         elevation: 12,
         child: InkWell(
           onTap: () {
-            // targeKey.currentState?.updateIcon();
+            // Call the callback instead of accessing the key directly
+            updateIconCallback();
             entry.remove();
           },
           child: SizedBox(
@@ -27,6 +28,7 @@ void showModalInput(BuildContext context, TextEditingController controller,
               children: [
                 TextField(
                   onSubmitted: (value) {
+                    updateIconCallback();
                     entry.remove();
                   },
                   controller: controller,

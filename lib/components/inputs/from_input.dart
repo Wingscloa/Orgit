@@ -80,8 +80,8 @@ class _FormInputState extends State<FormInput> {
         Row(
           children: [
             Container(
-              width: 270,
-              height: 45,
+              width: MediaQuery.of(context).size.width * 0.7,
+              height: MediaQuery.of(context).size.height * 0.06,
               decoration: BoxDecoration(
                 color: Color.fromARGB(255, 26, 27, 29),
                 borderRadius: BorderRadius.only(
@@ -111,8 +111,8 @@ class _FormInputState extends State<FormInput> {
               ),
             ),
             Container(
-              width: 30,
-              height: 45,
+              width: MediaQuery.of(context).size.width * 0.08,
+              height: MediaQuery.of(context).size.height * 0.06,
               decoration: BoxDecoration(
                 color: Color.fromARGB(255, 26, 27, 29),
                 borderRadius: BorderRadius.only(
