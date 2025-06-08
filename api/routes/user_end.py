@@ -1,6 +1,5 @@
 from fastapi import APIRouter, HTTPException, Depends
 from session import getDb
-from fastapi.responses import JSONResponse
 from services._User import *
 from schemas.users import *
 from auth import verify_firebase_token
@@ -15,12 +14,22 @@ async def get_user_all(verify = Depends(verify_firebase_token),db : Session = De
         return response 
     except HTTPException as err:
         raise HTTPException(status_code=500, detail=f"{err}")
+
+@router.get('/User/id/{useruid}', response_model=int)
+async def get_userid_by_uid(useruid: str, verify = Depends(verify_firebase_token), db : Session = Depends(getDb)):
+    try:
+        response = get_userId_by_uid(useruid, db)
+        if not response:
+            raise HTTPException(status_code=404, detail="User not found")
+        return response
+    except HTTPException as err:
+        raise HTTPException(status_code=500, detail=f"{err}")
     
-@router.post('/User/')
+@router.post('/User/', status_code=200)
 async def post_user_register(model : RegisterSchema,  db : Session = Depends(getDb)):
     try:
         user_register(model,db)
-        return JSONResponse(status_code=200,content={"message" : "User is registered"})
+        return {"message": "User is registered", "status": "success"}
     except Exception as err:
         raise HTTPException(status_code=500, detail=f"{err}")
 
@@ -48,20 +57,26 @@ async def check_if_user_in_group(useruid: str, db: Session = Depends(getDb)):
     except Exception as err:
         raise HTTPException(status_code=500, detail=f"{err}")
 
-@router.put('/User')
+@router.put('/User', status_code=200)
 async def put_user_profile_form(model : ProfileSchema, verify = Depends(verify_firebase_token), db : Session = Depends(getDb)):
     try:
+        print(f"DEBUG: Received model type: {type(model)}")
+        print(f"DEBUG: Received model data: {model}")
+        print(f"DEBUG: Model dict: {model.model_dump() if model else 'None'}")
+        
         user_UpdateProfile(model,db)
-        return JSONResponse(status_code=201,content={"message" : "User profile is updated"})
+        return {"message": "User profile is updated", "status": "success"}
     except Exception as err:
+        print(f"DEBUG: Error in endpoint: {err}")
         raise HTTPException(status_code=500, detail=f"{err}")
 
-@router.delete('/User')
+@router.delete('/User', status_code=200)
 async def delete_user_by_id(useruid : str, verify = Depends(verify_firebase_token), db : Session = Depends(getDb)):
     try:
         response = delete_user(useruid,db)
         if not response:
-            return JSONResponse(status_code=404,content={"message" : "User is deleted"})
+            return {"message": "User is deleted", "status": "success"}
+        return {"message": "User not found", "status": "error"}
     except Exception as err:
         raise HTTPException(status_code=500, detail=f"{err}")
     

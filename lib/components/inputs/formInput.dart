@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:orgit/utils/responsive_utils.dart';
 
 class FormInput extends StatefulWidget {
   final String labelText;
@@ -57,7 +58,7 @@ class _FormInputState extends State<FormInput> {
                 widget.labelText,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 10,
+                  fontSize: ResponsiveUtils.getLabelFontSize(context),
                   color: Color.fromARGB(255, 87, 88, 90),
                 ),
               ),
@@ -69,7 +70,7 @@ class _FormInputState extends State<FormInput> {
                         style: TextStyle(
                           color: widget.rightTextColor,
                           fontWeight: FontWeight.bold,
-                          fontSize: 12,
+                          fontSize: ResponsiveUtils.getSmallFontSize(context),
                         ),
                       ),
                     )
@@ -103,7 +104,7 @@ class _FormInputState extends State<FormInput> {
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontSize: 15,
+                    fontSize: ResponsiveUtils.getBodyFontSize(context),
                   ),
                   cursorHeight: 25,
                   cursorColor: Colors.white.withAlpha(125),
@@ -127,7 +128,7 @@ class _FormInputState extends State<FormInput> {
                     : () => (),
                 child: Icon(
                   widget.showObscureText
-                      ? widget.obscureText
+                      ? _obscureText
                           ? Icons.visibility
                           : Icons.visibility_off
                       : widget.icon,

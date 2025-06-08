@@ -33,7 +33,7 @@ class ProfileSchema(BaseModel):
     telephoneprefix: str = Field(max_length=3, min_length=3)
     telephonenumber: str = Field(max_length=9, min_length=9)
     birthday : datetime
-    profileicon : bytes
+    profileicon : Optional[str] = None  # Base64 encoded string
 
 class VerifySchema(BaseModel):
     useruid : str
@@ -52,7 +52,7 @@ class UserExperienceSchema(BaseModel):
 
 class UserProfileSchema(BaseModel):
     useruid : str
-    ProfileIcon : bytes
+    ProfileIcon : Optional[str] = None  # Base64 encoded string
 
 class UserGroupSchema(BaseModel):
     useruid : str

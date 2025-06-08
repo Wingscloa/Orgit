@@ -13,10 +13,10 @@ dependencies:
   logger: ^2.5.0
   flutter_animate: ^4.5.2
   connectivity_plus: ^6.1.0
+  shared_preferences: ^2.2.2
   
   flutter:
     sdk: flutter
-
   english_words: ^4.0.0
   provider: ^6.0.0 
   firebase_core: ^3.8.1
@@ -29,6 +29,7 @@ dependencies:
   blur: ^4.0.0
   flutter_colorpicker: ^1.0.3
   flutter_dotenv: ^5.2.1
+  geolocator: ^12.0.0
 
 
 dev_dependencies:

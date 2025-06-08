@@ -1,10 +1,11 @@
 import "package:email_validator/email_validator.dart";
 import "package:flutter/material.dart";
 import "package:orgit/Components/Feature/bottom_dots.dart";
-import "package:orgit/Components/Inputs/from_input.dart";
+import "package:orgit/Components/Inputs/formInput.dart";
 import "package:icons_plus/icons_plus.dart";
 import "package:orgit/Components/Button/social_button.dart";
 import "package:logger/logger.dart";
+import "package:orgit/Pages/Auth/profile_form.dart";
 import "dart:developer";
 import "package:orgit/services/auth/auth.dart";
 import "package:orgit/global_vars.dart";
@@ -83,8 +84,13 @@ class _RegisterState extends State<Register> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               InkWell(
-                                onTap: () =>
-                                    throw new Exception('Not implemented'),
+                                onTap: () => {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => LoginForm()),
+                                  )
+                                },
                                 child: Text(
                                   "Přihlásit se",
                                   style: TextStyle(
@@ -433,15 +439,11 @@ class _RegisterState extends State<Register> {
                   backgroundColor: Colors.green,
                 ),
               );
-
-              // Call the onRegister callback to navigate
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => LoginForm()),
+                MaterialPageRoute(builder: (context) => Profileform()),
               );
             } catch (apiError) {
-              // API call failed, but Firebase user was created
-              // We should delete the Firebase user to avoid orphaned accounts
               try {
                 await user.delete();
               } catch (deleteError) {
@@ -538,10 +540,8 @@ class _RegisterState extends State<Register> {
             await ApiClient().post("/User/", userModel.toJson());
           }
 
-          // Close loading dialog
           Navigator.of(context).pop();
 
-          // Show success message
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text("Google přihlášení proběhlo úspěšně"),
@@ -549,13 +549,8 @@ class _RegisterState extends State<Register> {
             ),
           );
 
-          // Navigate to the next screen
           throw new Exception('Not implemented');
         } catch (e) {
-          // Close loading dialog
-          Navigator.of(context).pop();
-
-          // Show error message
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text("Chyba při ukládání uživatele: ${e.toString()}"),
@@ -567,10 +562,8 @@ class _RegisterState extends State<Register> {
           log.e(e);
         }
       } else {
-        // Close loading dialog
         Navigator.of(context).pop();
 
-        // Show error message
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text("Google přihlášení selhalo"),
@@ -579,12 +572,10 @@ class _RegisterState extends State<Register> {
         );
       }
     } catch (e) {
-      // Close loading dialog if it's open
       if (Navigator.of(context).canPop()) {
         Navigator.of(context).pop();
       }
 
-      // Show error message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text("Chyba při Google přihlášení: ${e.toString()}"),
@@ -599,7 +590,6 @@ class _RegisterState extends State<Register> {
 
   Future<void> signInWithFacebook(BuildContext context) async {
     try {
-      // Show loading indicator
       showDialog(
         context: context,
         barrierDismissible: false,
@@ -612,18 +602,15 @@ class _RegisterState extends State<Register> {
         },
       );
 
-      // Sign in with Facebook
       UserCredential? userCredential = await AuthService().loginWithFacebook();
 
       if (userCredential != null && userCredential.user != null) {
         User user = userCredential.user!;
 
-        // Check if user already exists in your database
         try {
           bool userExists = await checkUserExists(user.uid);
 
           if (!userExists) {
-            // Create user in database if it doesn't exist
             UserRegister userModel = UserRegister(
               useruid: user.uid,
               email: user.email ?? "",
@@ -632,10 +619,8 @@ class _RegisterState extends State<Register> {
             await ApiClient().post("/User/", userModel.toJson());
           }
 
-          // Close loading dialog
           Navigator.of(context).pop();
 
-          // Show success message
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text("Facebook přihlášení proběhlo úspěšně"),
@@ -643,13 +628,10 @@ class _RegisterState extends State<Register> {
             ),
           );
 
-          // Navigate to the next screen
           throw new Exception('Not implemented');
         } catch (e) {
-          // Close loading dialog
           Navigator.of(context).pop();
 
-          // Show error message
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text("Chyba při ukládání uživatele: ${e.toString()}"),

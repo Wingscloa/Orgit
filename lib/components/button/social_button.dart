@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:orgit/utils/responsive_utils.dart';
 
 class SocialButton extends StatelessWidget {
   final String text;
@@ -33,7 +34,7 @@ class SocialButton extends StatelessWidget {
               text,
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 15,
+                fontSize: ResponsiveUtils.getBodyFontSize(context),
                 fontWeight: FontWeight.bold,
               ),
             )

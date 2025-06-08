@@ -3,9 +3,55 @@ import 'package:orgit/components/modals/mdl_item_view.dart';
 import 'package:flutter/material.dart';
 import 'package:orgit/components/Bar/slide_bar.dart';
 import 'package:orgit/components/Inputs/custom_searchbar.dart';
+import 'package:orgit/services/auth/auth.dart';
 
-class Modcreategroup extends StatelessWidget {
-  final TextEditingController searchControl = new TextEditingController();
+class Modcreategroup extends StatefulWidget {
+  @override
+  State<Modcreategroup> createState() => _ModcreategroupState();
+}
+
+class _ModcreategroupState extends State<Modcreategroup> {
+  final TextEditingController searchControl = TextEditingController();
+
+  Future<void> _handleJoinGroup(BuildContext context, String groupName) async {
+    try {
+      // Simulate successful group joining
+      // TODO: Replace with actual API call when backend is ready
+      print("Joining group: $groupName");
+
+      // Update cache to mark user as being in a group
+      final authService = AuthService();
+      await authService.updateInGroupStatus(true);
+
+      if (context.mounted) {
+        // Close the modal
+        Navigator.of(context).pop();
+
+        // Show success message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Úspěšně jste se připojili ke skupině "$groupName"!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+
+        // Navigate to homepage
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          '/homepage',
+          (route) => false,
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Chyba při připojování ke skupině: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,10 +110,8 @@ class Modcreategroup extends StatelessWidget {
                             cards: List.generate(
                               4,
                               (index) => Cardgroup(
-                                onTap: () => {
-                                  print(
-                                      'Pripojit se do skupiny (CardGroup$index)')
-                                },
+                                onTap: () => _handleJoinGroup(
+                                    context, 'Dealy na Krátký'),
                                 city: 'Děčín',
                                 primaryColor:
                                     const Color.fromARGB(255, 198, 197, 197),
@@ -91,10 +135,8 @@ class Modcreategroup extends StatelessWidget {
                             cards: List.generate(
                               4,
                               (index) => Cardgroup(
-                                onTap: () => {
-                                  print(
-                                      'Pripojit se do skupiny (CardGroup$index)')
-                                },
+                                onTap: () => _handleJoinGroup(
+                                    context, 'Dealy na Krátký'),
                                 city: 'Děčín',
                                 primaryColor:
                                     const Color.fromARGB(255, 198, 197, 197),

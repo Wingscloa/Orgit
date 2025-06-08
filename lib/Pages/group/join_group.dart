@@ -1,10 +1,11 @@
-import 'package:orgit/Components/Modals/mdl_group_create.dart';
-import 'package:orgit/Components/Modals/mdl_group_join.dart';
+import 'package:orgit/components/modals/mdl_group_create.dart';
+import 'package:orgit/components/modals/mdl_group_join.dart';
 import 'package:orgit/Components/Modals/confirmation_modal.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:orgit/Components/Feature/bottom_dots.dart';
 import 'package:orgit/Components/Button/default_button.dart';
+import 'package:orgit/Pages/Auth/Register.dart';
 import 'package:orgit/global_vars.dart';
 
 class Joingroup extends StatelessWidget {
@@ -20,9 +21,8 @@ class Joingroup extends StatelessWidget {
         try {
           await FirebaseAuth.instance.signOut();
           if (context.mounted) {
-            Navigator.of(context).pushNamedAndRemoveUntil(
-              '/login',
-              (route) => false,
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => Register()),
             );
           }
         } catch (e) {
@@ -100,7 +100,7 @@ class Joingroup extends StatelessWidget {
                               isScrollControlled: true,
                               context: context,
                               builder: (BuildContext context) {
-                                return Mdlgroupcreate();
+                                return MdlGroupCreate();
                               },
                             );
                           },

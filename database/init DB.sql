@@ -13,7 +13,7 @@ CREATE TABLE Users (
 	TelephonePrefix char(3) NULL,
 	Level INTEGER NOT NULL DEFAULT 1,
 	Experience INTEGER NOT NULL DEFAULT 0,
-	ProfileIcon TEXT NULL,
+	ProfileIcon BYTEA NULL,
 	DeletedAt DATE NULL,
 	CreatedAt DATE DEFAULT NOW(),
 	LastActive DATE NULL
@@ -77,16 +77,30 @@ CREATE TABLE ToDo(
 
 CREATE INDEX idx_todo_userid ON ToDo(UserId);
 
+-- locations
+
+CREATE TABLE Regions(
+	RegionId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	Name varchar(32) NOT NULL UNIQUE
+);
+
+CREATE TABLE Cities(
+	CityId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	Name varchar(32) NOT NULL UNIQUE,
+	RegionId INTEGER REFERENCES Regions(RegionId) ON DELETE CASCADE
+);
+
+
 -- GROUPS & EVENTS
 
 -- created
 
 CREATE TABLE Groups (
 	GroupId INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	ProfilePicture TEXT NOT NULL,
+	ProfilePicture BYTEA NOT NULL,
 	Name varchar(32) NOT NULL UNIQUE,
-	City varchar(32) NOT NULL,
-	Region varchar(32) NOT NULL,
+	City INTEGER REFERENCES Cities(CityId) NOT NULL,
+	Region INTEGER REFERENCES Regions(RegionId) NOT NULL,
 	Leader INTEGER REFERENCES Users(UserId) ON DELETE CASCADE,
 	Description varchar(512) NOT NULL,
 	CreatedBy INTEGER REFERENCES Users(UserId) ON DELETE CASCADE,
@@ -273,6 +287,10 @@ CREATE TABLE BubbleGroups(
 	UnlockAfterComplete INTEGER REFERENCES BubbleGroups(BubbleGroupId) ON DELETE CASCADE NULL,
 	LevelReq INTEGER NULL DEFAULT 1
 );
+
+
+
+
 
 -- created
 CREATE TABLE BubbleQuests(

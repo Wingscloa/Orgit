@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from routes import user_end, group_end, todo_end, email_end
+from routes import user_end, group_end, todo_end, email_end, location_end
                      
 
 # ,todo_end,email_end,
@@ -14,6 +14,7 @@ app.include_router(user_end.router,tags=["User"])
 app.include_router(group_end.router,tags=["Group"])
 app.include_router(todo_end.router,tags=["Todo"])
 app.include_router(email_end.router,tags=["Email"])
+app.include_router(location_end.router,tags=["Location"])
 # app.include_router(notification_end.router,ddtags=["Notification"])
 # app.include_router(report_end.router,tags=["Report"])
 # app.include_router(title_end.router,tags=["Title"])

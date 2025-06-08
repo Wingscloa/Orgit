@@ -3,12 +3,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'dart:async';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:orgit/Pages/Auth/Register.dart';
 import 'package:orgit/Pages/splashscreen/splashScreen.dart';
 import 'package:orgit/services/auth/auth.dart';
-import 'package:orgit/Pages/Auth/Register.dart';
-import 'package:orgit/Pages/Auth/profile_form.dart';
-import 'package:orgit/Pages/group/join_group.dart';
-import 'package:orgit/Pages/homepage.dart';
+import 'package:orgit/services/cache/cache.dart';
+import 'package:orgit/utils/navigation_utils.dart';
 
 class UserInfo {
   static String uid = "";
@@ -29,12 +28,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      navigatorKey: navigatorKey,
       title: "Orgit",
       theme: ThemeData(
         navigationBarTheme: const NavigationBarThemeData(
@@ -49,48 +45,24 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
       debugShowCheckedModeBanner: false,
-      // home: Homepage(initPage: 0),
-      home: SplashScreen(
-        duration: const Duration(seconds: 2),
-        onFinish: () async {
-          try {
-            final AuthService authService = AuthService();
-
-            final String destination =
-                await authService.determineUserDestination();
-
-            switch (destination) {
-              case 'register':
-                navigatorKey.currentState?.pushReplacement(
-                  MaterialPageRoute(builder: (context) => Register()),
-                );
-                break;
-              case 'profile':
-                navigatorKey.currentState?.pushReplacement(
-                  MaterialPageRoute(builder: (context) => Profileform()),
-                );
-                break;
-              case 'join_group':
-                navigatorKey.currentState?.pushReplacement(
-                  MaterialPageRoute(builder: (context) => Joingroup()),
-                );
-                break;
-              case 'homepage':
-              default:
-                navigatorKey.currentState?.pushReplacement(
-                  MaterialPageRoute(
-                      builder: (context) => Homepage(initPage: 0)),
-                );
-                break;
-            }
-          } catch (e) {
-            print("❌ Chyba při určování destinace: $e");
-            if (context.mounted) {
-              navigatorKey.currentState?.pushReplacement(
-                MaterialPageRoute(builder: (context) => Register()),
-              );
-            }
+      home: FutureBuilder<Widget>(
+        future: NavigationUtils.getInitialPage(),
+        builder: (context, snapshot) {
+          // final AuthService authService = AuthService();
+          // authService.signOut();
+          final CacheService cacheService = CacheService.instance;
+          cacheService.debugAllSharedPreferences();
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return SplashScreen(
+              duration: const Duration(seconds: 2),
+              onFinish: () {}, // Prázdný  callback
+            );
           }
+
+          if (snapshot.hasData) {
+            return snapshot.data!;
+          }
+          return Register();
         },
       ),
     );

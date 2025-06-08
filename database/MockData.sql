@@ -249,3 +249,123 @@ VALUES
 		'splnění 10 achievmentu, 10 úkolu',
 		FALSE
 	);
+
+
+	-- Vložení krajů
+	INSERT INTO Regions (Name) VALUES 
+	('Hlavní město Praha'),
+	('Středočeský kraj'),
+	('Jihočeský kraj'),
+	('Plzeňský kraj'),
+	('Karlovarský kraj'),
+	('Ústecký kraj'),
+	('Liberecký kraj'),
+	('Královéhradecký kraj'),
+	('Pardubický kraj'),
+	('Kraj Vysočina'),
+	('Jihomoravský kraj'),
+	('Olomoucký kraj'),
+	('Zlínský kraj'),
+	('Moravskoslezský kraj');
+
+	-- Vložení hlavních měst krajů a dalších významných měst
+	INSERT INTO Cities (Name, RegionId) VALUES 
+	-- Hlavní město Praha (RegionId = 1)
+	('Praha', 1),
+
+	-- Středočeský kraj (RegionId = 2)
+	('Kladno', 2),
+	('Mladá Boleslav', 2),
+	('Příbram', 2),
+	('Kolín', 2),
+	('Kutná Hora', 2),
+	('Mělník', 2),
+	('Benešov', 2),
+	('Beroun', 2),
+	('Nymburk', 2),
+	('Rakovník', 2),
+
+	-- Jihočeský kraj (RegionId = 3)
+	('České Budějovice', 3),
+	('Český Krumlov', 3),
+	('Jindřichův Hradec', 3),
+	('Písek', 3),
+	('Strakonice', 3),
+	('Tábor', 3),
+	('Prachatice', 3),
+
+	-- Plzeňský kraj (RegionId = 4)
+	('Plzeň', 4),
+	('Klatovy', 4),
+	('Domažlice', 4),
+	('Rokycany', 4),
+	('Tachov', 4),
+
+	-- Karlovarský kraj (RegionId = 5)
+	('Karlovy Vary', 5),
+	('Cheb', 5),
+	('Sokolov', 5),
+
+	-- Ústecký kraj (RegionId = 6)
+	('Ústí nad Labem', 6),
+	('Děčín', 6),
+	('Teplice', 6),
+	('Most', 6),
+	('Chomutov', 6),
+	('Litoměřice', 6),
+	('Louny', 6),
+
+	-- Liberecký kraj (RegionId = 7)
+	('Liberec', 7),
+	('Jablonec nad Nisou', 7),
+	('Česká Lípa', 7),
+	('Semily', 7),
+
+	-- Královéhradecký kraj (RegionId = 8)
+	('Hradec Králové', 8),
+	('Jičín', 8),
+	('Náchod', 8),
+	('Rychnov nad Kněžnou', 8),
+	('Trutnov', 8),
+
+	-- Pardubický kraj (RegionId = 9)
+	('Pardubice', 9),
+	('Chrudim', 9),
+	('Svitavy', 9),
+	('Ústí nad Orlicí', 9),
+
+	-- Kraj Vysočina (RegionId = 10)
+	('Jihlava', 10),
+	('Havlíčkův Brod', 10),
+	('Pelhřimov', 10),
+	('Třebíč', 10),
+	('Žďár nad Sázavou', 10),
+
+	-- Jihomoravský kraj (RegionId = 11)
+	('Brno', 11),
+	('Blansko', 11),
+	('Břeclav', 11),
+	('Hodonín', 11),
+	('Vyškov', 11),
+	('Znojmo', 11),
+
+	-- Olomoucký kraj (RegionId = 12)
+	('Olomouc', 12),
+	('Prostějov', 12),
+	('Přerov', 12),
+	('Šumperk', 12),
+	('Jeseník', 12),
+
+	-- Zlínský kraj (RegionId = 13)
+	('Zlín', 13),
+	('Kroměříž', 13),
+	('Uherské Hradiště', 13),
+	('Vsetín', 13),
+
+	-- Moravskoslezský kraj (RegionId = 14)
+	('Ostrava', 14),
+	('Karviná', 14),
+	('Frýdek-Místek', 14),
+	('Opava', 14),
+	('Nový Jičín', 14),
+	('Třinec', 14);

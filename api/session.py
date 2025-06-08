@@ -8,7 +8,7 @@ from pathlib import Path
 from db.models import (icon,users, titles, userTitles, roles
                        ,userRoles, toDo, groups, groupMembers, events
                        ,eventParticipants, groupTree, bubbleGroups, bubbleQuests,completedQuests,
-                       notificationTypes, notifications, reports, category)
+                       notificationTypes, notifications, reports, category, cities, regions)
 
 # Načtení proměnných z .env souboru
 env_path = Path(__file__).parent.parent / '.env'

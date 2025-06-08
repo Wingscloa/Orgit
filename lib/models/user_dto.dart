@@ -1,3 +1,6 @@
+import 'dart:typed_data';
+import 'dart:convert';
+
 class UserResponse {
   final int userid;
   final String useruid;
@@ -61,5 +64,77 @@ class UserResponse {
         deletedat: deletedat,
         createdat: DateTime.parse(json['createdat']),
         lastactive: lastactive);
+  }
+}
+
+class UserProfileRequest {
+  final String useruid;
+  final String firstname;
+  final String lastname;
+  final String nickname;
+  final String telephoneprefix;
+  final String telephonenumber;
+  final DateTime birthday;
+  final Uint8List? profileicon;
+
+  UserProfileRequest({
+    required this.useruid,
+    required this.firstname,
+    required this.lastname,
+    required this.nickname,
+    required this.telephoneprefix,
+    required this.telephonenumber,
+    required this.birthday,
+    this.profileicon,
+  });
+  Map<String, dynamic> toJson() {
+    return {
+      'useruid': useruid,
+      'firstname': firstname,
+      'lastname': lastname,
+      'nickname': nickname,
+      'telephoneprefix': telephoneprefix,
+      'telephonenumber': telephonenumber,
+      'birthday': birthday.toIso8601String(),
+      if (profileicon != null) 'profileicon': base64Encode(profileicon!),
+    };
+  }
+
+  // Validation methods
+  bool isValid() {
+    return firstname.isNotEmpty &&
+        firstname.length <= 32 &&
+        lastname.isNotEmpty &&
+        lastname.length <= 32 &&
+        nickname.length <= 32 &&
+        telephoneprefix.length == 3 &&
+        telephonenumber.length == 9;
+  }
+
+  String? validateFirstname() {
+    if (firstname.isEmpty) return 'Jméno je povinné';
+    if (firstname.length > 32) return 'Jméno může mít maximálně 32 znaků';
+    return null;
+  }
+
+  String? validateLastname() {
+    if (lastname.isEmpty) return 'Příjmení je povinné';
+    if (lastname.length > 32) return 'Příjmení může mít maximálně 32 znaků';
+    return null;
+  }
+
+  String? validateNickname() {
+    if (nickname.length > 32) return 'Přezdívka může mít maximálně 32 znaků';
+    return null;
+  }
+
+  String? validateTelephonePrefix() {
+    if (telephoneprefix.length != 3) return 'Předvolba musí mít 3 znaky';
+    return null;
+  }
+
+  String? validateTelephonenumber() {
+    if (telephonenumber.length != 9) return 'Telefonní číslo musí mít 9 znaků';
+    return null;
   }
 }

@@ -18,13 +18,14 @@ async def get_group_all(verify = Depends(verify_firebase_token), db : Session = 
     except Exception as err:
         raise HTTPException(status_code=500, detail=f"Contact support\nException error : {err}")
     
-@router.post('/Group')
+@router.post('/Group', status_code=200)
 async def create_group(groupModel : GroupSchema, verify = Depends(verify_firebase_token), db : Session = Depends(getDb)):
     try:
-        group_create(groupModel,db=db)
-        return True
+        groupid = group_create(groupModel,db=db)
+        return {"message": "Group created successfully", "status": "success", "groupid": groupid}
     except Exception as err:
-        raise HTTPException(status_code=400, detail="Parameters are not correct")
+        print(f"ERROR in group creation: {err}")  # Debug print
+        raise HTTPException(status_code=400, detail=f"Parameters are not correct: {str(err)}")
     
 @router.delete('/Group')
 async def delete_group_by_id(groupid: int, verify = Depends(verify_firebase_token), db : Session = Depends(getDb)):
@@ -55,7 +56,7 @@ async def get_groups_paginated(start :int, count: int, verify = Depends(verify_f
     except Exception as err:
         raise HTTPException(status_code=500, detail=f"Error contact support: {err}")
 
-@router.get('/Group/{city}', response_model=list[GroupSearchResponse])
+@router.get('/Group/city/{city}', response_model=list[GroupSearchResponse])
 async def get_group_by_city(city : str, start: int, count : int, verify = Depends(verify_firebase_token), db : Session = Depends(getDb)):
     if(start < 0):
         raise HTTPException(status_code=400, detail="Start can't be negative")
@@ -68,7 +69,7 @@ async def get_group_by_city(city : str, start: int, count : int, verify = Depend
     except Exception as err:
         raise HTTPException(status_code=500, detail="Contact Support\nException error : {err}")
 
-@router.get('/Group/{name}', response_model=list[GroupSearchResponse])
+@router.get('/Group/name/{name}', response_model=list[GroupSearchResponse])
 async def get_group_by_name(name: str, start: int, count: int, verify = Depends(verify_firebase_token), db : Session = Depends(getDb)):
     if(start < 0):
         raise HTTPException(status_code=400, detail="Start can't be negative")
@@ -79,3 +80,29 @@ async def get_group_by_name(name: str, start: int, count: int, verify = Depends(
         return result
     except Exception as err:
         raise HTTPException(status_code=400, detail="Contact Support\nException error : {err}")
+
+@router.post('/Group/member', status_code=200)
+async def add_user_to_group(member: GroupMemberSchema, verify = Depends(verify_firebase_token), db : Session = Depends(getDb)):
+    """
+    Přidá uživatele do skupiny pomocí userid
+    """
+    try:
+        result = group_add_member(member.userid, member.groupid, db)
+        return result
+    except HTTPException:
+        raise
+    except Exception as err:
+        raise HTTPException(status_code=500, detail=f"Error adding user to group: {str(err)}")
+
+@router.delete('/Group/member', status_code=200)
+async def remove_user_from_group(member: GroupMemberSchema, verify = Depends(verify_firebase_token), db : Session = Depends(getDb)):
+    """
+    Odebere uživatele ze skupiny pomocí userid (kick)
+    """
+    try:
+        result = group_remove_member(member.userid, member.groupid, db)
+        return result
+    except HTTPException:
+        raise
+    except Exception as err:
+        raise HTTPException(status_code=500, detail=f"Error removing user from group: {str(err)}")

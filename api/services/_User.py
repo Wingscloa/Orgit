@@ -16,18 +16,60 @@ def user_register(userModel: RegisterSchema, db : Session = Depends(getDb)):
 
 def user_UpdateProfile(userModel: ProfileSchema, db : Session = Depends(getDb)):
     try:
+        print(f"DEBUG: userModel type: {type(userModel)}")
+        print(f"DEBUG: userModel data: {userModel}")
+        
+        if userModel is None:
+            raise HTTPException(status_code=400, detail="userModel is None")
+            
         user = db.query(User).filter(User.useruid == userModel.useruid).first()
-        user.firstname = userModel.firstname
-        user.lastname = userModel.lastname
-        user.nickname = userModel.nickname
-        user.telephoneprefix = userModel.telephoneprefix
-        user.telephonenumber = userModel.telephonenumber
-        user.birthday = userModel.birthday
-        user.profileicon = userModel.profileicon
+        print(f"DEBUG: Found user: {user}")
+        
+        if user is None:
+            # User doesn't exist, create a new one with profile data
+            print(f"DEBUG: Creating new user with useruid: {userModel.useruid}")
+            user = User(
+                useruid=userModel.useruid,
+                firstname=userModel.firstname,
+                lastname=userModel.lastname,
+                nickname=userModel.nickname,
+                telephoneprefix=userModel.telephoneprefix,
+                telephonenumber=userModel.telephonenumber,
+                birthday=userModel.birthday,
+                profileicon=userModel.profileicon,
+                email="",  # Email will be filled from Firebase token if needed
+                verified=False,
+                deleted=False,
+                level=1,
+                experience=0
+            )
+            db.add(user)
+        else:
+            # User exists, update their profile
+            print(f"DEBUG: Updating existing user: {user.useruid}")
+            user.firstname = userModel.firstname
+            user.lastname = userModel.lastname
+            user.nickname = userModel.nickname
+            user.telephoneprefix = userModel.telephoneprefix
+            user.telephonenumber = userModel.telephonenumber
+            user.birthday = userModel.birthday
+            user.profileicon = userModel.profileicon
+        
         db.commit()
+        print(f"DEBUG: Successfully committed changes")
+    except HTTPException as http_err:
+        raise http_err
     except Exception as err:
         raise HTTPException(status_code=500, detail=f"{err}")
-    
+
+def get_userId_by_uid(useruid: str, db : Session = Depends(getDb)):
+    try:
+        user = db.query(User).filter(User.useruid == useruid).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        return user.userid
+    except Exception as err:
+        raise HTTPException(status_code=500, detail=str(err))
 
 def get_users(db : Session = Depends(getDb)):
     try:   
