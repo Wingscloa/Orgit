@@ -49,6 +49,16 @@ async def check_if_user_profile_complete(useruid: str, db: Session = Depends(get
     except Exception as err:
         raise HTTPException(status_code=500, detail=f"{err}")
 
+@router.get('/User/{useruid}', response_model=UserResponse)
+async def get_user_by_uid_endpoint(useruid: str, verify = Depends(verify_firebase_token), db : Session = Depends(getDb)):
+    try:
+        response = get_user_by_uid(useruid, db)
+        return response
+    except HTTPException as err:
+        raise err
+    except Exception as err:
+        raise HTTPException(status_code=500, detail=f"{err}")
+
 @router.get('/User/in-group/')
 async def check_if_user_in_group(useruid: str, db: Session = Depends(getDb)):
     try:
@@ -60,10 +70,6 @@ async def check_if_user_in_group(useruid: str, db: Session = Depends(getDb)):
 @router.put('/User', status_code=200)
 async def put_user_profile_form(model : ProfileSchema, verify = Depends(verify_firebase_token), db : Session = Depends(getDb)):
     try:
-        print(f"DEBUG: Received model type: {type(model)}")
-        print(f"DEBUG: Received model data: {model}")
-        print(f"DEBUG: Model dict: {model.model_dump() if model else 'None'}")
-        
         user_UpdateProfile(model,db)
         return {"message": "User profile is updated", "status": "success"}
     except Exception as err:

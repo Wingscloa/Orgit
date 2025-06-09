@@ -136,19 +136,19 @@ def delete_user(useruid : str, db : Session = Depends(getDb)):
     except Exception as err:
         raise Exception(err)
 
-# async def DBgetUserByUid(useruid: str, db : Session = Depends(getDb)):
-#     try:
-#         result = (db.query(User).
-#                 filter(User.useruid == useruid)
-#                 .first())
+def get_user_by_uid(useruid: str, db : Session = Depends(getDb)):
+    try:
+        result = (db.query(User).
+                filter(User.useruid == useruid)
+                .first())
 
-#         if not result:
-#             raise HTTPException(status_code=404, detail="User is not found")
+        if not result:
+            raise HTTPException(status_code=404, detail="User is not found")
         
-#         return result
+        return result
     
-#     except Exception as err:
-#         raise Exception(err)
+    except Exception as err:
+        raise HTTPException(status_code=500, detail=str(err))
 
 
 
