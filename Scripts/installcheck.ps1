@@ -120,19 +120,6 @@ function Set-InstallationComplete {
     }
 }
 
-# Zobrazení nápovědy
-if ($Help) {
-    Write-Host "Nápověda pro installcheck.ps1:"
-    Write-Host "  -SkipPython    : Přeskočí kontrolu a instalaci Pythonu"
-    Write-Host "  -SkipPostgres  : Přeskočí kontrolu a instalaci PostgreSQL"
-    Write-Host "  -SkipPgAdmin   : Přeskočí kontrolu a instalaci pgAdmin"
-    Write-Host "  -LogToFile     : Zapisuje logy také do souboru install.log"
-    Write-Host "  -Help          : Zobrazí tuto nápovědu"
-    exit 0
-}
-
-# ------------------ INICIALIZACE ------------------
-
 Write-Log "Spouštím kontrolu prostředí pro projekt..." "INFO" "Cyan"
 $envPath = "..\.env"
 $startTime = Get-Date
@@ -341,85 +328,6 @@ if (-not $SkipPython) {
 }
 else {
     Write-Log "Preskakuji kontrolu a instalaci Pythonu dle parametru." "INFO" "Yellow"
-}
-
-# ------------------ PGADMIN ------------------
-
-if (-not $SkipPgAdmin) {
-    Write-Log "SEKCE: Kontrola a instalace pgAdmin" "INFO" "Cyan"
-    
-    $pgAdminFound = $false
-    $pgAdminExePath = $null
-    $pgAdminExeNames = @("pgAdmin4.exe", "pgAdmin4")
-    $pgAdminSearchDirs = @(
-        "C:\Program Files\pgAdmin 4",
-        "C:\Program Files\pgAdmin 4\bin",
-        "C:\Program Files (x86)\pgAdmin 4",
-        "C:\Program Files (x86)\pgAdmin 4\bin",
-        "$env:LOCALAPPDATA\Programs\pgAdmin 4",
-        "$env:LOCALAPPDATA\Programs\pgAdmin 4\bin",
-        "$env:APPDATA\pgAdmin",
-        "$env:USERPROFILE\AppData\Local\Programs\pgAdmin 4",
-        "$env:USERPROFILE\AppData\Local\Programs\pgAdmin 4\bin"
-    )
-    
-    $pgAdminChecked = @()
-    foreach ($dir in $pgAdminSearchDirs) {
-        foreach ($exe in $pgAdminExeNames) {
-            $fullPath = Join-Path $dir $exe
-            $pgAdminChecked += $fullPath
-            if (Test-Path $fullPath) {
-                Write-Log "pgAdmin nalezen: $fullPath" "SUCCESS" "Green"
-                $pgAdminExePath = $fullPath
-                $pgAdminFound = $true
-                break
-            }
-        }
-        if ($pgAdminFound) { break }
-    }
-    
-    # Try to find in PATH
-    if (-not $pgAdminFound) {
-        $pgCmd = Get-Command pgAdmin4 -ErrorAction SilentlyContinue
-        if ($pgCmd) {
-            Write-Log "pgAdmin nalezen v PATH: $($pgCmd.Source)" "SUCCESS" "Green"
-            $pgAdminExePath = $pgCmd.Source
-            $pgAdminFound = $true
-        }
-    }
-    
-    # Výpis kontrolovaných cest, pokud pgAdmin nebyl nalezen
-    if (-not $pgAdminFound) {
-        Write-Log "[DEBUG] Kontrolovane cesty pro pgAdmin:" "INFO" "White"
-        $pgAdminChecked | ForEach-Object { Write-Log $_ "INFO" "White" }
-        
-        # Instalace pgAdmin
-        Write-Log "pgAdmin nebyl nalezen. Stahuji a instaluji pgAdmin..." "INFO" "Cyan"
-        
-        # Získání nejnovější verze pgAdmin
-        $pgAdminUrl = "https://ftp.postgresql.org/pub/pgadmin/pgadmin4/v7.6/windows/pgadmin4-7.6-x64.exe"
-        $pgAdminInstallerPath = "$env:TEMP\pgadmin-installer.exe"
-        
-        try {
-            Show-DownloadProgress -Url $pgAdminUrl -OutFile $pgAdminInstallerPath -DisplayName "Stahuji pgAdmin"
-            Write-Log "Stazeno: $pgAdminInstallerPath" "SUCCESS" "Green"
-            Write-Log "Spoustim instalator pgAdmin..." "INFO" "Cyan"
-            Start-Process -FilePath $pgAdminInstallerPath -ArgumentList "/VERYSILENT /NORESTART" -Wait
-            Write-Log "Instalace pgAdmin dokoncena." "SUCCESS" "Green"
-            $pgAdminFound = $true
-        }
-        catch {
-            Write-Log "Chyba pri stahovani nebo instalaci pgAdmin: $_" "ERROR" "Red"
-            Write-Log "Pokracuji bez pgAdmin - můžete jej později nainstalovat manuálně." "WARNING" "Yellow"
-        }
-    }
-    
-    if ($pgAdminFound) {
-        Write-Log "pgAdmin je nainstalován a připraven k použití." "SUCCESS" "Green"
-    }
-}
-else {
-    Write-Log "Preskakuji kontrolu a instalaci pgAdmin dle parametru." "INFO" "Yellow"
 }
 
 # ------------------ ZÁVĚR ------------------
