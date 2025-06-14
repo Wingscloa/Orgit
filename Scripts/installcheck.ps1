@@ -329,13 +329,3 @@ if (-not $SkipPython) {
 else {
     Write-Log "Preskakuji kontrolu a instalaci Pythonu dle parametru." "INFO" "Yellow"
 }
-
-# ------------------ ZÁVĚR ------------------
-
-Set-InstallationComplete -EnvPath $envPath
-
-$endTime = Get-Date
-$duration = $endTime - $startTime
-Write-Log "Instalace dokoncena za $($duration.TotalSeconds.ToString("0.00")) sekund." "INFO" "Cyan"
-Write-Log "Muzete pokracovat dalsim skriptem nebo restartovat pocitac, pokud byl instalovan software." "INFO" "Cyan"
-Write-Log "Pokud nastala chyba, zkontrolujte soubor install.log pro podrobnosti." "INFO" "Cyan"
