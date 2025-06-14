@@ -55,14 +55,44 @@ function Show-DownloadProgress {
     }
 }
 
+# Funkce pro zadání hesla pro databázi
+function Get-SecurePassword {
+    param(
+        [string]$Prompt = "Zadejte heslo pro PostgreSQL databázi"
+    )
+    
+    do {
+        Write-Host ""
+        Write-Host "=" * 60 -ForegroundColor Yellow
+        Write-Host "NASTAVENÍ HESLA PRO DATABÁZI" -ForegroundColor Yellow
+        Write-Host "=" * 60 -ForegroundColor Yellow
+        Write-Host ""
+        Write-Host "Pro pokračování v instalaci musíte zadat heslo pro PostgreSQL databázi." -ForegroundColor Cyan
+        Write-Host ""
+        
+        $securePassword = Read-Host -Prompt $Prompt -AsSecureString
+        $password = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($securePassword))
+        
+        if ([string]::IsNullOrWhiteSpace($password)) {
+            Write-Host "Heslo nesmí být prázdné!" -ForegroundColor Red
+            continue
+        }
+        
+        Write-Host "Heslo bylo úspěšně nastaveno." -ForegroundColor Green
+        return $password
+        
+    } while ($true)
+}
+
 # Funkce pro správu .env souboru
 function Initialize-EnvFile {
     param(
         [string]$EnvPath = "..\.env"
     )
-    
     # Kontrola existence .env, pokud neexistuje, vytvoř ho s příkladovými řádky
     if (-not (Test-Path $EnvPath)) {
+        Write-Log ".env soubor nebyl nalezen. Vytvářím nový s příkladovými hodnotami..." "INFO" "Yellow"
+        
         $exampleEnv = @(
             "FASTAPI_PORT=8080",
             "HOST=127.0.0.1",
@@ -74,8 +104,21 @@ function Initialize-EnvFile {
             "Installation=false"
         )
         Set-Content -Path $EnvPath -Value $exampleEnv
-        Write-Log ".env nebyl nalezen, byl vytvoren s prikladovymi radky. Nastavte hodnoty a spustte skript znovu." "ERROR" "Red"
-        return $false
+        Write-Log ".env soubor byl vytvořen s výchozími hodnotami." "SUCCESS" "Green"
+        
+        # Po vytvoření .env vynutit zadání hesla od uživatele
+        $userPassword = Get-SecurePassword
+        
+        # Aktualizovat heslo v .env souboru
+        $envLines = Get-Content $EnvPath
+        for ($i = 0; $i -lt $envLines.Count; $i++) {
+            if ($envLines[$i] -match "^pSQLPassword=") {
+                $envLines[$i] = "pSQLPassword=$userPassword"
+                break
+            }
+        }
+        Set-Content -Path $EnvPath -Value $envLines
+        Write-Log "Heslo bylo úspěšně nastaveno do .env souboru. Pokračuji v instalaci..." "SUCCESS" "Green"
     }
 
     # Kontrola Installation flag
@@ -341,85 +384,6 @@ if (-not $SkipPython) {
 }
 else {
     Write-Log "Preskakuji kontrolu a instalaci Pythonu dle parametru." "INFO" "Yellow"
-}
-
-# ------------------ PGADMIN ------------------
-
-if (-not $SkipPgAdmin) {
-    Write-Log "SEKCE: Kontrola a instalace pgAdmin" "INFO" "Cyan"
-    
-    $pgAdminFound = $false
-    $pgAdminExePath = $null
-    $pgAdminExeNames = @("pgAdmin4.exe", "pgAdmin4")
-    $pgAdminSearchDirs = @(
-        "C:\Program Files\pgAdmin 4",
-        "C:\Program Files\pgAdmin 4\bin",
-        "C:\Program Files (x86)\pgAdmin 4",
-        "C:\Program Files (x86)\pgAdmin 4\bin",
-        "$env:LOCALAPPDATA\Programs\pgAdmin 4",
-        "$env:LOCALAPPDATA\Programs\pgAdmin 4\bin",
-        "$env:APPDATA\pgAdmin",
-        "$env:USERPROFILE\AppData\Local\Programs\pgAdmin 4",
-        "$env:USERPROFILE\AppData\Local\Programs\pgAdmin 4\bin"
-    )
-    
-    $pgAdminChecked = @()
-    foreach ($dir in $pgAdminSearchDirs) {
-        foreach ($exe in $pgAdminExeNames) {
-            $fullPath = Join-Path $dir $exe
-            $pgAdminChecked += $fullPath
-            if (Test-Path $fullPath) {
-                Write-Log "pgAdmin nalezen: $fullPath" "SUCCESS" "Green"
-                $pgAdminExePath = $fullPath
-                $pgAdminFound = $true
-                break
-            }
-        }
-        if ($pgAdminFound) { break }
-    }
-    
-    # Try to find in PATH
-    if (-not $pgAdminFound) {
-        $pgCmd = Get-Command pgAdmin4 -ErrorAction SilentlyContinue
-        if ($pgCmd) {
-            Write-Log "pgAdmin nalezen v PATH: $($pgCmd.Source)" "SUCCESS" "Green"
-            $pgAdminExePath = $pgCmd.Source
-            $pgAdminFound = $true
-        }
-    }
-    
-    # Výpis kontrolovaných cest, pokud pgAdmin nebyl nalezen
-    if (-not $pgAdminFound) {
-        Write-Log "[DEBUG] Kontrolovane cesty pro pgAdmin:" "INFO" "White"
-        $pgAdminChecked | ForEach-Object { Write-Log $_ "INFO" "White" }
-        
-        # Instalace pgAdmin
-        Write-Log "pgAdmin nebyl nalezen. Stahuji a instaluji pgAdmin..." "INFO" "Cyan"
-        
-        # Získání nejnovější verze pgAdmin
-        $pgAdminUrl = "https://ftp.postgresql.org/pub/pgadmin/pgadmin4/v7.6/windows/pgadmin4-7.6-x64.exe"
-        $pgAdminInstallerPath = "$env:TEMP\pgadmin-installer.exe"
-        
-        try {
-            Show-DownloadProgress -Url $pgAdminUrl -OutFile $pgAdminInstallerPath -DisplayName "Stahuji pgAdmin"
-            Write-Log "Stazeno: $pgAdminInstallerPath" "SUCCESS" "Green"
-            Write-Log "Spoustim instalator pgAdmin..." "INFO" "Cyan"
-            Start-Process -FilePath $pgAdminInstallerPath -ArgumentList "/VERYSILENT /NORESTART" -Wait
-            Write-Log "Instalace pgAdmin dokoncena." "SUCCESS" "Green"
-            $pgAdminFound = $true
-        }
-        catch {
-            Write-Log "Chyba pri stahovani nebo instalaci pgAdmin: $_" "ERROR" "Red"
-            Write-Log "Pokracuji bez pgAdmin - můžete jej později nainstalovat manuálně." "WARNING" "Yellow"
-        }
-    }
-    
-    if ($pgAdminFound) {
-        Write-Log "pgAdmin je nainstalován a připraven k použití." "SUCCESS" "Green"
-    }
-}
-else {
-    Write-Log "Preskakuji kontrolu a instalaci pgAdmin dle parametru." "INFO" "Yellow"
 }
 
 # ------------------ ZÁVĚR ------------------

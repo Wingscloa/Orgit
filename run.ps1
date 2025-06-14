@@ -9,8 +9,8 @@ if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdenti
 
 # Spuštění všech dostupných skriptů ve složce Scripts postupně
 Set-Location $scriptPath
-# .\installcheck.ps1
-# .\iniDb.ps1
+.\installcheck.ps1
+.\iniDb.ps1
 .\iniServer.ps1
 
 Write-Host "`n--- Skript dokončen. Okno zůstává otevřené, můžete psát vlastní příkazy. ---`n"
