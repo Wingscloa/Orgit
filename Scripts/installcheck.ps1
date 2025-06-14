@@ -55,14 +55,44 @@ function Show-DownloadProgress {
     }
 }
 
+# Funkce pro zadání hesla pro databázi
+function Get-SecurePassword {
+    param(
+        [string]$Prompt = "Zadejte heslo pro PostgreSQL databázi"
+    )
+    
+    do {
+        Write-Host ""
+        Write-Host "=" * 60 -ForegroundColor Yellow
+        Write-Host "NASTAVENÍ HESLA PRO DATABÁZI" -ForegroundColor Yellow
+        Write-Host "=" * 60 -ForegroundColor Yellow
+        Write-Host ""
+        Write-Host "Pro pokračování v instalaci musíte zadat heslo pro PostgreSQL databázi." -ForegroundColor Cyan
+        Write-Host ""
+        
+        $securePassword = Read-Host -Prompt $Prompt -AsSecureString
+        $password = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($securePassword))
+        
+        if ([string]::IsNullOrWhiteSpace($password)) {
+            Write-Host "Heslo nesmí být prázdné!" -ForegroundColor Red
+            continue
+        }
+        
+        Write-Host "Heslo bylo úspěšně nastaveno." -ForegroundColor Green
+        return $password
+        
+    } while ($true)
+}
+
 # Funkce pro správu .env souboru
 function Initialize-EnvFile {
     param(
         [string]$EnvPath = "..\.env"
     )
-    
     # Kontrola existence .env, pokud neexistuje, vytvoř ho s příkladovými řádky
     if (-not (Test-Path $EnvPath)) {
+        Write-Log ".env soubor nebyl nalezen. Vytvářím nový s příkladovými hodnotami..." "INFO" "Yellow"
+        
         $exampleEnv = @(
             "FASTAPI_PORT=8080",
             "HOST=127.0.0.1",
@@ -74,8 +104,21 @@ function Initialize-EnvFile {
             "Installation=false"
         )
         Set-Content -Path $EnvPath -Value $exampleEnv
-        Write-Log ".env nebyl nalezen, byl vytvoren s prikladovymi radky. Nastavte hodnoty a spustte skript znovu." "ERROR" "Red"
-        return $false
+        Write-Log ".env soubor byl vytvořen s výchozími hodnotami." "SUCCESS" "Green"
+        
+        # Po vytvoření .env vynutit zadání hesla od uživatele
+        $userPassword = Get-SecurePassword
+        
+        # Aktualizovat heslo v .env souboru
+        $envLines = Get-Content $EnvPath
+        for ($i = 0; $i -lt $envLines.Count; $i++) {
+            if ($envLines[$i] -match "^pSQLPassword=") {
+                $envLines[$i] = "pSQLPassword=$userPassword"
+                break
+            }
+        }
+        Set-Content -Path $EnvPath -Value $envLines
+        Write-Log "Heslo bylo úspěšně nastaveno do .env souboru. Pokračuji v instalaci..." "SUCCESS" "Green"
     }
 
     # Kontrola Installation flag
@@ -119,6 +162,19 @@ function Set-InstallationComplete {
         Write-Log "Installation=true bylo zapsano do .env na 8. radek." "SUCCESS" "Green"
     }
 }
+
+# Zobrazení nápovědy
+if ($Help) {
+    Write-Host "Nápověda pro installcheck.ps1:"
+    Write-Host "  -SkipPython    : Přeskočí kontrolu a instalaci Pythonu"
+    Write-Host "  -SkipPostgres  : Přeskočí kontrolu a instalaci PostgreSQL"
+    Write-Host "  -SkipPgAdmin   : Přeskočí kontrolu a instalaci pgAdmin"
+    Write-Host "  -LogToFile     : Zapisuje logy také do souboru install.log"
+    Write-Host "  -Help          : Zobrazí tuto nápovědu"
+    exit 0
+}
+
+# ------------------ INICIALIZACE ------------------
 
 Write-Log "Spouštím kontrolu prostředí pro projekt..." "INFO" "Cyan"
 $envPath = "..\.env"
@@ -329,3 +385,13 @@ if (-not $SkipPython) {
 else {
     Write-Log "Preskakuji kontrolu a instalaci Pythonu dle parametru." "INFO" "Yellow"
 }
+
+# ------------------ ZÁVĚR ------------------
+
+Set-InstallationComplete -EnvPath $envPath
+
+$endTime = Get-Date
+$duration = $endTime - $startTime
+Write-Log "Instalace dokoncena za $($duration.TotalSeconds.ToString("0.00")) sekund." "INFO" "Cyan"
+Write-Log "Muzete pokracovat dalsim skriptem nebo restartovat pocitac, pokud byl instalovan software." "INFO" "Cyan"
+Write-Log "Pokud nastala chyba, zkontrolujte soubor install.log pro podrobnosti." "INFO" "Cyan"
