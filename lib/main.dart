@@ -4,10 +4,13 @@ import 'package:flutter/services.dart';
 import 'dart:async';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:orgit/Pages/Auth/Register.dart';
+import 'package:orgit/Pages/group/group_page.dart';
+import 'package:orgit/Pages/todo/todo_page.dart';
 import 'package:orgit/Pages/splashscreen/splashScreen.dart';
 import 'package:orgit/services/auth/auth.dart';
 import 'package:orgit/services/cache/cache.dart';
 import 'package:orgit/utils/navigation_utils.dart';
+import 'package:orgit/Pages/calendar/calendar_page.dart';
 
 class UserInfo {
   static String uid = "";
@@ -44,27 +47,27 @@ class _MyAppState extends State<MyApp> {
           seedColor: Color.fromARGB(255, 0, 0, 0),
         ),
       ),
-      debugShowCheckedModeBanner: false,
-      home: FutureBuilder<Widget>(
-        future: NavigationUtils.getInitialPage(),
-        builder: (context, snapshot) {
-          // final AuthService authService = AuthService();
-          // authService.signOut();
-          final CacheService cacheService = CacheService.instance;
-          cacheService.debugAllSharedPreferences();
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return SplashScreen(
-              duration: const Duration(seconds: 2),
-              onFinish: () {}, // Prázdný  callback
-            );
-          }
+      home: Calendarpage(),
+      // home: FutureBuilder<Widget>(5
+      //   future: NavigationUtils.getInitialPage(),
+      //   builder: (context, snapshot) {
+      //     // final AuthService authService = AuthService();
+      //     // authService.signOut();
+      //     final CacheService cacheService = CacheService.instance;
+      //     cacheService.debugAllSharedPreferences();
+      //     if (snapshot.connectionState == ConnectionState.waiting) {
+      //       return SplashScreen(
+      //         duration: const Duration(seconds: 2),
+      //         onFinish: () {}, // Prázdný  callback
+      //       );
+      //     }
 
-          if (snapshot.hasData) {
-            return snapshot.data!;
-          }
-          return Register();
-        },
-      ),
+      //     if (snapshot.hasData) {
+      //       return snapshot.data!;
+      //     }
+      //     return Register();
+      //   },
+      // ),
     );
   }
 }
