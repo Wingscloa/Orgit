@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
+import 'package:orgit/utils/responsive_utils.dart';
 
 class SettingEntry extends StatelessWidget {
   final IconData icon;
@@ -18,7 +19,8 @@ class SettingEntry extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: SizedBox(
-        width: MediaQuery.of(context).size.width * 0.8,
+        width: MediaQuery.of(context).size.width *
+            (ResponsiveUtils.isSmallScreen(context) ? 0.85 : 0.8),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -27,15 +29,16 @@ class SettingEntry extends StatelessWidget {
                 Icon(
                   icon,
                   color: Colors.white,
-                  size: 30,
+                  size: ResponsiveUtils.getIconSize(context) * 0.85,
                 ),
                 SizedBox(
-                  width: 15,
+                  width: ResponsiveUtils.getSpacingMedium(context) * 0.6,
                 ),
                 Text(
                   label,
                   style: TextStyle(
-                    fontSize: 19,
+                    fontSize:
+                        ResponsiveUtils.getSubtitleFontSize(context) * 1.1,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
@@ -47,11 +50,11 @@ class SettingEntry extends StatelessWidget {
               child: Icon(
                 Icons.arrow_back_ios,
                 color: Colors.white,
-                size: 22,
+                size: ResponsiveUtils.isSmallScreen(context) ? 18 : 22,
                 shadows: [
                   Shadow(
                     color: Colors.grey,
-                    blurRadius: 4,
+                    blurRadius: ResponsiveUtils.isSmallScreen(context) ? 3 : 4,
                     offset: Offset(-2, 0),
                   ),
                 ],

@@ -11,6 +11,7 @@ import 'package:orgit/utils/responsive_utils.dart';
 import 'package:orgit/utils/navigation_utils.dart';
 import 'package:orgit/services/auth/auth.dart';
 import 'package:orgit/models/group_dto.dart';
+import 'package:orgit/Pages/homepage.dart';
 
 class MdlGroupCreate extends StatefulWidget {
   @override
@@ -456,7 +457,7 @@ class _MdlGroupCreateState extends State<MdlGroupCreate> {
                 joinResponse.containsKey('status') &&
                 joinResponse['status'] == 'success') {
               // Update user's group status in cache
-              await AuthService().updateInGroupStatus(true);
+              // await AuthService().updateInGroupStatus(true);
 
               _showSuccessMessage(
                   'Skupina byla úspěšně vytvořena a jste přidán jako administrator!');
@@ -464,10 +465,14 @@ class _MdlGroupCreateState extends State<MdlGroupCreate> {
               // Wait a moment for user to see success message
               await Future.delayed(Duration(seconds: 2));
 
-              // Use NavigationUtils to navigate to the appropriate page
+              // Přesměrování na Homepage
               if (mounted) {
-                final targetPage = await NavigationUtils.getPostLoginPage();
-                NavigationUtils.navigateToWidget(context, targetPage);
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(
+                      builder: (context) => Homepage(initPage: 1)),
+                  (Route<dynamic> route) =>
+                      false, // Odstraní všechny předchozí stránky ze zásobníku
+                );
               }
             } else {
               _showSuccessMessage(
@@ -487,15 +492,29 @@ class _MdlGroupCreateState extends State<MdlGroupCreate> {
             // Wait a moment for user to see success message
             await Future.delayed(Duration(seconds: 2));
 
-            // Use NavigationUtils to navigate to the appropriate page
+            // Přesměrování na Homepage
             if (mounted) {
-              final targetPage = await NavigationUtils.getPostLoginPage();
-              NavigationUtils.navigateToWidget(context, targetPage);
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => Homepage(initPage: 1)),
+                (Route<dynamic> route) =>
+                    false, // Odstraní všechny předchozí stránky ze zásobníku
+              );
             }
           }
         } catch (e) {
           _showSuccessMessage(
               'Skupina byla vytvořena, ale nepodařilo se vás automaticky přidat.');
+
+          // Wait a moment for user to see success message
+          await Future.delayed(Duration(seconds: 2));
+
+          // Přesměrování na Homepage i v případě chyby
+          if (mounted) {
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => Homepage(initPage: 1)),
+              (Route<dynamic> route) => false,
+            );
+          }
 
           // Wait a moment for user to see success message
           await Future.delayed(Duration(seconds: 2));

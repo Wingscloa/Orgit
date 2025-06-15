@@ -44,8 +44,10 @@ class _TelephoneInputState extends State<TelephoneInput> {
     setState(() {
       bool isPrefixValid =
           prefix.length == 3 && RegExp(r'^\d{3}$').hasMatch(prefix);
-      bool isPhoneValid =
-          phone.length == 9 && RegExp(r'^\d{9}$').hasMatch(phone);
+      // Kontrola, že číslo má maximálně 9 číslic
+      bool isPhoneValid = phone.isNotEmpty &&
+          phone.length <= 9 &&
+          RegExp(r'^\d{1,9}$').hasMatch(phone);
 
       if (isPrefixValid && isPhoneValid) {
         checkIconColor = Colors.green;
@@ -133,6 +135,12 @@ class _TelephoneInputState extends State<TelephoneInput> {
                   cursorHeight: 25,
                   cursorColor: Colors.white.withAlpha(125),
                   keyboardType: TextInputType.number,
+                  maxLength: 9, // Omezení maximální délky vstupu na 9 znaků
+                  buildCounter: (context,
+                          {required currentLength,
+                          required isFocused,
+                          maxLength}) =>
+                      null, // Skrytí počítadla znaků
                 ),
               ),
             ),

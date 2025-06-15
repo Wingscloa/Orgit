@@ -414,14 +414,20 @@ class _LoginFormState extends State<LoginForm> {
             ),
           );
         },
-      ); // Perform login
+      );
+
+      // Nejprve provedeme přihlášení
       await AuthService().logInUserWithEmailAndPassword(email, password);
+
+      // Zavřeme dialog s indikátorem načítání
       Navigator.of(context).pop();
       await Future.delayed(Duration(milliseconds: 100));
 
-      // Navigate to appropriate page after successful login
-      final targetPage = await NavigationUtils.getPostLoginPage();
-      NavigationUtils.navigateToWidget(context, targetPage);
+      // Až po úspěšném přihlášení rozhodneme, kam uživatele přesměrovat
+      final targetPage = await NavigationUtils.getNavigation();
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => targetPage),
+      );
     } catch (e) {
       Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
@@ -448,20 +454,24 @@ class _LoginFormState extends State<LoginForm> {
         },
       );
 
+      // Nejprve provedeme přihlášení přes Google
       print("LoginForm: Starting Google authentication");
       await AuthService().loginWithGoogle();
       print("LoginForm: Google authentication successful");
 
-      // Close loading dialog
+      // Zavřeme dialog s indikátorem načítání
       print("LoginForm: Closing Google login loading dialog");
       Navigator.of(context).pop();
-      // Small delay to ensure UI state is stable
+
+      // Malá pauza pro stabilizaci UI
       await Future.delayed(Duration(milliseconds: 100));
 
-      // Navigate to appropriate screen based on user status
+      // Až po úspěšném přihlášení rozhodneme, kam uživatele přesměrovat
       print("LoginForm: Getting post-login page");
-      final targetPage = await NavigationUtils.getPostLoginPage();
-      NavigationUtils.navigateToWidget(context, targetPage);
+      final targetPage = await NavigationUtils.getNavigation();
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => targetPage),
+      );
       print("LoginForm: Google navigation completed");
     } catch (e) {
       // Close loading dialog

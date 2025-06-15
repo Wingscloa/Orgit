@@ -15,7 +15,7 @@ import "package:firebase_auth/firebase_auth.dart";
 import "package:orgit/Pages/Auth/login_form.dart";
 
 class Register extends StatefulWidget {
-  Register() {}
+  Register();
 
   @override
   State<Register> createState() => _RegisterState();
@@ -540,6 +540,7 @@ class _RegisterState extends State<Register> {
             await ApiClient().post("/User/", userModel.toJson());
           }
 
+          // Close loading dialog
           Navigator.of(context).pop();
 
           ScaffoldMessenger.of(context).showSnackBar(
@@ -549,8 +550,17 @@ class _RegisterState extends State<Register> {
             ),
           );
 
-          throw new Exception('Not implemented');
+          // Přesměrovat na další obrazovku místo vyhození výjimky
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Profileform()),
+          );
         } catch (e) {
+          // Close loading dialog if open
+          if (Navigator.of(context).canPop()) {
+            Navigator.of(context).pop();
+          }
+
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text("Chyba při ukládání uživatele: ${e.toString()}"),
@@ -619,6 +629,7 @@ class _RegisterState extends State<Register> {
             await ApiClient().post("/User/", userModel.toJson());
           }
 
+          // Close loading dialog
           Navigator.of(context).pop();
 
           ScaffoldMessenger.of(context).showSnackBar(
@@ -628,9 +639,16 @@ class _RegisterState extends State<Register> {
             ),
           );
 
-          throw new Exception('Not implemented');
+          // Přesměrovat na další obrazovku místo vyhození výjimky
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Profileform()),
+          );
         } catch (e) {
-          Navigator.of(context).pop();
+          // Close loading dialog if open
+          if (Navigator.of(context).canPop()) {
+            Navigator.of(context).pop();
+          }
 
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(

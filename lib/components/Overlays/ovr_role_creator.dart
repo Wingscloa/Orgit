@@ -7,6 +7,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:orgit/global_vars.dart';
 import 'package:orgit/components/overlays/overlay.dart';
 import 'package:orgit/components/header/ovr_header.dart';
+import 'package:orgit/utils/responsive_utils.dart';
 import 'dart:math';
 
 class OverlayRoleCreate extends StatefulOverlay {
@@ -68,6 +69,19 @@ class OverlayRoleCreateState extends State<OverlayRoleCreate> {
   ];
   @override
   Widget build(BuildContext context) {
+    final topRadius = ResponsiveUtils.getResponsiveWidth(
+      context,
+      mobile: 40.0,
+      tablet: 50.0,
+      desktop: 60.0,
+    );
+
+    final headerPadding = EdgeInsets.only(
+        top: ResponsiveUtils.getSpacingSmall(context) * 2,
+        left: ResponsiveUtils.getPaddingHorizontal(context));
+
+    final columnSpacing = ResponsiveUtils.getSpacingMedium(context);
+
     return Positioned(
       top: 55,
       bottom: 0,
@@ -77,22 +91,25 @@ class OverlayRoleCreateState extends State<OverlayRoleCreate> {
         animationDuration: 0.ms,
         borderOnForeground: false,
         borderRadius: BorderRadius.only(
-          topLeft: const Radius.circular(60),
-          topRight: const Radius.circular(60),
+          topLeft: Radius.circular(topRadius),
+          topRight: Radius.circular(topRadius),
         ),
         elevation: 20,
         color: Global.settings,
         child: Column(
-          spacing: 35,
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 20, left: 45),
+              padding: headerPadding,
               child: OverlayHeader(
                 label: "Role skupiny",
                 onTap: widget.onClose,
               ),
             ),
-            roles.isNotEmpty ? RoleGroup(roles: roles) : RoleGroupNull()
+            SizedBox(height: columnSpacing),
+            Expanded(
+              child:
+                  roles.isNotEmpty ? RoleGroup(roles: roles) : RoleGroupNull(),
+            ),
           ],
         ),
       ),
@@ -107,55 +124,96 @@ class RoleGroupNull extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      spacing: 70,
-      children: [
-        SizedBox(
-          height: 30,
+    final imageWidth = ResponsiveUtils.getResponsiveWidth(
+      context,
+      mobile: MediaQuery.of(context).size.width * 0.7,
+      tablet: MediaQuery.of(context).size.width * 0.5,
+      desktop: MediaQuery.of(context).size.width * 0.4,
+    );
+
+    final titleFontSize = ResponsiveUtils.getResponsiveWidth(
+      context,
+      mobile: ResponsiveUtils.getHeadingFontSize(context),
+      tablet: ResponsiveUtils.getHeadingFontSize(context) * 1.1,
+      desktop: ResponsiveUtils.getTitleFontSize(context),
+    );
+
+    final descriptionFontSize = ResponsiveUtils.getBodyFontSize(context);
+
+    final buttonWidth = ResponsiveUtils.getResponsiveWidth(
+      context,
+      mobile: MediaQuery.of(context).size.width * 0.85,
+      tablet: MediaQuery.of(context).size.width * 0.7,
+      desktop: MediaQuery.of(context).size.width * 0.5,
+    );
+
+    final buttonHeight = ResponsiveUtils.getResponsiveWidth(
+      context,
+      mobile: 40.0,
+      tablet: 45.0,
+      desktop: 50.0,
+    );
+
+    return SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          vertical: ResponsiveUtils.getSpacingMedium(context),
         ),
-        Image(
-          image: AssetImage(
-            'assets/RoleGroupBackground.png',
-          ),
-        ),
-        Column(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Align(
-              alignment: Alignment.center,
-              child: Text(
-                "Rozděl práci mezi ostatní",
-                style: TextStyle(
-                  color: Color.fromARGB(255, 255, 203, 105),
-                  fontSize: 32,
-                  fontWeight: FontWeight.w600,
+            SizedBox(
+              width: imageWidth,
+              child: Image(
+                image: AssetImage(
+                  'assets/RoleGroupBackground.png',
                 ),
+                fit: BoxFit.contain,
               ),
             ),
-            Align(
-              alignment: Alignment.center,
-              child: Text(
-                textAlign: TextAlign.center,
-                "Rozdělování práce je základ každého dobrého organizování. Používej role k jednoduššímu rozdělení prací. ",
-                style: TextStyle(
-                  color: Global.settingsDescription,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
+            SizedBox(height: ResponsiveUtils.getSpacingMedium(context)),
+            Column(
+              children: [
+                Text(
+                  "Rozděl práci mezi ostatní",
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 255, 203, 105),
+                    fontSize: titleFontSize,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
+                SizedBox(height: ResponsiveUtils.getSpacingSmall(context)),
+                Container(
+                  width: ResponsiveUtils.getResponsiveWidth(
+                    context,
+                    mobile: MediaQuery.of(context).size.width * 0.8,
+                    tablet: MediaQuery.of(context).size.width * 0.6,
+                    desktop: MediaQuery.of(context).size.width * 0.4,
+                  ),
+                  child: Text(
+                    textAlign: TextAlign.center,
+                    "Rozdělování práce je základ každého dobrého organizování. Používej role k jednoduššímu rozdělení prací. ",
+                    style: TextStyle(
+                      color: Global.settingsDescription,
+                      fontSize: descriptionFontSize,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-        Align(
-          alignment: Alignment.center,
-          child: Defaultbutton(
+            SizedBox(height: ResponsiveUtils.getSpacingLarge(context)),
+            Defaultbutton(
               text: "Vytvořit roli",
               color: Color.fromARGB(255, 255, 203, 105),
               onTap: () => print("Vytvořit roli"),
-              width: MediaQuery.of(context).size.width * 0.85,
+              width: buttonWidth,
               textColor: Colors.black,
-              height: 40),
+              height: buttonHeight,
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }
@@ -167,70 +225,113 @@ class RoleGroup extends StatelessWidget {
   });
 
   final List<Role> roles;
-
   @override
   Widget build(BuildContext context) {
+    final titleFontSize = ResponsiveUtils.getResponsiveWidth(
+      context,
+      mobile: ResponsiveUtils.getHeadingFontSize(context),
+      tablet: ResponsiveUtils.getHeadingFontSize(context) * 1.1,
+      desktop: ResponsiveUtils.getTitleFontSize(context),
+    );
+
+    final descriptionFontSize = ResponsiveUtils.getBodyFontSize(context);
+
+    final descriptionWidth = ResponsiveUtils.getResponsiveWidth(
+      context,
+      mobile: MediaQuery.of(context).size.width * 0.7,
+      tablet: MediaQuery.of(context).size.width * 0.6,
+      desktop: MediaQuery.of(context).size.width * 0.4,
+    );
+
+    final buttonWidth = ResponsiveUtils.getResponsiveWidth(
+      context,
+      mobile: MediaQuery.of(context).size.width * 0.85,
+      tablet: MediaQuery.of(context).size.width * 0.7,
+      desktop: MediaQuery.of(context).size.width * 0.5,
+    );
+    final buttonHeight = ResponsiveUtils.getResponsiveWidth(
+      context,
+      mobile: 40.0,
+      tablet: 45.0,
+      desktop: 50.0,
+    );
+
     return Column(
       children: [
-        Column(
-          spacing: 5,
-          children: [
-            Align(
-              alignment: Alignment.center,
-              child: Text(
+        // Hlavička - nadpis a popis
+        Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: ResponsiveUtils.getPaddingHorizontal(context) * 0.5,
+            vertical: ResponsiveUtils.getSpacingSmall(context),
+          ),
+          child: Column(
+            children: [
+              Text(
                 "Rozděl práci mezi ostatní",
                 style: TextStyle(
                   color: Color.fromARGB(255, 255, 203, 105),
-                  fontSize: 32,
+                  fontSize: titleFontSize,
                   fontWeight: FontWeight.w600,
                 ),
               ),
-            ),
-            SizedBox(
-              width: 300,
-              child: Align(
-                alignment: Alignment.center,
+              SizedBox(height: ResponsiveUtils.getSpacingSmall(context)),
+              SizedBox(
+                width: descriptionWidth,
                 child: Text(
                   textAlign: TextAlign.center,
                   "Rozdělování práce je základ každého dobrého organizování. Používej role k jednoduššímu rozdělení prací. ",
                   style: TextStyle(
                     color: Colors.grey.withAlpha(125),
-                    fontSize: 14,
+                    fontSize: descriptionFontSize,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
-            )
-          ],
-        ),
-        SizedBox(
-          width: MediaQuery.of(context).size.width * 0.8,
-          height: 6 * 75,
-          child: ListView.builder(
-            itemCount: roles.length,
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: RoleContainer(
-                  header: roles[index].name,
-                  count: roles[index].count,
-                  icon: roles[index].icon,
-                  iconColor: roles[index].iconColor,
-                  iconBackground: roles[index].backgroundColor,
-                ),
-              );
-            },
+            ],
           ),
         ),
-        Align(
-          alignment: Alignment.center,
+
+        // Seznam rolí - v Expanded s SingleChildScrollView, aby se správně scrolloval
+        Expanded(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: ResponsiveUtils.getPaddingHorizontal(context) * 0.5,
+              ),
+              child: Column(
+                children: roles.map((role) {
+                  return Padding(
+                    padding: EdgeInsets.only(
+                      bottom: ResponsiveUtils.getSpacingSmall(context),
+                    ),
+                    child: RoleContainer(
+                      header: role.name,
+                      count: role.count,
+                      icon: role.icon,
+                      iconColor: role.iconColor,
+                      iconBackground: role.backgroundColor,
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+          ),
+        ),
+
+        // Tlačítko pro vytvoření nové role
+        Padding(
+          padding: EdgeInsets.only(
+            bottom: ResponsiveUtils.getSpacingMedium(context),
+            top: ResponsiveUtils.getSpacingSmall(context),
+          ),
           child: Defaultbutton(
-              text: "Vytvořit novou roli",
-              color: Color.fromARGB(255, 255, 203, 105),
-              onTap: () => print("Vytvorit novou roli"),
-              width: MediaQuery.of(context).size.width * 0.85,
-              textColor: Colors.black,
-              height: 40),
+            text: "Vytvořit novou roli",
+            color: Color.fromARGB(255, 255, 203, 105),
+            onTap: () => print("Vytvorit novou roli"),
+            width: buttonWidth,
+            textColor: Colors.black,
+            height: buttonHeight,
+          ),
         ),
       ],
     );
@@ -253,11 +354,53 @@ class RoleContainer extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
+    final containerHeight = ResponsiveUtils.getResponsiveWidth(
+      context,
+      mobile: 60.0,
+      tablet: 65.0,
+      desktop: 70.0,
+    );
+
+    final borderRadius = ResponsiveUtils.getResponsiveWidth(
+      context,
+      mobile: 6.0,
+      tablet: 8.0,
+      desktop: 10.0,
+    );
+
+    final containerPadding = ResponsiveUtils.getResponsiveWidth(
+      context,
+      mobile: 8.0,
+      tablet: 10.0,
+      desktop: 12.0,
+    );
+
+    final iconSpacing = ResponsiveUtils.getResponsiveWidth(
+      context,
+      mobile: 15.0,
+      tablet: 18.0,
+      desktop: 20.0,
+    );
+
+    final headerFontSize = ResponsiveUtils.getResponsiveWidth(
+      context,
+      mobile: 16.0,
+      tablet: 18.0,
+      desktop: 20.0,
+    );
+
+    final countFontSize = ResponsiveUtils.getResponsiveWidth(
+      context,
+      mobile: 13.0,
+      tablet: 14.0,
+      desktop: 15.0,
+    );
+
     return GestureDetector(
       onTap: () => print("neco se ma stat"),
       child: Container(
         width: MediaQuery.of(context).size.width,
-        height: 60,
+        height: containerHeight,
         decoration: BoxDecoration(
           color: Global.settingsButton,
           border: Border.all(
@@ -265,23 +408,23 @@ class RoleContainer extends StatelessWidget {
           ),
           boxShadow: [
             BoxShadow(
-              blurRadius: 2,
+              blurRadius: ResponsiveUtils.isSmallScreen(context) ? 2 : 4,
               color: Colors.white.withAlpha(10),
               offset: Offset(0, 5),
             ),
           ],
           borderRadius: BorderRadius.all(
-            Radius.circular(6),
+            Radius.circular(borderRadius),
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: EdgeInsets.all(containerPadding),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Row(
-                spacing: 15,
+                spacing: iconSpacing,
                 children: [
                   RoleIcon(
                     color: iconBackground,
@@ -294,12 +437,16 @@ class RoleContainer extends StatelessWidget {
                     children: [
                       Text(
                         header,
-                        style: Global.defaultStyle(16, true),
+                        style: TextStyle(
+                          fontSize: headerFontSize,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
                       Text(
                         countToText(count),
                         style: TextStyle(
-                          fontSize: 13,
+                          fontSize: countFontSize,
                           color: Colors.grey.withAlpha(140),
                         ),
                       ),
@@ -308,12 +455,14 @@ class RoleContainer extends StatelessWidget {
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.only(right: 10),
+                padding: EdgeInsets.only(
+                    right: ResponsiveUtils.getSpacingSmall(context)),
                 child: Transform.rotate(
                   angle: pi,
                   child: Icon(
                     Icons.arrow_back_ios,
                     color: Colors.white,
+                    size: ResponsiveUtils.getIconSize(context) * 0.7,
                   ),
                 ),
               ),

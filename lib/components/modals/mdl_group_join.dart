@@ -243,7 +243,7 @@ class _MdlgroupjoinState extends State<Mdlgroupjoin> {
       }
 
       // Aktualizace cache - uživatel je nyní ve skupině
-      await authService.updateInGroupStatus(true);
+      // await authService.updateInGroupStatus(true);
 
       if (context.mounted) {
         // Zavření modalu

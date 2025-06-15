@@ -459,12 +459,10 @@ class _ProfileformState extends State<Profileform> {
       } else {
         telephonePrefixError = "";
         telephonePrefixValid = Colors.white;
-      }
-
-      // Validate telephone number - optional
+      } // Validate telephone number - optional
       if (telephone.isNotEmpty) {
-        if (telephone.length != 9 || !RegExp(r'^\d{9}$').hasMatch(telephone)) {
-          telephoneError = "Telefonní číslo musí mít 9 číslic";
+        if (!RegExp(r'^\d{1,9}$').hasMatch(telephone)) {
+          telephoneError = "Telefonní číslo může mít maximálně 9 číslic";
           telephoneValid = Colors.red;
           isValid = false;
         } else {
@@ -541,9 +539,6 @@ class _ProfileformState extends State<Profileform> {
           await apiClient.put('/User', body: profileRequest.toJson());
       final status = response['status'];
       if (status == "success") {
-        final authService = AuthService();
-        await authService.updateProfileCompleteStatus(true);
-
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(

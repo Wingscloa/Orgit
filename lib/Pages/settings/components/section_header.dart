@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:orgit/utils/responsive_utils.dart';
 
 class SectionHeader extends StatelessWidget {
   final String header;
@@ -13,12 +14,13 @@ class SectionHeader extends StatelessWidget {
     return Align(
       alignment: Alignment.centerLeft,
       child: Padding(
-        padding: const EdgeInsets.only(left: 40),
+        padding: EdgeInsets.only(
+            left: ResponsiveUtils.getPaddingHorizontal(context)),
         child: Text(
           header,
           style: TextStyle(
             color: Colors.grey.withAlpha(140),
-            fontSize: 20,
+            fontSize: ResponsiveUtils.getSubtitleFontSize(context) * 1.1,
             fontWeight: FontWeight.w600,
           ),
         ),

@@ -21,7 +21,7 @@ class _ModcreategroupState extends State<Modcreategroup> {
 
       // Update cache to mark user as being in a group
       final authService = AuthService();
-      await authService.updateInGroupStatus(true);
+      // await authService.updateInGroupStatus(true);
 
       if (context.mounted) {
         // Close the modal

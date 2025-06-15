@@ -1,6 +1,7 @@
 import 'package:blur/blur.dart';
 import 'package:flutter/material.dart';
 import 'package:orgit/utils/responsive_utils.dart';
+import 'package:orgit/Pages/settings/settings.dart';
 
 class Profilpage extends StatelessWidget {
   @override
@@ -8,7 +9,7 @@ class Profilpage extends StatelessWidget {
     return Stack(
       children: [
         Blur(
-          blur: 4,
+          blur: ResponsiveUtils.isSmallScreen(context) ? 3 : 4,
           blurColor: Color.fromARGB(255, 100, 100, 100),
           child: const Image(
             image: AssetImage('assets/backgroundMap.png'),
@@ -41,11 +42,19 @@ class Profilpage extends StatelessWidget {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    Icon(
-                      Icons.settings,
-                      color: Colors.white,
-                      size: ResponsiveUtils.getIconSize(context),
-                    )
+                    GestureDetector(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Settings(),
+                        ),
+                      ),
+                      child: Icon(
+                        Icons.settings,
+                        color: Colors.white,
+                        size: ResponsiveUtils.getIconSize(context),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -53,16 +62,21 @@ class Profilpage extends StatelessWidget {
               // Profile picture
               Center(
                 child: Container(
-                  padding: EdgeInsets.all(2),
+                  padding: EdgeInsets.all(
+                      ResponsiveUtils.isSmallScreen(context) ? 2 : 3),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(90),
+                    borderRadius: BorderRadius.circular(
+                        ResponsiveUtils.getResponsiveWidth(context,
+                            mobile: 90, tablet: 100, desktop: 110)),
                     border: Border.all(
                       color: Color.fromARGB(255, 224, 176, 29),
-                      width: 2,
+                      width: ResponsiveUtils.isSmallScreen(context) ? 2 : 3,
                     ),
                   ),
-                  height: ResponsiveUtils.isSmallScreen(context) ? 120 : 140,
-                  width: ResponsiveUtils.isSmallScreen(context) ? 120 : 140,
+                  height: ResponsiveUtils.getResponsiveWidth(context,
+                      mobile: 120, tablet: 140, desktop: 160),
+                  width: ResponsiveUtils.getResponsiveWidth(context,
+                      mobile: 120, tablet: 140, desktop: 160),
                   child: CircleAvatar(
                     backgroundImage: AssetImage("assets/profileIcon.png"),
                     backgroundColor: Color.fromARGB(255, 53, 54, 55),
@@ -70,7 +84,7 @@ class Profilpage extends StatelessWidget {
                 ),
               ),
 
-              SizedBox(height: ResponsiveUtils.getSpacingSmall(context)),
+              SizedBox(height: ResponsiveUtils.getSpacingMedium(context)),
 
               // Nickname
               Text(
@@ -79,7 +93,7 @@ class Profilpage extends StatelessWidget {
                   color: Colors.white,
                   fontWeight: FontWeight.w900,
                   fontSize: ResponsiveUtils.getHeadingFontSize(context) * 1.2,
-                  letterSpacing: 4,
+                  letterSpacing: ResponsiveUtils.isSmallScreen(context) ? 3 : 4,
                 ),
               ),
 
@@ -92,7 +106,8 @@ class Profilpage extends StatelessWidget {
                   color: Color.fromARGB(255, 170, 140, 80),
                   fontSize: ResponsiveUtils.getSubtitleFontSize(context),
                   fontWeight: FontWeight.w900,
-                  letterSpacing: 3.5,
+                  letterSpacing:
+                      ResponsiveUtils.isSmallScreen(context) ? 2.5 : 3.5,
                 ),
               ),
 
@@ -105,13 +120,18 @@ class Profilpage extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: Color.fromARGB(255, 36, 37, 39),
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      topRight: Radius.circular(20),
+                      topLeft: Radius.circular(
+                          ResponsiveUtils.isSmallScreen(context) ? 15 : 20),
+                      topRight: Radius.circular(
+                          ResponsiveUtils.isSmallScreen(context) ? 15 : 20),
                     ),
                   ),
                   child: Padding(
                     padding: EdgeInsets.only(
                       top: ResponsiveUtils.getSpacingLarge(context),
+                      left: ResponsiveUtils.getPaddingHorizontal(context) * 0.5,
+                      right:
+                          ResponsiveUtils.getPaddingHorizontal(context) * 0.5,
                     ),
                     child: Column(
                       children: [
@@ -168,18 +188,24 @@ class ProfilPageButton extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        width: ResponsiveUtils.getButtonWidth(context),
+        width: ResponsiveUtils.getResponsiveWidth(
+          context,
+          mobile: MediaQuery.of(context).size.width * 0.9,
+          tablet: ResponsiveUtils.getButtonWidth(context),
+          desktop: ResponsiveUtils.getButtonWidth(context) * 0.9,
+        ),
         height: ResponsiveUtils.getButtonHeight(context),
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
               color: Colors.black.withAlpha(255),
-              spreadRadius: 2,
-              blurRadius: 10,
-              offset: Offset(0, 4),
+              spreadRadius: ResponsiveUtils.isSmallScreen(context) ? 1 : 2,
+              blurRadius: ResponsiveUtils.isSmallScreen(context) ? 6 : 10,
+              offset: Offset(0, ResponsiveUtils.isSmallScreen(context) ? 3 : 4),
             )
           ],
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(
+              ResponsiveUtils.isSmallScreen(context) ? 8 : 10),
           color: Color.fromARGB(255, 26, 27, 29),
         ),
         child: Padding(
@@ -200,6 +226,8 @@ class ProfilPageButton extends StatelessWidget {
                   color: Colors.white,
                   fontWeight: FontWeight.w900,
                   fontSize: ResponsiveUtils.getSubtitleFontSize(context),
+                  letterSpacing:
+                      ResponsiveUtils.isSmallScreen(context) ? 1 : 1.5,
                 ),
               ),
             ],

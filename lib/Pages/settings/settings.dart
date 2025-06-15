@@ -10,16 +10,42 @@ import 'package:orgit/pages/settings/components/section_entry.dart';
 import 'package:orgit/pages/settings/components/section_line.dart';
 import 'package:orgit/utils/overlay_helper.dart';
 import 'package:orgit/components/Overlays/ovr_information_app.dart';
+import 'package:orgit/utils/responsive_utils.dart';
+import 'package:orgit/services/auth/auth.dart';
+import 'package:orgit/Pages/Auth/Register.dart'; // Import pro stránku registrace
 
-class Settings extends StatelessWidget {
-  static double marginItem = 35;
+class Settings extends StatefulWidget {
+  @override
+  State<Settings> createState() => _SettingsState();
+}
+
+class _SettingsState extends State<Settings> {
+  int selectedIndex = -1;
+  final AuthService _authService = AuthService();
+  Future<void> _signOut(BuildContext context) async {
+    try {
+      await _authService.signOut();
+      // Přesměrování na stránku registrace
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => Register()),
+          (route) => false);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Chyba při odhlašování: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Global.background,
         bottomNavigationBar: Container(
-          height: 55,
-          width: MediaQuery.sizeOf(context).width,
+          height: ResponsiveUtils.isSmallScreen(context) ? 60 : 70,
+          width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(4),
@@ -28,105 +54,13 @@ class Settings extends StatelessWidget {
             color: Color.fromARGB(255, 35, 35, 35),
           ),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              SizedBox(
-                width: 35,
-              ),
-              InkWell(
-                onTap: () => {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => Homepage(
-                                initPage: 0,
-                              )))
-                },
-                child: Icon(
-                  Icons.calendar_month,
-                  color: Colors.white,
-                  size: 40,
-                ),
-              ),
-              SizedBox(
-                width: marginItem,
-              ),
-              InkWell(
-                onTap: () => {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Homepage(
-                        initPage: 1,
-                      ),
-                    ),
-                  ),
-                },
-                child: Icon(
-                  Icons.calendar_month,
-                  color: Colors.white,
-                  size: 40,
-                ),
-              ),
-              SizedBox(
-                width: marginItem,
-              ),
-              InkWell(
-                onTap: () => {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Homepage(
-                        initPage: 2,
-                      ),
-                    ),
-                  ),
-                },
-                child: Icon(
-                  Icons.calendar_month,
-                  color: Colors.white,
-                  size: 40,
-                ),
-              ),
-              SizedBox(
-                width: marginItem,
-              ),
-              InkWell(
-                onTap: () => {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Homepage(
-                        initPage: 3,
-                      ),
-                    ),
-                  ),
-                },
-                child: Icon(
-                  Icons.calendar_month,
-                  color: Colors.white,
-                  size: 40,
-                ),
-              ),
-              SizedBox(
-                width: marginItem,
-              ),
-              InkWell(
-                onTap: () => {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Homepage(
-                        initPage: 4,
-                      ),
-                    ),
-                  ),
-                },
-                child: Icon(
-                  Icons.calendar_month,
-                  color: Colors.white,
-                  size: 40,
-                ),
-              ),
+              _buildNavItem(context, 0, Icons.calendar_month),
+              _buildNavItem(context, 1, Icons.event),
+              _buildNavItem(context, 2, Icons.group),
+              _buildNavItem(context, 3, Icons.checklist),
+              _buildNavItem(context, 4, Icons.person),
             ],
           ),
         ),
@@ -134,22 +68,35 @@ class Settings extends StatelessWidget {
         body: Stack(
           children: [
             Blur(
-              blur: 4,
+              blur: ResponsiveUtils.isSmallScreen(context) ? 3 : 4,
               blurColor: Color.fromARGB(255, 100, 100, 100),
               child: const Image(
-                image: AssetImage('assets/map.png'),
+                image: AssetImage('assets/backgroundMap.png'),
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: double.infinity,
               ),
             ),
             Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 60, left: 40, right: 40),
+                  padding: EdgeInsets.only(
+                    top: ResponsiveUtils.getPaddingVertical(context) * 2,
+                    left: ResponsiveUtils.getPaddingHorizontal(context),
+                    right: ResponsiveUtils.getPaddingHorizontal(context),
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Icon(
-                        Icons.arrow_back_ios,
-                        color: Colors.white,
+                      InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Icon(
+                          Icons.arrow_back_ios,
+                          color: Colors.white,
+                          size: ResponsiveUtils.getIconSize(context) * 0.8,
+                        ),
                       ),
                     ],
                   ),
@@ -157,11 +104,14 @@ class Settings extends StatelessWidget {
                 Row(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left: 40, top: 20),
+                      padding: EdgeInsets.only(
+                        left: ResponsiveUtils.getPaddingHorizontal(context),
+                        top: ResponsiveUtils.getSpacingMedium(context),
+                      ),
                       child: Text(
                         "Nastavení",
                         style: TextStyle(
-                          fontSize: 32,
+                          fontSize: ResponsiveUtils.getHeadingFontSize(context),
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
@@ -170,7 +120,7 @@ class Settings extends StatelessWidget {
                   ],
                 ),
                 SizedBox(
-                  height: 30,
+                  height: ResponsiveUtils.getSpacingLarge(context) * 0.75,
                 ),
                 Expanded(
                   child: Container(
@@ -181,29 +131,50 @@ class Settings extends StatelessWidget {
                     child: Column(
                       children: [
                         SizedBox(
-                          height: 20,
+                          height:
+                              ResponsiveUtils.getSpacingMedium(context) * 0.8,
                         ),
-                        // sekce nastaveni účet
                         SectionHeader(header: "Účet"),
                         SectionLine(),
                         Column(
-                          spacing: 20,
                           children: [
                             SettingEntry(
                               icon: Icons.person,
                               label: "Profil",
-                              onTap: () => Global.nothing(),
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Homepage(initPage: 3),
+                                ),
+                              ),
                             ),
+                            SizedBox(
+                                height:
+                                    ResponsiveUtils.getSpacingMedium(context) *
+                                        0.8),
                             SettingEntry(
                               icon: Icons.forum,
                               label: "Osobní údaje",
-                              onTap: () => Global.nothing(),
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Homepage(initPage: 3),
+                                ),
+                              ),
                             ),
+                            SizedBox(
+                                height:
+                                    ResponsiveUtils.getSpacingMedium(context) *
+                                        0.8),
                             SettingEntry(
                               icon: Icons.shield,
                               label: "Zabezpečení",
                               onTap: () => Global.nothing(),
                             ),
+                            SizedBox(
+                                height:
+                                    ResponsiveUtils.getSpacingMedium(context) *
+                                        0.8),
                             SettingEntry(
                               icon: Icons.group,
                               label: "Role skupiny",
@@ -215,13 +186,11 @@ class Settings extends StatelessWidget {
                           ],
                         ),
                         SectionLine(
-                          pBot: 40,
+                          pBot: ResponsiveUtils.getSpacingLarge(context),
                         ),
-                        // sekce obecne nastaveni
                         SectionHeader(header: "Obecné nastavení"),
                         SectionLine(),
                         Column(
-                          spacing: 20,
                           children: [
                             SettingEntry(
                               icon: Icons.notification_add,
@@ -231,6 +200,10 @@ class Settings extends StatelessWidget {
                                 OverlayNotification(),
                               ),
                             ),
+                            SizedBox(
+                                height:
+                                    ResponsiveUtils.getSpacingMedium(context) *
+                                        0.8),
                             SettingEntry(
                               icon: Icons.color_lens,
                               label: "Motiv",
@@ -239,6 +212,10 @@ class Settings extends StatelessWidget {
                                 OverlayMotive(),
                               ),
                             ),
+                            SizedBox(
+                                height:
+                                    ResponsiveUtils.getSpacingMedium(context) *
+                                        0.8),
                             SettingEntry(
                               icon: Icons.info,
                               label: "Informace o aplikaci",
@@ -246,6 +223,15 @@ class Settings extends StatelessWidget {
                                 context,
                                 OverlayInformationApp(),
                               ),
+                            ),
+                            SizedBox(
+                                height:
+                                    ResponsiveUtils.getSpacingMedium(context) *
+                                        0.8),
+                            SettingEntry(
+                              icon: Icons.logout,
+                              label: "Odhlásit se",
+                              onTap: () => _signOut(context),
                             ),
                           ],
                         )
@@ -257,5 +243,37 @@ class Settings extends StatelessWidget {
             ),
           ],
         ));
+  }
+
+  Widget _buildNavItem(BuildContext context, int index, IconData icon) {
+    final isSelected = selectedIndex == index;
+    return InkWell(
+      onTap: () => _onTapNavItem(index),
+      child: Container(
+        padding: EdgeInsets.all(ResponsiveUtils.getSpacingSmall(context)),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? Color.fromARGB(255, 255, 203, 105).withOpacity(0.2)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Icon(
+          icon,
+          color: isSelected ? Color.fromARGB(255, 255, 203, 105) : Colors.white,
+          size: ResponsiveUtils.getIconSize(context),
+        ),
+      ),
+    );
+  }
+
+  void _onTapNavItem(int index) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Homepage(
+          initPage: index,
+        ),
+      ),
+    );
   }
 }
